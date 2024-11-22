@@ -1,5 +1,5 @@
 import bcryptConfig from '@core/config/bcrypt.config';
-import { UserRepository } from '@core/type-orm/repositories/user.repository';
+import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
 import {
   ConflictException,
   Inject,
@@ -18,7 +18,7 @@ import { plainToInstance } from 'class-transformer';
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: IUserRepository,
     @Inject(bcryptConfig.KEY) private readonly config: ConfigType<typeof bcryptConfig>,
   ) {}
 

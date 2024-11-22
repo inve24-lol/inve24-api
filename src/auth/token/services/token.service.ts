@@ -1,6 +1,6 @@
 import bcryptConfig from '@core/config/bcrypt.config';
 import jwtConfig from '@core/config/jwt.config';
-import { TokenRepository } from '@core/type-orm/repositories/token.repository';
+import { ITokenRepository } from '@core/type-orm/abstracts/token-repository.abstract';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,7 @@ import { plainToInstance } from 'class-transformer';
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly tokenRepository: TokenRepository,
+    private readonly tokenRepository: ITokenRepository,
     @Inject(jwtConfig.KEY) private readonly config: ConfigType<typeof jwtConfig>,
     @Inject(bcryptConfig.KEY) private readonly hashConfig: ConfigType<typeof bcryptConfig>,
   ) {}
