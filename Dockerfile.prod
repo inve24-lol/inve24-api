@@ -1,6 +1,6 @@
-######################################
+###################
 # BUILD STAGE
-######################################
+###################
 FROM node:20-alpine As build
 
 USER node
@@ -14,10 +14,9 @@ RUN npm run build
 
 RUN npm ci --only=production
 
-
-######################################
-# RUN STAGE: Production Environment
-######################################
+###################
+# RUN STAGE: Prod
+###################
 FROM node:20-alpine
 
 USER node

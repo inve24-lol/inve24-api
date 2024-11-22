@@ -1,10 +1,10 @@
 {
-  "name": "nestjs-template",
+  "name": "inve24-api",
   "version": "0.0.1",
-  "description": "This template helps you quickly start your user management service in Docker environments.",
+  "description": "INVE24 API",
   "author": "okonomiyakki",
   "private": true,
-  "license": "MIT",
+  "license": "UNLICENSED",
   "engines": {
     "node": ">=20.0.0"
   },

@@ -2,24 +2,24 @@ version: "3.8"
 
 services:
 
-  nginx:
-    image: nginx:local
-    container_name: nginx
+  inve24_nginx:
+    image: inve24_nginx:local
+    container_name: inve24_nginx
     build:
       context: ./nginx
       dockerfile: Dockerfile.local
     restart: unless-stopped
     depends_on:
-      - mysql_db
-      - nestjs      
+      - inve24_db
+      - inve24_api
     ports:
       - 80:80
     networks:
-      - my_network
+      - inve24_network
 
-  nestjs:
-    image: nestjs:local
-    container_name: nestjs
+  inve24_api:
+    image: inve24_api:local
+    container_name: inve24_api
     build:
       context: .
       dockerfile: Dockerfile.local
@@ -28,25 +28,25 @@ services:
     env_file:
       - .env.local
     networks:
-      - my_network
+      - inve24_network
 
-  mysql_db:
+  inve24_db:
     image: mysql:8.0
-    container_name: mysql_db
+    container_name: inve24_db
     restart: always
     volumes:
-      - mysqldb_data:/var/lib/mysql
+      - inve24_db_data:/var/lib/mysql
     ports:
-      - 3307:3307 # ⚠ local environment only
+      - 3307:3307
     env_file:
       - .env.local
     networks:
-      - my_network
+      - inve24_network
 
 volumes:
-  mysqldb_data:
+  inve24_db_data:
     driver: local
 
 networks:
-  my_network:
+  inve24_network:
     driver: bridge
