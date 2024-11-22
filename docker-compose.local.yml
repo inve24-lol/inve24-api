@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+
+  nginx:
+    image: nginx:local
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.local
+    restart: unless-stopped
+    depends_on:
+      - mysql_db
+      - nestjs      
+    ports:
+      - 80:80
+    networks:
+      - my_network
+
+  nestjs:
+    image: nestjs:local
+    container_name: nestjs
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    depends_on:
+      - mysql_db
+    env_file:
+      - .env.local
+    networks:
+      - my_network
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    volumes:
+      - mysqldb_data:/var/lib/mysql
+    ports:
+      - 3307:3307 # ⚠ local environment only
+    env_file:
+      - .env.local
+    networks:
+      - my_network
+
+volumes:
+  mysqldb_data:
+    driver: local
+
+networks:
+  my_network:
+    driver: bridge

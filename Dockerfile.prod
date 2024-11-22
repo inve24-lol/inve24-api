@@ -1,0 +1,39 @@
+######################################
+# BUILD STAGE
+######################################
+FROM node:20-alpine As build
+
+USER node
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+RUN npm ci
+
+COPY --chown=node:node . .
+RUN npm run build
+
+RUN npm ci --only=production
+
+
+######################################
+# RUN STAGE: Production Environment
+######################################
+FROM node:20-alpine
+
+USER node
+WORKDIR /usr/src/app
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --chown=node:node --from=build /usr/src/app/migrations ./migrations 
+COPY --chown=node:node --from=build /usr/src/app/scripts ./scripts
+COPY --chown=node:node --from=build /usr/src/app/tsconfig.paths.json ./
+COPY --chown=node:node --from=build /usr/src/app/tsconfig.json ./
+COPY --chown=node:node --from=build /usr/src/app/typeorm.config.ts ./
+
+ENV NODE_ENV prod
+ENV MIGRATION_MODE run
+
+RUN chmod +x ./scripts/start.sh
+
+CMD ["./scripts/start.sh"]

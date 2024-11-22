@@ -1,0 +1,33 @@
+# docker files
+.dockerignore
+Dockerfile
+Dockerfile.local
+Dockerfile.prod
+Dockerfile.*
+docker-compose.yml
+docker-compose.local.yml
+docker-compose.prod.yml
+docker-compose.*.yml
+
+# git
+.git
+.gitignore
+
+# logs
+npm-debug.log
+
+# compiled output
+node_modules
+dist
+
+# dotenv files
+.env
+.env.dev
+.env.local
+.env.prod
+.env*
+
+# etc.
+test
+LICENSE
+README.md
