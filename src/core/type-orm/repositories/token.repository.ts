@@ -2,9 +2,10 @@ import { CustomRepository } from '@core/type-orm/decorators/custom-repository.de
 import { TokenEntity } from '@core/type-orm/entities/token.entity';
 import { InternalServerErrorException } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
+import { ITokenRepository } from '@core/type-orm/abstracts/token-repository.abstract';
 
 @CustomRepository(TokenEntity)
-export class TokenRepository extends Repository<TokenEntity> {
+export class TokenRepositoryImpl extends Repository<TokenEntity> implements ITokenRepository {
   async upsertToken(userId: string, refreshToken: string): Promise<void> {
     try {
       await this.upsert(
