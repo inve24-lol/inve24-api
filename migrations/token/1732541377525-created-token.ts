@@ -1,4 +1,8 @@
-import { generateCreatedAtColumn, generatePrimaryColumn } from 'migrations/utils/utile';
+import {
+  generateCreatedAtColumn,
+  generatePrimaryColumn,
+  generateUpdatedAtColumn,
+} from 'migrations/utils/utile';
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 
 export class CreatedToken1732541377525 implements MigrationInterface {
@@ -22,6 +26,7 @@ export class CreatedToken1732541377525 implements MigrationInterface {
             isNullable: false,
             comment: 'Refresh Token (NN)',
           }),
+          generateUpdatedAtColumn('Token Modification Date (NN)'),
           generateCreatedAtColumn('Token Creation Date (NN)'),
         ],
         foreignKeys: [

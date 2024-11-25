@@ -1,5 +1,9 @@
 import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
-import { generateCreatedAtColumn, generatePrimaryColumn } from 'migrations/utils/utile';
+import {
+  generateCreatedAtColumn,
+  generatePrimaryColumn,
+  generateUpdatedAtColumn,
+} from 'migrations/utils/utile';
 import { Role } from 'src/common/constants/roles.enum';
 
 export class CreatedUser1732537469871 implements MigrationInterface {
@@ -46,6 +50,7 @@ export class CreatedUser1732537469871 implements MigrationInterface {
             default: `'${Role.GUEST}'`,
             comment: 'User Role (NN)',
           }),
+          generateUpdatedAtColumn('User Modification Date (NN)'),
           generateCreatedAtColumn('User Creation Date (NN)'),
         ],
         uniques: [

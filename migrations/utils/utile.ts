@@ -22,3 +22,16 @@ export const generateCreatedAtColumn = (comment: string = 'Creation Date'): Tabl
     comment,
   };
 };
+
+export const generateUpdatedAtColumn = (
+  comment: string = 'Modification Date',
+): TableColumnOptions => {
+  return {
+    name: 'updated_at',
+    type: 'timestamp',
+    isNullable: false,
+    default: 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+    comment,
+  };
+};
