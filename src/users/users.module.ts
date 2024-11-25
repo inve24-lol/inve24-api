@@ -6,13 +6,15 @@ import { UsersController } from '@users/controllers/users.controller';
 import { UsersService } from '@users/services/users.service';
 
 @Module({
-  imports: [
-    TypeOrmExModule.forCustomRepository([
-      { repoInterface: IUserRepository, repository: UserRepositoryImpl },
-    ]),
-  ],
+  imports: [TypeOrmExModule.forCustomRepository([UserRepositoryImpl])],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [
+    UsersService,
+    {
+      provide: IUserRepository,
+      useClass: UserRepositoryImpl,
+    },
+  ],
   exports: [UsersService],
 })
 export class UsersModule {}
