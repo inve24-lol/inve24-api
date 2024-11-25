@@ -48,8 +48,8 @@ export class UsersService {
     return plainToInstance(UserProfileDto, user);
   }
 
-  async getUserProfileByUuId(uuid: string): Promise<UserProfileDto> {
-    const user = await this.userRepository.findUserByUuId(uuid);
+  async getUserProfileByUuid(uuid: string): Promise<UserProfileDto> {
+    const user = await this.userRepository.findUserByUuid(uuid);
 
     if (!user) throw new NotFoundException('The user has already been deleted.');
 
