@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { UserEntity } from '@core/type-orm/entities/user.entity';
 
 @Entity('token')
+@Unique('UQ_IDX_token_user_uuid', ['userUuid'])
 export class TokenEntity {
   @PrimaryGeneratedColumn({
     name: 'id',
@@ -18,16 +19,23 @@ export class TokenEntity {
   })
   userUuid!: string;
 
-  @Column('varchar', {
+  @Column('char', {
     name: 'refresh_token',
     length: 60,
     comment: 'Refresh Token (NN)',
   })
   refreshToken!: string;
 
-  @Column({
+  @Column('timestamp', {
+    name: 'updated_at',
+    onUpdate: 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: 'Token Modification Date (NN)',
+  })
+  updatedAt!: Date;
+
+  @Column('timestamp', {
     name: 'created_at',
-    type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     comment: 'Token Creation Date (NN)',
   })
@@ -40,7 +48,7 @@ export class TokenEntity {
   @JoinColumn({
     name: 'user_uuid',
     referencedColumnName: 'uuid',
-    foreignKeyConstraintName: 'FK_refresh_token_user_uuid',
+    foreignKeyConstraintName: 'FK_token_user_uuid',
   })
   user!: UserEntity;
 }

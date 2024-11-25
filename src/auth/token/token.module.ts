@@ -8,12 +8,16 @@ import { TokenService } from '@token/services/token.service';
 
 @Module({
   imports: [
-    TypeOrmExModule.forCustomRepository([
-      { repoInterface: ITokenRepository, repository: TokenRepositoryImpl },
-    ]),
+    TypeOrmExModule.forCustomRepository([TokenRepositoryImpl]),
     JwtModule.registerAsync({ useClass: JwtModuleOptionsFactory }),
   ],
-  providers: [TokenService],
+  providers: [
+    TokenService,
+    {
+      provide: ITokenRepository,
+      useClass: TokenRepositoryImpl,
+    },
+  ],
   exports: [TokenService],
 })
 export class TokenModule {}

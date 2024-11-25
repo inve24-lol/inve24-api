@@ -10,6 +10,13 @@ export class BaseDto implements IBase {
   readonly id!: number;
 
   @ApiProperty({
+    description: 'Modification Date',
+    example: '2024-01-01T00:00:00.000Z',
+  })
+  @Expose()
+  readonly updatedAt!: Date;
+
+  @ApiProperty({
     description: 'Creation Date',
     example: '2024-01-01T00:00:00.000Z',
   })
