@@ -1,11 +1,19 @@
 import { CustomRepository } from '@core/type-orm/decorators/custom-repository.decorator';
 import { TokenEntity } from '@core/type-orm/entities/token.entity';
-import { InternalServerErrorException } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { InternalServerErrorException, Optional } from '@nestjs/common';
+import { DeleteResult, EntityManager, QueryRunner, Repository } from 'typeorm';
 import { ITokenRepository } from '@core/type-orm/abstracts/token-repository.abstract';
+import { InjectEntityManager } from '@nestjs/typeorm';
 
 @CustomRepository(TokenEntity)
 export class TokenRepositoryImpl extends Repository<TokenEntity> implements ITokenRepository {
+  constructor(
+    @InjectEntityManager() manager: EntityManager,
+    @Optional() queryRunner?: QueryRunner,
+  ) {
+    super(TokenEntity, manager, queryRunner);
+  }
+
   async upsertToken(userUuid: string, refreshToken: string): Promise<void> {
     try {
       await this.upsert(
