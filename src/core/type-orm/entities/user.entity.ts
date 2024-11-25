@@ -1,11 +1,11 @@
-import { Column, Entity, Generated, Index, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Generated, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { TokenEntity } from '@core/type-orm/entities/token.entity';
 import { Role } from '@common/constants/roles.enum';
 
-@Index('UQ_IDX_user_uuid', ['uuid'], { unique: true })
-@Index('UQ_IDX_user_email', ['email'], { unique: true })
-@Index('UQ_IDX_user_nickname', ['nickname'], { unique: true })
 @Entity('user')
+@Unique('UQ_IDX_user_uuid', ['uuid'])
+@Unique('UQ_IDX_user_email', ['email'])
+@Unique('UQ_IDX_user_nickname', ['nickname'])
 export class UserEntity {
   @PrimaryGeneratedColumn({
     name: 'id',
