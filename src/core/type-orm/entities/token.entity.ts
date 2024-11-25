@@ -11,14 +11,14 @@ export class TokenEntity {
   })
   id!: number;
 
-  @Column('varchar', {
+  @Column('char', {
     name: 'user_uuid',
     length: 36,
     comment: 'User UUID (FK, NN, UQ)',
   })
   userUuid!: string;
 
-  @Column('varchar', {
+  @Column('char', {
     name: 'refresh_token',
     length: 60,
     comment: 'Refresh Token (NN)',
