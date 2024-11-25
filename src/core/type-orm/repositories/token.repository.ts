@@ -6,23 +6,23 @@ import { ITokenRepository } from '@core/type-orm/abstracts/token-repository.abst
 
 @CustomRepository(TokenEntity)
 export class TokenRepositoryImpl extends Repository<TokenEntity> implements ITokenRepository {
-  async upsertToken(userId: string, refreshToken: string): Promise<void> {
+  async upsertToken(userUuid: string, refreshToken: string): Promise<void> {
     try {
       await this.upsert(
         {
-          userId,
+          userUuid,
           refreshToken,
         },
-        ['userId'],
+        ['userUuid'],
       );
     } catch (error) {
       throw new InternalServerErrorException('Query failed.');
     }
   }
 
-  async findTokenByUserId(userId: string): Promise<TokenEntity | null> {
+  async findTokenByUserUuid(userUuid: string): Promise<TokenEntity | null> {
     try {
-      const tokenEntity = await this.findOne({ where: { userId } });
+      const tokenEntity = await this.findOne({ where: { userUuid } });
 
       return tokenEntity || null;
     } catch (error) {
@@ -30,9 +30,9 @@ export class TokenRepositoryImpl extends Repository<TokenEntity> implements ITok
     }
   }
 
-  async deleteToken(userId: string): Promise<DeleteResult> {
+  async deleteToken(userUuid: string): Promise<DeleteResult> {
     try {
-      return await this.delete({ userId });
+      return await this.delete({ userUuid });
     } catch (error) {
       throw new InternalServerErrorException('Query failed.');
     }

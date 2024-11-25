@@ -3,18 +3,20 @@ import { UserEntity } from '@core/type-orm/entities/user.entity';
 
 @Entity('token')
 export class TokenEntity {
-  @PrimaryGeneratedColumn('uuid', {
+  @PrimaryGeneratedColumn({
     name: 'id',
-    comment: 'Token Uuid (PK, NN)',
+    type: 'int',
+    unsigned: true,
+    comment: 'Token ID (PK, NN, UN, AI)',
   })
-  id!: string;
+  id!: number;
 
   @Column('varchar', {
-    name: 'user_id',
+    name: 'user_uuid',
     length: 36,
     comment: 'User UUID (FK, NN, UQ)',
   })
-  userId!: string;
+  userUuid!: string;
 
   @Column('varchar', {
     name: 'refresh_token',
@@ -26,7 +28,6 @@ export class TokenEntity {
   @Column({
     name: 'created_at',
     type: 'timestamp',
-    onUpdate: 'CURRENT_TIMESTAMP',
     default: () => 'CURRENT_TIMESTAMP',
     comment: 'Token Creation Date (NN)',
   })
@@ -37,9 +38,9 @@ export class TokenEntity {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({
-    name: 'user_id',
-    referencedColumnName: 'id',
-    foreignKeyConstraintName: 'FK_refresh_token_user_id',
+    name: 'user_uuid',
+    referencedColumnName: 'uuid',
+    foreignKeyConstraintName: 'FK_refresh_token_user_uuid',
   })
   user!: UserEntity;
 }

@@ -1,7 +1,7 @@
 import { Role } from '@common/constants/roles.enum';
 
 export interface IPayload {
-  id: string;
+  uuid: string;
 
   nickname: string;
 
