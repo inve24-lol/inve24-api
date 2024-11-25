@@ -5,5 +5,5 @@ export abstract class IUserRepository {
   abstract saveUser(createUser: DeepPartial<UserEntity>): Promise<UserEntity>;
   abstract findUserByEmail(email: string): Promise<UserEntity | null>;
   abstract findUserByNickname(nickname: string): Promise<UserEntity | null>;
-  abstract findUserById(id: string): Promise<UserEntity | null>;
+  abstract findUserById(id: number): Promise<UserEntity | null>;
 }

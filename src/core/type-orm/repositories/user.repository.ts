@@ -36,7 +36,7 @@ export class UserRepositoryImpl extends Repository<UserEntity> implements IUserR
     }
   }
 
-  async findUserById(id: string): Promise<UserEntity | null> {
+  async findUserById(id: number): Promise<UserEntity | null> {
     try {
       const userEntity = await this.findOne({ where: { id } });
 
