@@ -20,7 +20,7 @@ export class TokenRepositoryImpl extends Repository<TokenEntity> implements ITok
     }
   }
 
-  async findTokenByUserId(userUuid: string): Promise<TokenEntity | null> {
+  async findTokenByUserUuid(userUuid: string): Promise<TokenEntity | null> {
     try {
       const tokenEntity = await this.findOne({ where: { userUuid } });
 
