@@ -24,9 +24,7 @@ export class AuthService {
 
     const userProfile: UserProfileDto = await this.usersService.verifyUser(email, password);
 
-    const authTokens: AuthTokensDto = await this.signInToken(userProfile);
-
-    const { accessToken, refreshToken } = authTokens;
+    const { accessToken, refreshToken }: AuthTokensDto = await this.signInToken(userProfile);
 
     const signInResponse = plainToInstance(SignInResponseDto, { userProfile, accessToken });
 
