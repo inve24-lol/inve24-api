@@ -51,9 +51,16 @@ export class UserEntity {
   })
   role!: Role;
 
-  @Column({
+  @Column('timestamp', {
+    name: 'updated_at',
+    onUpdate: 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: 'User Modification Date (NN)',
+  })
+  updatedAt!: Date;
+
+  @Column('timestamp', {
     name: 'created_at',
-    type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     comment: 'User Creation Date (NN)',
   })

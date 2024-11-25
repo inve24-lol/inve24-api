@@ -26,9 +26,16 @@ export class TokenEntity {
   })
   refreshToken!: string;
 
-  @Column({
+  @Column('timestamp', {
+    name: 'updated_at',
+    onUpdate: 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: 'Token Modification Date (NN)',
+  })
+  updatedAt!: Date;
+
+  @Column('timestamp', {
     name: 'created_at',
-    type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     comment: 'Token Creation Date (NN)',
   })
