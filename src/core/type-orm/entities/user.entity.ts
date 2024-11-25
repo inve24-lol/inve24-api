@@ -29,7 +29,7 @@ export class UserEntity {
   })
   email!: string;
 
-  @Column('varchar', {
+  @Column('char', {
     name: 'password',
     length: 60,
     comment: 'User Password (NN)',
