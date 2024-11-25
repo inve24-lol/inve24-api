@@ -30,15 +30,15 @@ export class TokenService {
   async verifyRefreshToken(
     authPayload: AuthPayloadDto,
     refreshToken: string,
-  ): Promise<{ id: string }> {
-    const { id: userId } = authPayload;
+  ): Promise<{ uuid: string }> {
+    const { uuid: userUuid } = authPayload;
 
-    const token = await this.tokenRepository.findTokenByUserId(userId);
+    const token = await this.tokenRepository.findTokenByUserUuid(userUuid);
 
     if (!token)
       throw new UnauthorizedException('The user is invalid. Please ensure you are signed in.');
 
-    const { refreshToken: hashedRefreshToken, userId: id } = token;
+    const { refreshToken: hashedRefreshToken, userUuid: uuid } = token;
 
     const isRefreshTokenMatched = await bcrypt.compare(refreshToken, hashedRefreshToken);
 
@@ -48,13 +48,13 @@ export class TokenService {
         'Your session has been invalidated due to a new sign-in from another client. Please sign in again to continue.',
       );
 
-    return { id };
+    return { uuid };
   }
 
   async deleteRefreshToken(payload: PayloadDto): Promise<void> {
-    const { id: userId } = payload;
+    const { uuid: userUuid } = payload;
 
-    const { affected } = await this.tokenRepository.deleteToken(userId);
+    const { affected } = await this.tokenRepository.deleteToken(userUuid);
 
     if (!affected) throw new UnauthorizedException('The refresh token has already been deleted.');
   }
@@ -82,13 +82,13 @@ export class TokenService {
     authPayload: AuthPayloadDto,
     refreshToken: string,
   ): Promise<void> {
-    const { id: userId } = authPayload;
+    const { uuid: userUuid } = authPayload;
 
     const hashedRefreshToken = await bcrypt.hash(
       refreshToken,
       this.hashConfig.bcrypt.refreshTokenSalt,
     );
 
-    await this.tokenRepository.upsertToken(userId, hashedRefreshToken);
+    await this.tokenRepository.upsertToken(userUuid, hashedRefreshToken);
   }
 }

@@ -5,7 +5,7 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class PayloadDto implements IPayload {
   @Expose()
-  readonly id!: string;
+  readonly uuid!: string;
 
   @Expose()
   readonly nickname!: string;

@@ -1,16 +1,26 @@
-import { Column, Entity, Index, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Generated, Index, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TokenEntity } from '@core/type-orm/entities/token.entity';
 import { Role } from '@common/constants/roles.enum';
 
-@Index('UQ_IDX_user_nickname', ['nickname'], { unique: true })
+@Index('UQ_IDX_user_uuid', ['uuid'], { unique: true })
 @Index('UQ_IDX_user_email', ['email'], { unique: true })
+@Index('UQ_IDX_user_nickname', ['nickname'], { unique: true })
 @Entity('user')
 export class UserEntity {
-  @PrimaryGeneratedColumn('uuid', {
+  @PrimaryGeneratedColumn({
     name: 'id',
-    comment: 'User Uuid (PK, NN)',
+    type: 'int',
+    unsigned: true,
+    comment: 'User ID (PK, NN, UN, AI)',
   })
-  id!: string;
+  id!: number;
+
+  @Column('uuid', {
+    name: 'uuid',
+    comment: 'User UUID (NN, UQ)',
+  })
+  @Generated('uuid')
+  uuid!: string;
 
   @Column('varchar', {
     name: 'email',

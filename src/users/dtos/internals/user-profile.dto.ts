@@ -7,6 +7,12 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class UserProfileDto extends BaseDto implements IUserProfile {
   @ApiProperty({
+    description: 'User Uuid',
+  })
+  @Expose()
+  readonly uuid!: string;
+
+  @ApiProperty({
     description: 'User Email',
     example: 'example@eamil.com',
   })

@@ -4,10 +4,10 @@ import { Expose } from 'class-transformer';
 
 export class BaseDto implements IBase {
   @ApiProperty({
-    description: 'Uuid',
+    description: 'ID',
   })
   @Expose()
-  readonly id!: string;
+  readonly id!: number;
 
   @ApiProperty({
     description: 'Creation Date',
