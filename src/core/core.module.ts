@@ -5,6 +5,7 @@ import serverConfig from '@core/config/server.config';
 import databaseConfig from '@core/config/database.config';
 import jwtConfig from '@core/config/jwt.config';
 import bcryptConfig from '@core/config/bcrypt.config';
+import mailConfig from '@core/config/mail.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmModuleOptionsFactory } from '@core/type-orm/factories/type-orm-module-options.factory';
 
@@ -12,7 +13,7 @@ import { TypeOrmModuleOptionsFactory } from '@core/type-orm/factories/type-orm-m
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`],
-      load: [serverConfig, databaseConfig, jwtConfig, bcryptConfig],
+      load: [serverConfig, databaseConfig, jwtConfig, bcryptConfig, mailConfig],
       isGlobal: true,
       validationSchema: validationSchema,
     }),
