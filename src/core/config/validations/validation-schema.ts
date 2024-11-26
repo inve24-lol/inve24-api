@@ -20,4 +20,9 @@ export const validationSchema = Joi.object({
 
   BCRYPT_PASSWORD_SALT: Joi.number().required(),
   BCRYPT_REFRESH_TOKEN_SALT: Joi.number().required(),
+
+  MAIL_HOST: Joi.string().required(),
+  MAIL_PORT: Joi.number().required(),
+  MAIL_USER: Joi.string().required(),
+  MAIL_PASSWORD: Joi.string().required(),
 });
