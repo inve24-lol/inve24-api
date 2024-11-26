@@ -2,11 +2,11 @@
 
 - PR into main
   > ex) 🚀 [v0.0.0] [RELEASE] OO 기능 배포 <br>
-  > ex) ⚠ [v0.0.0] [HOTFIX] OO 오류 긴급 수정 <br>
+  > ex) ⚠ [v0.0.0] [HOTFIX] OO 에러 긴급 수정 <br>
 - PR into develop
   > ex) ✨ [#{이슈 번호}] [Feat] OO 기능 구현 <br>
   > ex) 🛠 [#{이슈 번호}] [Refactor] OO 기능 개선 <br>
-  > ex) 🐞 [#{이슈 번호}] [Fix] OO 오류 수정 <br>
+  > ex) 🐞 [#{이슈 번호}] [Fix] OO 에러 수정 <br>
 
 ## 🌳 작업한 브랜치
 
