@@ -20,7 +20,7 @@ export class MailerModuleOptionsFactory implements MailerOptionsFactory {
         },
       },
       defaults: {
-        from: '"인베24" <no-reply@inve24.com>',
+        from: `"인베24" <${this.config.mail.user}>`,
       },
       template: {
         dir: __dirname + '/templates',
