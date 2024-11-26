@@ -8,16 +8,7 @@
   > ex) 🛠 [#{이슈 번호}] [refactor] OO 기능 개선 <br>
   > ex) 🐞 [#{이슈 번호}] [fix] OO 오류 수정 <br>
 
-## 브랜치 & 커밋 컨벤션(작성 후 삭제)
-
-- Branch Name
-  > ex) {[이슈 목적](https://github.com/inve24-lol/inve24-api/labels)}/backend-{이슈번호} <br>
-  > ex) {[이슈 목적](https://github.com/inve24-lol/inve24-api/labels)}/frontend-{이슈 번호} <br>
-  > ex) {[이슈 목적](https://github.com/inve24-lol/inve24-api/labels)}/deploy-{이슈 번호} <br>
-- Commit Title
-  > ex) #{이슈번호} feat({모듈명 or 관심사}): OO 기능 추가 <br>
-
-## 🌳 작업 브랜치
+## 🌳 작업한 브랜치
 
 > ex) feature/backend-{이슈 번호}
 
