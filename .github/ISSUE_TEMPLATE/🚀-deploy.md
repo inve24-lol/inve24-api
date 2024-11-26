@@ -2,7 +2,7 @@
 name: "\U0001F680 Deploy"
 about: 배포 관련 작업
 title: "[RELEASE] v0.0.0 배포"
-labels: deploy
+labels: 'Type: Deploy'
 assignees: okonomiyakki
 
 ---

@@ -2,7 +2,7 @@
 name: "\U0001F41E Bug report"
 about: 버그 제보
 title: "[bug] OO 기능 오류"
-labels: bug
+labels: 'Type: Bug'
 assignees: okonomiyakki
 
 ---

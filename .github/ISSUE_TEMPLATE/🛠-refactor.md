@@ -2,7 +2,7 @@
 name: "\U0001F6E0 Refactor"
 about: 리팩토링
 title: "[refactor] OO 기능 개선"
-labels: refactor
+labels: 'Type: Refactor'
 assignees: okonomiyakki
 
 ---
