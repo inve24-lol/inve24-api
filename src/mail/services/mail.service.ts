@@ -67,7 +67,7 @@ export class MailService {
     try {
       await this.mailerService.sendMail({
         to: email,
-        subject: '이메일 주소 인증 코드입니다.',
+        subject: '[INVE24] 이메일 주소 인증 코드입니다.',
         template: 'email-cert-code',
         context: {
           certCode,
