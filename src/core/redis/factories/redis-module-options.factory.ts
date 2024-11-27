@@ -1,5 +1,9 @@
 import redisConfig from '@core/config/redis.config';
 import {
+  EMAIL_CERT_CODE_REDIS_NAMESPACE,
+  REFRESH_TOKEN_REDIS_NAMESPACE,
+} from '@core/redis/constants/redis.namespace';
+import {
   RedisModuleOptions,
   RedisOptionsFactory,
 } from '@liaoliaots/nestjs-redis/dist/redis/interfaces';
@@ -12,11 +16,22 @@ export class RedisModuleOptionsFactory implements RedisOptionsFactory {
 
   createRedisOptions(): RedisModuleOptions {
     return {
-      config: {
-        host: this.config.redis.host,
-        port: this.config.redis.port,
-        password: this.config.redis.password,
-      },
+      config: [
+        {
+          namespace: EMAIL_CERT_CODE_REDIS_NAMESPACE,
+          host: this.config.redis.host,
+          port: this.config.redis.port,
+          password: this.config.redis.password,
+          db: this.config.redis.emailCertCode.db,
+        },
+        {
+          namespace: REFRESH_TOKEN_REDIS_NAMESPACE,
+          host: this.config.redis.host,
+          port: this.config.redis.port,
+          password: this.config.redis.password,
+          db: this.config.redis.refreshToken.db,
+        },
+      ],
     };
   }
 }

@@ -58,7 +58,11 @@ export class MailService {
   private async generateEmailCertCode(email: string): Promise<void> {
     const certCode = randomInt(EMAIL_CERT_CODE_RANGE.MIN, EMAIL_CERT_CODE_RANGE.MAX);
 
-    await this.mailCacheRepository.setCertCode(email, certCode, this.config.redis.emailCertCodeTtl);
+    await this.mailCacheRepository.setCertCode(
+      email,
+      certCode,
+      this.config.redis.emailCertCode.ttl,
+    );
 
     await this.sendEmail(email, certCode);
   }
