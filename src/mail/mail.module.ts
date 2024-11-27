@@ -4,10 +4,23 @@ import { MailService } from '@mail/services/mail.service';
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UsersModule } from '@users/users.module';
+import { MailCacheRepositoryImpl } from '@core/redis/repositories/mail-cache-repository';
+import { IMailCacheRepository } from '@core/redis/abstracts/mail-cache-repository.abstract';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
-  imports: [UsersModule, MailerModule.forRootAsync({ useClass: MailerModuleOptionsFactory })],
+  imports: [
+    UsersModule,
+    RedisModule,
+    MailerModule.forRootAsync({ useClass: MailerModuleOptionsFactory }),
+  ],
   controllers: [MailController],
-  providers: [MailService],
+  providers: [
+    MailService,
+    {
+      provide: IMailCacheRepository,
+      useClass: MailCacheRepositoryImpl,
+    },
+  ],
 })
 export class MailModule {}
