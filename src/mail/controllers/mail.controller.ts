@@ -1,25 +1,32 @@
-import { SendEmailVerificationCodeRequestDto } from '@mail/dto/requests/send-email-verification-code-request.dto';
-import { verifyEmailVerificationCodeRequestDto } from '@mail/dto/requests/verify-email-verification-code-request.dto';
-import { SendEmailVerificationCodeResponseDto } from '@mail/dto/responses/send-email-verification-code-response.dto';
-import { VerifyEmailVerificationCodeResponseDto } from '@mail/dto/responses/verify-email-verification-code-response.dto';
+import { SendEmailCertCodeRequestDto } from '@mail/dto/requests/send-email-cert-code-request.dto';
+import { VerifyEmailCertCodeRequestDto } from '@mail/dto/requests/verify-email-cert-code-request.dto';
+import { SendEmailCertCodeResponseDto } from '@mail/dto/responses/send-email-cert-code-response.dto';
+import { VerifyEmailCertCodeResponseDto } from '@mail/dto/responses/verify-email-cert-code-response.dto';
 import { MailService } from '@mail/services/mail.service';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
 @Controller('mail')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
 
+  @ApiOperation({ summary: '이메일 인증 코드 메일 전송' })
+  @ApiOkResponse({ type: SendEmailCertCodeResponseDto })
+  @HttpCode(HttpStatus.OK)
   @Get('v1/:email')
-  async sendEmailVerificationCode(
-    @Param() sendEmailVerificationCodeRequest: SendEmailVerificationCodeRequestDto,
-  ): Promise<SendEmailVerificationCodeResponseDto> {
-    return await this.mailService.sendEmailVerificationCode(sendEmailVerificationCodeRequest);
+  async sendEmailCertCode(
+    @Param() sendEmailCertCodeRequest: SendEmailCertCodeRequestDto,
+  ): Promise<SendEmailCertCodeResponseDto> {
+    return await this.mailService.sendEmailCertCode(sendEmailCertCodeRequest);
   }
 
-  @Get('v1/:verificationCode/:email')
-  async verifyEmailVerificationCode(
-    @Param() verifyEmailVerificationCodeRequest: verifyEmailVerificationCodeRequestDto,
-  ): Promise<VerifyEmailVerificationCodeResponseDto> {
-    return await this.mailService.verifyEmailVerificationCode(verifyEmailVerificationCodeRequest);
+  @ApiOperation({ summary: '이메일 인증 코드 검증' })
+  @ApiOkResponse({ type: VerifyEmailCertCodeResponseDto })
+  @HttpCode(HttpStatus.OK)
+  @Get('v1/:certCode/:email')
+  async verifyEmailCertCode(
+    @Param() verifyEmailCertCodeRequest: VerifyEmailCertCodeRequestDto,
+  ): Promise<VerifyEmailCertCodeResponseDto> {
+    return await this.mailService.verifyEmailCertCode(verifyEmailCertCodeRequest);
   }
 }

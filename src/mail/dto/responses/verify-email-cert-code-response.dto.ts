@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class SendEmailVerificationCodeResponseDto {
+export class VerifyEmailCertCodeResponseDto {
   @ApiProperty({
-    description: 'User Email',
+    description: '사용자 이메일',
     example: 'example@eamil.com',
   })
   @Expose()

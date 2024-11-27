@@ -1,10 +1,18 @@
-import { EMAIL_VERIFICATION_CODE_RANGE } from '@mail/constants/mail.constant';
-import { SendEmailVerificationCodeRequestDto } from '@mail/dto/requests/send-email-verification-code-request.dto';
-import { verifyEmailVerificationCodeRequestDto } from '@mail/dto/requests/verify-email-verification-code-request.dto';
-import { SendEmailVerificationCodeResponseDto } from '@mail/dto/responses/send-email-verification-code-response.dto';
-import { VerifyEmailVerificationCodeResponseDto } from '@mail/dto/responses/verify-email-verification-code-response.dto';
+import redisConfig from '@core/config/redis.config';
+import { IMailCacheRepository } from '@core/redis/abstracts/mail-cache-repository.abstract';
+import { EMAIL_CERT_CODE_RANGE } from '@mail/constants/mail.constant';
+import { SendEmailCertCodeRequestDto } from '@mail/dto/requests/send-email-cert-code-request.dto';
+import { VerifyEmailCertCodeRequestDto } from '@mail/dto/requests/verify-email-cert-code-request.dto';
+import { SendEmailCertCodeResponseDto } from '@mail/dto/responses/send-email-cert-code-response.dto';
+import { VerifyEmailCertCodeResponseDto } from '@mail/dto/responses/verify-email-cert-code-response.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { UsersService } from '@users/services/users.service';
 import { plainToInstance } from 'class-transformer';
 import { randomInt } from 'crypto';
@@ -14,74 +22,60 @@ export class MailService {
   constructor(
     private readonly usersService: UsersService,
     private readonly mailerService: MailerService,
+    private readonly mailCacheRepository: IMailCacheRepository,
+    @Inject(redisConfig.KEY) private readonly config: ConfigType<typeof redisConfig>,
   ) {}
 
-  async sendEmailVerificationCode(
-    sendEmailVerificationCodeRequest: SendEmailVerificationCodeRequestDto,
-  ): Promise<SendEmailVerificationCodeResponseDto> {
-    const { email } = sendEmailVerificationCodeRequest;
+  async sendEmailCertCode(
+    sendEmailCertCodeRequest: SendEmailCertCodeRequestDto,
+  ): Promise<SendEmailCertCodeResponseDto> {
+    const { email } = sendEmailCertCodeRequest;
 
     await this.usersService.checkUserEmailExists(email);
 
-    const emailVerificationCode = this.generateEmailVerificationCode(email);
+    await this.generateEmailCertCode(email);
 
-    await this.sendEmail(email, emailVerificationCode);
-
-    return plainToInstance(SendEmailVerificationCodeResponseDto, { email });
+    return plainToInstance(SendEmailCertCodeResponseDto, { email });
   }
 
-  async verifyEmailVerificationCode(
-    verifyEmailVerificationCodeRequest: verifyEmailVerificationCodeRequestDto,
-  ): Promise<VerifyEmailVerificationCodeResponseDto> {
-    const { emailVerificationCode, email } = verifyEmailVerificationCodeRequest;
+  async verifyEmailCertCode(
+    verifyEmailCertCodeRequest: VerifyEmailCertCodeRequestDto,
+  ): Promise<VerifyEmailCertCodeResponseDto> {
+    const { certCode, email } = verifyEmailCertCodeRequest;
 
-    // TODO: 캐시 가져오기
-    // const data = this.verificationCodeInfos.get(email);
-    // if (!data) throw new BadRequestException('이메일 인증 코드가 존재하지 않습니다.');
+    const redisCertCode = await this.mailCacheRepository.getCertCode(email);
 
-    //  TODO: 캐시 가져오기
-    // const { code, expiresAt } = data;
-    // if (code !== verificationCode)
-    //   throw new BadRequestException('이메일 인증 코드가 일치하지 않습니다.');
+    if (!redisCertCode) throw new BadRequestException('이메일 인증 코드가 만료되었습니다.');
 
-    // TODO: 만료시간 초과 시 캐시 삭제
-    // if (new Date(expiresAt) < new Date()) {
-    //   this.verificationCodeInfos.delete(email);
-    //   throw new BadRequestException('인증 코드가 만료되었습니다.');
-    // }
+    if (certCode !== redisCertCode)
+      throw new BadRequestException('이메일 인증 코드가 일치하지 않습니다.');
 
-    // TODO: 캐시 삭제
-    // this.verificationCodeInfos.delete(email);
+    await this.mailCacheRepository.delCertCode(email);
 
-    return plainToInstance(VerifyEmailVerificationCodeResponseDto, { email });
+    return plainToInstance(VerifyEmailCertCodeResponseDto, { email });
   }
 
-  private generateEmailVerificationCode(email: string): number {
-    const emailVerificationCode = randomInt(
-      EMAIL_VERIFICATION_CODE_RANGE.MIN,
-      EMAIL_VERIFICATION_CODE_RANGE.MAX,
-    );
+  private async generateEmailCertCode(email: string): Promise<void> {
+    const certCode = randomInt(EMAIL_CERT_CODE_RANGE.MIN, EMAIL_CERT_CODE_RANGE.MAX);
 
-    // TODO: 레디스에 저장하고 TTL 설전 후 code만 리턴
-    // const expiresAt = new Date();
-    // expiresAt.setHours(expiresAt.getHours() + 1);
-    // this.verificationCodeInfos.set(email, { code, expiresAt });
+    await this.mailCacheRepository.setCertCode(email, certCode, this.config.redis.emailCertCodeTtl);
 
-    return emailVerificationCode;
+    await this.sendEmail(email, certCode);
   }
 
-  private async sendEmail(email: string, emailVerificationCode: number) {
+  private async sendEmail(email: string, certCode: number) {
     try {
       await this.mailerService.sendMail({
         to: email,
-        subject: '이메일 주소 인증 코드입니다.',
-        template: './email-verification-code',
+        subject: '[INVE24] 이메일 주소 인증 코드입니다.',
+        template: 'email-cert-code',
         context: {
-          code: emailVerificationCode,
+          certCode,
         },
       });
     } catch (error) {
-      throw new InternalServerErrorException('Send Email failed.');
+      console.log(error);
+      throw new InternalServerErrorException('이메일 전송에 실패하였습니다.');
     }
   }
 }

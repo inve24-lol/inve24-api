@@ -23,7 +23,7 @@ export class MailerModuleOptionsFactory implements MailerOptionsFactory {
         from: `"인베24" <${this.config.mail.user}>`,
       },
       template: {
-        dir: __dirname + '/templates',
+        dir: 'dist/mail/templates',
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,

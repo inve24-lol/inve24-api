@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { USER_EMAIL_LENGTH } from '@users/constants/user.constant';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
-export class SendEmailVerificationCodeRequestDto {
+export class SendEmailCertCodeRequestDto {
   @ApiProperty({
-    description: 'User Email',
+    description: '사용자 이메일',
     example: 'example@eamil.com',
   })
   @IsNotEmpty()
