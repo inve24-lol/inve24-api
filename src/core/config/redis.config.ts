@@ -6,6 +6,6 @@ export default registerAs(REDIS_CONFIG_TOKEN, () => ({
     host: process.env.REDIS_HOST,
     port: +process.env.REDIS_PORT!,
     password: process.env.REDIS_PASSWORD,
-    emailCertCodeTtl: +process.env.REDIS_EMAIL_CODE_TTL!,
+    emailCertCodeTtl: +process.env.REDIS_EMAIL_CERT_CODE_TTL!,
   },
 }));
