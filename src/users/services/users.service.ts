@@ -1,7 +1,7 @@
 import bcryptConfig from '@core/config/bcrypt.config';
 import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
 import {
-  ConflictException,
+  BadRequestException,
   Inject,
   Injectable,
   NotFoundException,
@@ -56,6 +56,18 @@ export class UsersService {
     return plainToInstance(UserProfileDto, user);
   }
 
+  async checkUserEmailExists(email: string): Promise<void> {
+    const user = await this.userRepository.findUserByEmail(email);
+
+    if (user) throw new BadRequestException('이메일이 이미 존재합니다.');
+  }
+
+  private async checkUserNicknameExists(nickname: string): Promise<void> {
+    const user = await this.userRepository.findUserByNickname(nickname);
+
+    if (user) throw new BadRequestException('닉네임이 이미 존재합니다.');
+  }
+
   private async createUser(signUpRequest: SignUpRequestDto): Promise<UserProfileDto> {
     const { password } = signUpRequest;
 
@@ -69,18 +81,5 @@ export class UsersService {
     const user = await this.userRepository.saveUser(createUser);
 
     return plainToInstance(UserProfileDto, user);
-  }
-
-  private async checkUserEmailExists(email: string): Promise<void> {
-    const user = await this.userRepository.findUserByEmail(email);
-
-    if (user?.email)
-      throw new ConflictException('This email is already registered with an existing account.');
-  }
-
-  private async checkUserNicknameExists(nickname: string): Promise<void> {
-    const user = await this.userRepository.findUserByNickname(nickname);
-
-    if (user?.nickname) throw new ConflictException('This nickname is already taken.');
   }
 }
