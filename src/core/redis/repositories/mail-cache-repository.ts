@@ -1,4 +1,5 @@
 import { IMailCacheRepository } from '@core/redis/abstracts/mail-cache-repository.abstract';
+import { EMAIL_CERT_CODE_REDIS_NAMESPACE } from '@core/redis/constants/redis.namespace';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
@@ -8,7 +9,7 @@ export class MailCacheRepositoryImpl implements IMailCacheRepository {
   private readonly redis: Redis;
 
   constructor(private readonly redisService: RedisService) {
-    this.redis = this.redisService.getOrThrow();
+    this.redis = this.redisService.getOrThrow(EMAIL_CERT_CODE_REDIS_NAMESPACE);
   }
 
   async setCertCode(email: string, certCode: number, ttl: number): Promise<string> {
