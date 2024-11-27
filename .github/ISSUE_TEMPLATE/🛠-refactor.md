@@ -18,10 +18,11 @@ assignees: okonomiyakki
 
 ## 🌳 작업할 브랜치
 
-> ex) refactor/backend-{이슈 번호}
+- refactor/backend-{이슈 번호}
 
 ## 🛠 리팩토링 작업 설명
-> 코드 구조 개선 및 기존 기능 수정에 대해 간단히 설명 
+> 코드 구조 개선 및 기존 기능 수정에 대해 간단히 설명
+- 
 
 ## ✔ 리팩토링 요구 사항
 - [ ] 요구 사항 1
@@ -29,3 +30,4 @@ assignees: okonomiyakki
 
 ## 💬 기타 메모(선택)
 > 추가적인 설명이나 참고 자료 링크 첨부
+-

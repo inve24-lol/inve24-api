@@ -18,10 +18,11 @@ assignees: okonomiyakki
 
 ## 🌳 작업할 브랜치
 
-> ex) error/backend-{이슈 번호}
+- error/backend-{이슈 번호}
 
 ## 🐞 에러 설명
 > 에러에 대해 간단히 설명
+- 
 
 ## 📝 재현 방법
 - 수행한 동작:
@@ -30,6 +31,7 @@ assignees: okonomiyakki
 
 ## 🚩 예상 결과
 > 정상적인 결과는 무엇인지 설명
+- 
 
 ## ✔ 에러 해결 요구 사항
 - [ ] 요구 사항 1
@@ -40,3 +42,4 @@ assignees: okonomiyakki
 
 ## 💬 기타 메모(선택)
 > 추가적인 설명이나 참고 자료 링크 첨부
+-

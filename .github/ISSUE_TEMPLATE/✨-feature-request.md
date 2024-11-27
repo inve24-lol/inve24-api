@@ -18,10 +18,11 @@ assignees: okonomiyakki
 
 ## 🌳 작업할 브랜치
 
-> ex) feat/backend-{이슈 번호}
+- feat/backend-{이슈 번호}
 
 ## ✨ 기능 설명
 > 추가하려는 기능에 대해 간단히 설명
+- 
 
 ## ✔ 기능 요구 사항
 - [ ] 요구 사항 1
@@ -29,3 +30,4 @@ assignees: okonomiyakki
 
 ## 💬 기타 메모(선택)
 > 추가적인 설명이나 참고 자료 링크 첨부
+-
