@@ -29,7 +29,7 @@ export class MailCacheRepositoryImpl implements IMailCacheRepository {
 
   async delCertCode(email: string): Promise<void> {
     try {
-      await this.redis.get(email);
+      await this.redis.del(email);
     } catch (error) {
       throw new InternalServerErrorException('Delete failed.');
     }
