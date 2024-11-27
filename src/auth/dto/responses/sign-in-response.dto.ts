@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserProfileDto } from '@users/dtos/internals/user-profile.dto';
+import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()

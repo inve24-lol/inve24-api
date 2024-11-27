@@ -4,9 +4,9 @@ import { ITokenRepository } from '@core/type-orm/abstracts/token-repository.abst
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AuthPayloadDto } from '@token/dtos/auth-payload.dto';
-import { AuthTokensDto } from '@token/dtos/auth-tokens-dto';
-import { PayloadDto } from '@token/dtos/payload.dto';
+import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
+import { AuthTokensDto } from '@token/dto/auth-tokens-dto';
+import { PayloadDto } from '@token/dto/payload.dto';
 import bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 

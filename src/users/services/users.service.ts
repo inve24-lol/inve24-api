@@ -8,10 +8,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { CreateUserDto } from '@users/dtos/internals/create-user.dto';
-import { SignUpRequestDto } from '@users/dtos/requests/sign-up-request.dto';
-import { SignUpResponseDto } from '@users/dtos/responses/sign-up-response.dto';
-import { UserProfileDto } from '@users/dtos/internals/user-profile.dto';
+import { CreateUserDto } from '@users/dto/internals/create-user.dto';
+import { SignUpRequestDto } from '@users/dto/requests/sign-up-request.dto';
+import { SignUpResponseDto } from '@users/dto/responses/sign-up-response.dto';
+import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 

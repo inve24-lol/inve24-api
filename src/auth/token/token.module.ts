@@ -3,7 +3,7 @@ import { TokenRepositoryImpl } from '@core/type-orm/repositories/token.repositor
 import { TypeOrmExModule } from '@core/type-orm/type-orm-ex.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtModuleOptionsFactory } from '@token/jwt/factories/jwt-module-options.factory';
+import { JwtModuleOptionsFactory } from '@token/factories/jwt-module-options.factory';
 import { TokenService } from '@token/services/token.service';
 
 @Module({

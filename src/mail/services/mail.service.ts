@@ -1,8 +1,8 @@
 import { EMAIL_VERIFICATION_CODE_RANGE } from '@mail/constants/mail.constant';
-import { SendEmailVerificationCodeRequestDto } from '@mail/dtos/requests/send-email-verification-code-request.dto';
-import { verifyEmailVerificationCodeRequestDto } from '@mail/dtos/requests/verify-email-verification-code-request.dto';
-import { SendEmailVerificationCodeResponseDto } from '@mail/dtos/responses/send-email-verification-code-response.dto';
-import { VerifyEmailVerificationCodeResponseDto } from '@mail/dtos/responses/verify-email-verification-code-response.dto';
+import { SendEmailVerificationCodeRequestDto } from '@mail/dto/requests/send-email-verification-code-request.dto';
+import { verifyEmailVerificationCodeRequestDto } from '@mail/dto/requests/verify-email-verification-code-request.dto';
+import { SendEmailVerificationCodeResponseDto } from '@mail/dto/responses/send-email-verification-code-response.dto';
+import { VerifyEmailVerificationCodeResponseDto } from '@mail/dto/responses/verify-email-verification-code-response.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UsersService } from '@users/services/users.service';

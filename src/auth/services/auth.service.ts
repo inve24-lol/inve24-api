@@ -1,12 +1,12 @@
-import { SignInRequestDto } from '@auth/dtos/requests/sign-in-request.dto';
-import { RefreshResponseDto } from '@auth/dtos/responses/refresh-response.dto';
-import { SignInResponseDto } from '@auth/dtos/responses/sign-in-response.dto';
+import { SignInRequestDto } from '@auth/dto/requests/sign-in-request.dto';
+import { RefreshResponseDto } from '@auth/dto/responses/refresh-response.dto';
+import { SignInResponseDto } from '@auth/dto/responses/sign-in-response.dto';
 import { Injectable } from '@nestjs/common';
-import { AuthPayloadDto } from '@token/dtos/auth-payload.dto';
-import { AuthTokensDto } from '@token/dtos/auth-tokens-dto';
-import { PayloadDto } from '@token/dtos/payload.dto';
+import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
+import { AuthTokensDto } from '@token/dto/auth-tokens-dto';
+import { PayloadDto } from '@token/dto/payload.dto';
 import { TokenService } from '@token/services/token.service';
-import { UserProfileDto } from '@users/dtos/internals/user-profile.dto';
+import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import { UsersService } from '@users/services/users.service';
 import { plainToInstance } from 'class-transformer';
 

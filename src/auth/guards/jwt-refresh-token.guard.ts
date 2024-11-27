@@ -1,6 +1,6 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthPayloadDto } from '@token/dtos/auth-payload.dto';
+import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
 import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import { Observable } from 'rxjs';
 

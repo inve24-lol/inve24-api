@@ -1,6 +1,6 @@
-import { SignInRequestDto } from '@auth/dtos/requests/sign-in-request.dto';
-import { RefreshResponseDto } from '@auth/dtos/responses/refresh-response.dto';
-import { SignInResponseDto } from '@auth/dtos/responses/sign-in-response.dto';
+import { SignInRequestDto } from '@auth/dto/requests/sign-in-request.dto';
+import { RefreshResponseDto } from '@auth/dto/responses/refresh-response.dto';
+import { SignInResponseDto } from '@auth/dto/responses/sign-in-response.dto';
 import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
 import { JwtRefreshTokenGuard } from '@auth/guards/jwt-refresh-token.guard';
 import { RolesGuard } from '@auth/guards/roles.guard';
@@ -29,7 +29,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { PayloadDto } from '@token/dtos/payload.dto';
+import { PayloadDto } from '@token/dto/payload.dto';
 import { Response } from 'express';
 
 @ApiTags('Auth')

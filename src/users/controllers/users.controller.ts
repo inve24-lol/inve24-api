@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SignUpRequestDto } from '@users/dtos/requests/sign-up-request.dto';
-import { SignUpResponseDto } from '@users/dtos/responses/sign-up-response.dto';
+import { SignUpRequestDto } from '@users/dto/requests/sign-up-request.dto';
+import { SignUpResponseDto } from '@users/dto/responses/sign-up-response.dto';
 import { UsersService } from '@users/services/users.service';
 
 @ApiTags('Users')
