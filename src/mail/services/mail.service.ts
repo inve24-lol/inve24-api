@@ -1,8 +1,8 @@
-import { EMAIL_VERIFICATION_CODE_RANGE } from '@mail/constants/mail.constant';
-import { SendEmailVerificationCodeRequestDto } from '@mail/dto/requests/send-email-verification-code-request.dto';
-import { verifyEmailVerificationCodeRequestDto } from '@mail/dto/requests/verify-email-verification-code-request.dto';
-import { SendEmailVerificationCodeResponseDto } from '@mail/dto/responses/send-email-verification-code-response.dto';
-import { VerifyEmailVerificationCodeResponseDto } from '@mail/dto/responses/verify-email-verification-code-response.dto';
+import { EMAIL_CERT_CODE_RANGE } from '@mail/constants/mail.constant';
+import { SendEmailCertCodeRequestDto } from '@mail/dto/requests/send-email-cert-code-request.dto';
+import { VerifyEmailCertCodeRequestDto } from '@mail/dto/requests/verify-email-cert-code-request.dto';
+import { SendEmailCertCodeResponseDto } from '@mail/dto/responses/send-email-cert-code-response.dto';
+import { VerifyEmailCertCodeResponseDto } from '@mail/dto/responses/verify-email-cert-code-response.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UsersService } from '@users/services/users.service';
@@ -16,30 +16,30 @@ export class MailService {
     private readonly mailerService: MailerService,
   ) {}
 
-  async sendEmailVerificationCode(
-    sendEmailVerificationCodeRequest: SendEmailVerificationCodeRequestDto,
-  ): Promise<SendEmailVerificationCodeResponseDto> {
-    const { email } = sendEmailVerificationCodeRequest;
+  async sendEmailCertCode(
+    sendEmailCertCodeRequest: SendEmailCertCodeRequestDto,
+  ): Promise<SendEmailCertCodeResponseDto> {
+    const { email } = sendEmailCertCodeRequest;
 
     await this.usersService.checkUserEmailExists(email);
 
-    const emailVerificationCode = this.generateEmailVerificationCode(email);
+    const certCode = this.generateEmailCertCode(email);
 
-    await this.sendEmail(email, emailVerificationCode);
+    await this.sendEmail(email, certCode);
 
-    return plainToInstance(SendEmailVerificationCodeResponseDto, { email });
+    return plainToInstance(SendEmailCertCodeResponseDto, { email });
   }
 
-  async verifyEmailVerificationCode(
-    verifyEmailVerificationCodeRequest: verifyEmailVerificationCodeRequestDto,
-  ): Promise<VerifyEmailVerificationCodeResponseDto> {
-    const { emailVerificationCode, email } = verifyEmailVerificationCodeRequest;
+  async verifyEmailCertCode(
+    verifyEmailCertCodeRequest: VerifyEmailCertCodeRequestDto,
+  ): Promise<VerifyEmailCertCodeResponseDto> {
+    const { certCode, email } = verifyEmailCertCodeRequest;
 
     // TODO: 캐시 가져오기
     // const data = this.verificationCodeInfos.get(email);
     // if (!data) throw new BadRequestException('이메일 인증 코드가 존재하지 않습니다.');
 
-    //  TODO: 캐시 가져오기
+    //  TODO: 캐시 검증하기
     // const { code, expiresAt } = data;
     // if (code !== verificationCode)
     //   throw new BadRequestException('이메일 인증 코드가 일치하지 않습니다.');
@@ -53,31 +53,28 @@ export class MailService {
     // TODO: 캐시 삭제
     // this.verificationCodeInfos.delete(email);
 
-    return plainToInstance(VerifyEmailVerificationCodeResponseDto, { email });
+    return plainToInstance(VerifyEmailCertCodeResponseDto, { email });
   }
 
-  private generateEmailVerificationCode(email: string): number {
-    const emailVerificationCode = randomInt(
-      EMAIL_VERIFICATION_CODE_RANGE.MIN,
-      EMAIL_VERIFICATION_CODE_RANGE.MAX,
-    );
+  private generateEmailCertCode(email: string): number {
+    const certCode = randomInt(EMAIL_CERT_CODE_RANGE.MIN, EMAIL_CERT_CODE_RANGE.MAX);
 
     // TODO: 레디스에 저장하고 TTL 설전 후 code만 리턴
     // const expiresAt = new Date();
     // expiresAt.setHours(expiresAt.getHours() + 1);
     // this.verificationCodeInfos.set(email, { code, expiresAt });
 
-    return emailVerificationCode;
+    return certCode;
   }
 
-  private async sendEmail(email: string, emailVerificationCode: number) {
+  private async sendEmail(email: string, certCode: number) {
     try {
       await this.mailerService.sendMail({
         to: email,
         subject: '이메일 주소 인증 코드입니다.',
-        template: './email-verification-code',
+        template: './email-cert-code',
         context: {
-          code: emailVerificationCode,
+          certCode,
         },
       });
     } catch (error) {
