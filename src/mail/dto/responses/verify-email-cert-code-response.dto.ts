@@ -4,7 +4,7 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class VerifyEmailCertCodeResponseDto {
   @ApiProperty({
-    description: 'User Email',
+    description: '사용자 이메일',
     example: 'example@eamil.com',
   })
   @Expose()

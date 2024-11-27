@@ -75,7 +75,7 @@ export class MailService {
       });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Send Email failed.');
+      throw new InternalServerErrorException('이메일 전송에 실패하였습니다.');
     }
   }
 }

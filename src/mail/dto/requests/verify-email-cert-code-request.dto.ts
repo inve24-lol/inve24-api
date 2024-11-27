@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class VerifyEmailCertCodeRequestDto extends SendEmailCertCodeRequestDto {
   @ApiProperty({
-    description: 'Email Cert Code',
+    description: '이메일 인증 코드',
   })
   @IsNotEmpty()
   @IsString()
