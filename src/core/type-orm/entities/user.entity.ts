@@ -10,13 +10,13 @@ export class UserEntity {
     name: 'id',
     type: 'int',
     unsigned: true,
-    comment: 'User ID (PK, NN, UN, AI)',
+    comment: '유저 고유 ID (PK, NN, UN, AI)',
   })
   id!: number;
 
   @Column('uuid', {
     name: 'uuid',
-    comment: 'User UUID (NN, UQ)',
+    comment: '유저 UUID (NN, UQ)',
   })
   @Generated('uuid')
   uuid!: string;
@@ -24,21 +24,21 @@ export class UserEntity {
   @Column('varchar', {
     name: 'email',
     length: 50,
-    comment: 'User Email (NN, UQ)',
+    comment: '유저 이메일 (NN, UQ)',
   })
   email!: string;
 
   @Column('char', {
     name: 'password',
     length: 60,
-    comment: 'User Password (NN)',
+    comment: '유저 비밀번호 (NN)',
   })
   password!: string;
 
   @Column('varchar', {
     name: 'nickname',
     length: 10,
-    comment: 'User Nickname (NN, UQ)',
+    comment: '유저 닉네임 (NN, UQ)',
   })
   nickname!: string;
 
@@ -46,7 +46,7 @@ export class UserEntity {
     name: 'role',
     enum: Role,
     default: Role.GUEST,
-    comment: 'User Role (NN)',
+    comment: '유저 역할 (NN)',
   })
   role!: Role;
 
@@ -54,14 +54,14 @@ export class UserEntity {
     name: 'updated_at',
     onUpdate: 'CURRENT_TIMESTAMP',
     default: () => 'CURRENT_TIMESTAMP',
-    comment: 'User Modification Date (NN)',
+    comment: '수정 일자 (NN)',
   })
   updatedAt!: Date;
 
   @Column('timestamp', {
     name: 'created_at',
     default: () => 'CURRENT_TIMESTAMP',
-    comment: 'User Creation Date (NN)',
+    comment: '생성 일자 (NN)',
   })
   createdAt!: Date;
 }

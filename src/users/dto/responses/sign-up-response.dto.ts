@@ -5,7 +5,7 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class SignUpResponseDto {
   @ApiProperty({
-    description: 'User Profile',
+    description: '유저 프로필',
     type: UserProfileDto,
   })
   @Expose()

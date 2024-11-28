@@ -4,7 +4,7 @@ import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 export class SendEmailCertCodeRequestDto {
   @ApiProperty({
-    description: '사용자 이메일',
+    description: '유저 이메일',
     example: 'example@eamil.com',
   })
   @IsNotEmpty()

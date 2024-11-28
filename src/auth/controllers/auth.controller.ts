@@ -40,7 +40,7 @@ export class AuthController {
     @Inject(serverConfig.KEY) private readonly config: ConfigType<typeof serverConfig>,
   ) {}
 
-  @ApiOperation({ summary: 'Sign-in user' })
+  @ApiOperation({ summary: '로그인' })
   @ApiOkResponse({ type: SignInResponseDto })
   @HttpCode(HttpStatus.OK)
   @Post('v1/signin')
@@ -59,7 +59,7 @@ export class AuthController {
     return signInResponse;
   }
 
-  @ApiOperation({ summary: 'Sign-out user' })
+  @ApiOperation({ summary: '로그아웃' })
   @ApiNoContentResponse({ description: 'No content' })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAccessTokenGuard)
@@ -74,7 +74,7 @@ export class AuthController {
     response.clearCookie('refreshToken');
   }
 
-  @ApiOperation({ summary: 'Refresh access-token' })
+  @ApiOperation({ summary: '엑세스 토큰 재발급' })
   @ApiOkResponse({ type: RefreshResponseDto })
   @ApiCookieAuth('refresh-token')
   @UseGuards(JwtRefreshTokenGuard, RolesGuard) // ⚠ This Must Be Changed

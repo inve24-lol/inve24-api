@@ -5,14 +5,14 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class SignInResponseDto {
   @ApiProperty({
-    description: 'User Profile',
+    description: '유저 프로필',
     type: UserProfileDto,
   })
   @Expose()
   readonly userProfile!: UserProfileDto;
 
   @ApiProperty({
-    description: 'Access Token',
+    description: '엑세스 토큰',
   })
   @Expose()
   readonly accessToken!: string;

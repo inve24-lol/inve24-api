@@ -9,7 +9,7 @@ import { UsersService } from '@users/services/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Sign-up user' })
+  @ApiOperation({ summary: '회원 가입' })
   @ApiCreatedResponse({ type: SignUpResponseDto })
   @HttpCode(HttpStatus.CREATED)
   @Post('v1/signup')

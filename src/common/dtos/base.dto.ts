@@ -4,20 +4,20 @@ import { Expose } from 'class-transformer';
 
 export class BaseDto implements IBase {
   @ApiProperty({
-    description: 'ID',
+    description: '고유 ID',
   })
   @Expose()
   readonly id!: number;
 
   @ApiProperty({
-    description: 'Modification Date',
+    description: '수정 일자',
     example: '2024-01-01T00:00:00.000Z',
   })
   @Expose()
   readonly updatedAt!: Date;
 
   @ApiProperty({
-    description: 'Creation Date',
+    description: '생성 일자',
     example: '2024-01-01T00:00:00.000Z',
   })
   @Expose()

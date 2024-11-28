@@ -1,6 +1,6 @@
 import { TableColumnOptions } from 'typeorm';
 
-export const generatePrimaryColumn = (comment: string = 'ID'): TableColumnOptions => {
+export const generatePrimaryColumn = (comment: string = '고유 ID (PK)'): TableColumnOptions => {
   return {
     name: 'id',
     type: 'int',
@@ -13,25 +13,23 @@ export const generatePrimaryColumn = (comment: string = 'ID'): TableColumnOption
   };
 };
 
-export const generateCreatedAtColumn = (comment: string = 'Creation Date'): TableColumnOptions => {
-  return {
-    name: 'created_at',
-    type: 'timestamp',
-    isNullable: false,
-    default: 'CURRENT_TIMESTAMP',
-    comment,
-  };
-};
-
-export const generateUpdatedAtColumn = (
-  comment: string = 'Modification Date',
-): TableColumnOptions => {
+export const generateUpdatedAtColumn = (comment: string = '수정 일자 (NN)'): TableColumnOptions => {
   return {
     name: 'updated_at',
     type: 'timestamp',
     isNullable: false,
     default: 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
+    comment,
+  };
+};
+
+export const generateCreatedAtColumn = (comment: string = '생성 일자 (NN)'): TableColumnOptions => {
+  return {
+    name: 'created_at',
+    type: 'timestamp',
+    isNullable: false,
+    default: 'CURRENT_TIMESTAMP',
     comment,
   };
 };

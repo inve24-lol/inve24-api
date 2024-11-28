@@ -26,10 +26,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('NestJS Template')
-    .setDescription(
-      'This template helps you quickly start your user management service in Docker environments.',
-    )
+    .setTitle('INVE24')
+    .setDescription('INVE24 API Docs')
     .setVersion('0.0.1')
     .addBearerAuth(
       {
@@ -37,7 +35,7 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         in: 'header',
-        description: 'Access Token required for authentication',
+        description: '인증에 필요한 엑세스 토큰',
       },
       'access-token',
     )
@@ -46,7 +44,7 @@ async function bootstrap() {
       {
         type: 'apiKey',
         in: 'cookie',
-        description: 'Refresh Token for renewing access token',
+        description: '엑세스 토큰 갱신을 위한 리프레시 토큰',
       },
       'refresh-token',
     )
