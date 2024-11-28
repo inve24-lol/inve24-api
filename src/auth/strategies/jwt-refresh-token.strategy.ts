@@ -31,13 +31,13 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-ref
     const { uuid } = authPayload;
 
     try {
-      // 401 에러 발생 시, catch문에서 로그아웃 처리
       await this.tokenService.verifyRefreshToken(uuid, refreshToken);
 
       const userProfile: UserProfileDto = await this.usersService.getUserProfileByUuid(uuid);
 
       return plainToInstance(PayloadDto, userProfile);
     } catch (error) {
+      // 401 에러 발생 시, 로그아웃 처리
       if (error instanceof UnauthorizedException) response?.clearCookie('refreshToken');
 
       throw error;
