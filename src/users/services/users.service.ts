@@ -1,7 +1,7 @@
 import bcryptConfig from '@core/config/bcrypt.config';
 import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
 import {
-  BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -37,13 +37,13 @@ export class UsersService {
   async verifyUser(email: string, password: string): Promise<UserProfileDto> {
     const user = await this.userRepository.findUserByEmail(email);
 
-    if (!user) throw new NotFoundException('Account does not exist.');
+    if (!user) throw new NotFoundException('해당 이메일로 생성된 계정이 존재하지 않습니다.');
 
     const { password: hashedPassword } = user;
 
     const isPasswordMatched = await bcrypt.compare(password, hashedPassword);
 
-    if (!isPasswordMatched) throw new UnauthorizedException('The password is incorrect.');
+    if (!isPasswordMatched) throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
 
     return plainToInstance(UserProfileDto, user);
   }
@@ -51,7 +51,7 @@ export class UsersService {
   async getUserProfileByUuid(uuid: string): Promise<UserProfileDto> {
     const user = await this.userRepository.findUserByUuid(uuid);
 
-    if (!user) throw new NotFoundException('The user has already been deleted.');
+    if (!user) throw new NotFoundException('계정이 존재하지 않습니다.');
 
     return plainToInstance(UserProfileDto, user);
   }
@@ -59,13 +59,13 @@ export class UsersService {
   async checkUserEmailExists(email: string): Promise<void> {
     const user = await this.userRepository.findUserByEmail(email);
 
-    if (user) throw new BadRequestException('이메일이 이미 존재합니다.');
+    if (user) throw new ConflictException('해당 이메일로 생성된 계정이 이미 존재합니다.');
   }
 
   private async checkUserNicknameExists(nickname: string): Promise<void> {
     const user = await this.userRepository.findUserByNickname(nickname);
 
-    if (user) throw new BadRequestException('닉네임이 이미 존재합니다.');
+    if (user) throw new ConflictException('해당 닉네임으로 생성된 계정이 이미 존재합니다.');
   }
 
   private async createUser(signUpRequest: SignUpRequestDto): Promise<UserProfileDto> {

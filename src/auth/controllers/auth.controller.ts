@@ -52,8 +52,8 @@ export class AuthController {
 
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: this.config.node.env === 'prod',
-      maxAge: this.config.server.refreshTokenCookieMaxAge,
+      secure: this.config.server.nodeEnv === 'prod',
+      maxAge: this.config.server.cookieMaxAge,
     });
 
     return signInResponse;
