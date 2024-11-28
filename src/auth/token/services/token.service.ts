@@ -1,6 +1,7 @@
 import bcryptConfig from '@core/config/bcrypt.config';
 import jwtConfig from '@core/config/jwt.config';
-import { ITokenRepository } from '@core/type-orm/abstracts/token-repository.abstract';
+import redisConfig from '@core/config/redis.config';
+import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -14,9 +15,10 @@ import { plainToInstance } from 'class-transformer';
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly tokenRepository: ITokenRepository,
-    @Inject(jwtConfig.KEY) private readonly config: ConfigType<typeof jwtConfig>,
+    private readonly tokenCacheRepository: ITokenCacheRepository,
+    @Inject(jwtConfig.KEY) private readonly tokenConfig: ConfigType<typeof jwtConfig>,
     @Inject(bcryptConfig.KEY) private readonly hashConfig: ConfigType<typeof bcryptConfig>,
+    @Inject(redisConfig.KEY) private readonly cacheConfig: ConfigType<typeof redisConfig>,
   ) {}
 
   async generateTokens(payload: PayloadDto, authPayload: AuthPayloadDto): Promise<AuthTokensDto> {
@@ -31,32 +33,33 @@ export class TokenService {
     authPayload: AuthPayloadDto,
     refreshToken: string,
   ): Promise<{ uuid: string }> {
-    const { uuid: userUuid } = authPayload;
+    const { uuid } = authPayload;
 
-    const token = await this.tokenRepository.findTokenByUserUuid(userUuid);
+    const redisHashedRefreshToken = await this.tokenCacheRepository.getToken(uuid);
 
-    if (!token)
-      throw new UnauthorizedException('The user is invalid. Please ensure you are signed in.');
+    // strategy에서 로그아웃 처리
+    if (!redisHashedRefreshToken)
+      throw new UnauthorizedException(
+        '잘못된 접근입니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
+      );
 
-    const { refreshToken: hashedRefreshToken, userUuid: uuid } = token;
+    const isRefreshTokenMatched = await bcrypt.compare(refreshToken, redisHashedRefreshToken);
 
-    const isRefreshTokenMatched = await bcrypt.compare(refreshToken, hashedRefreshToken);
-
-    // When a user is signed in from two clients, this is the error returned when attempting to reissue an access token using the first signed-in client.
+    // strategy에서 로그아웃 처리
+    // 두 개의 클라이언트에서 사용자가 로그인한 경우,
+    // 첫 번째 로그인 클라이언트를 사용하여 액세스 토큰을 재발급하려고 할 때 반환되는 오류
     if (!isRefreshTokenMatched)
       throw new UnauthorizedException(
-        'Your session has been invalidated due to a new sign-in from another client. Please sign in again to continue.',
+        '다른 장치에서 로그인되어 해당 세션을 사용할 수 없습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
       );
 
     return { uuid };
   }
 
   async deleteRefreshToken(payload: PayloadDto): Promise<void> {
-    const { uuid: userUuid } = payload;
+    const { uuid } = payload;
 
-    const { affected } = await this.tokenRepository.deleteToken(userUuid);
-
-    if (!affected) throw new UnauthorizedException('The refresh token has already been deleted.');
+    await this.tokenCacheRepository.delToken(uuid);
   }
 
   generateAccessToken(payload: PayloadDto): string {
@@ -67,9 +70,9 @@ export class TokenService {
     const refreshToken = this.jwtService.sign(
       { authPayload },
       {
-        secret: this.config.jwt.refreshToken.secret,
+        secret: this.tokenConfig.jwt.refreshToken.secret,
         subject: 'refresh-token',
-        expiresIn: this.config.jwt.refreshToken.expiresIn,
+        expiresIn: this.tokenConfig.jwt.refreshToken.expiresIn,
       },
     );
 
@@ -82,13 +85,17 @@ export class TokenService {
     authPayload: AuthPayloadDto,
     refreshToken: string,
   ): Promise<void> {
-    const { uuid: userUuid } = authPayload;
+    const { uuid } = authPayload;
 
     const hashedRefreshToken = await bcrypt.hash(
       refreshToken,
       this.hashConfig.bcrypt.refreshTokenSalt,
     );
 
-    await this.tokenRepository.upsertToken(userUuid, hashedRefreshToken);
+    await this.tokenCacheRepository.setToken(
+      uuid,
+      hashedRefreshToken,
+      this.cacheConfig.redis.refreshToken.ttl,
+    );
   }
 }
