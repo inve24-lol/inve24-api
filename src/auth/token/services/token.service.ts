@@ -29,12 +29,7 @@ export class TokenService {
     return plainToInstance(AuthTokensDto, { accessToken, refreshToken });
   }
 
-  async verifyRefreshToken(
-    authPayload: AuthPayloadDto,
-    refreshToken: string,
-  ): Promise<{ uuid: string }> {
-    const { uuid } = authPayload;
-
+  async verifyRefreshToken(uuid: string, refreshToken: string): Promise<void> {
     const redisHashedRefreshToken = await this.tokenCacheRepository.getToken(uuid);
 
     // strategy에서 로그아웃 처리
@@ -52,8 +47,6 @@ export class TokenService {
       throw new UnauthorizedException(
         '다른 장치에서 로그인되어 해당 세션을 사용할 수 없습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
       );
-
-    return { uuid };
   }
 
   async deleteRefreshToken(payload: PayloadDto): Promise<void> {
