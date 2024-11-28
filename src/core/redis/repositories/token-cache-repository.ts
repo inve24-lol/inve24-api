@@ -12,9 +12,9 @@ export class TokenCacheRepositoryImpl implements ITokenCacheRepository {
     this.redis = this.redisService.getOrThrow(REFRESH_TOKEN_REDIS_NAMESPACE);
   }
 
-  async setToken(uuid: string, certCode: number, ttl: number): Promise<string> {
+  async setToken(uuid: string, token: string, ttl: number): Promise<string> {
     try {
-      return await this.redis.set(uuid, certCode, 'EX', ttl);
+      return await this.redis.set(uuid, token, 'EX', ttl);
     } catch (error) {
       throw new InternalServerErrorException('Set failed.');
     }
