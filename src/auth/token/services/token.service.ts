@@ -42,7 +42,7 @@ export class TokenService {
 
     // strategy에서 로그아웃 처리
     // 두 개의 클라이언트에서 사용자가 로그인한 경우,
-    // 첫 번째 로그인 클라이언트를 사용하여 액세스 토큰을 재발급하려고 할 때 반환되는 오류
+    // 첫 번째 로그인 클라이언트를 사용하여 액세스 토큰을 재발급하려고 할 때 반환되는 에러
     if (!isRefreshTokenMatched)
       throw new UnauthorizedException(
         '다른 장치에서 로그인되어 해당 세션을 사용할 수 없습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
@@ -56,12 +56,12 @@ export class TokenService {
   }
 
   generateAccessToken(payload: PayloadDto): string {
-    return this.jwtService.sign({ payload });
+    return this.jwtService.sign({ ...payload });
   }
 
   private async generateRefreshToken(authPayload: AuthPayloadDto): Promise<string> {
     const refreshToken = this.jwtService.sign(
-      { authPayload },
+      { ...authPayload },
       {
         secret: this.tokenConfig.jwt.refreshToken.secret,
         subject: 'refresh-token',
