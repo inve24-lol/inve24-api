@@ -6,7 +6,7 @@ import {
 } from 'migrations/common/__common';
 import { Role } from 'src/common/constants/roles.enum';
 
-export class CreatedUser1732537469871 implements MigrationInterface {
+export class InitUser1732537469871 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
