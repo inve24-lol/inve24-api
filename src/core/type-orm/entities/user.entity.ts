@@ -1,5 +1,4 @@
 import { Column, Entity, Generated, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { TokenEntity } from '@core/type-orm/entities/token.entity';
 import { Role } from '@common/constants/roles.enum';
 
 @Entity('user')
@@ -65,7 +64,4 @@ export class UserEntity {
     comment: 'User Creation Date (NN)',
   })
   createdAt!: Date;
-
-  @OneToOne(() => TokenEntity, (token) => token.user)
-  token!: TokenEntity;
 }
