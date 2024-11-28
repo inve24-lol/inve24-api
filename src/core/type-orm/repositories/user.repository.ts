@@ -1,7 +1,7 @@
 import { CustomRepository } from '@core/type-orm/decorators/custom-repository.decorator';
 import { UserEntity } from '@core/type-orm/entities/user.entity';
 import { InternalServerErrorException, Optional } from '@nestjs/common';
-import { DeepPartial, EntityManager, QueryRunner, Repository } from 'typeorm';
+import { EntityManager, QueryRunner, Repository } from 'typeorm';
 import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
 import { InjectEntityManager } from '@nestjs/typeorm';
 
@@ -14,7 +14,7 @@ export class UserRepositoryImpl extends Repository<UserEntity> implements IUserR
     super(UserEntity, manager, queryRunner);
   }
 
-  async saveUser(createUser: DeepPartial<UserEntity>): Promise<UserEntity> {
+  async saveUser(createUser: Partial<UserEntity>): Promise<UserEntity> {
     try {
       const userEntity = await this.save(createUser);
 
