@@ -11,7 +11,7 @@ export class JwtRefreshTokenGuard extends AuthGuard('jwt-refresh') {
     user: TUser | null,
     info: TokenExpiredError | JsonWebTokenError | any,
   ): TUser {
-    if (err) throw new UnauthorizedException('리프레시 토큰 인증 작업 중 오류가 발생하였습니다.');
+    if (err) throw err;
 
     if (info?.message === 'No auth token')
       throw new UnauthorizedException('리프레시 토큰이 필요합니다.');
@@ -26,7 +26,7 @@ export class JwtRefreshTokenGuard extends AuthGuard('jwt-refresh') {
         '리프레시 토큰이 유효하지 않습니다. 유효한 토큰을 제공해 주세요.',
       );
 
-    if (info || !user) throw new UnauthorizedException('Authentication failed');
+    if (info || !user) throw new UnauthorizedException('Authentication failed.');
 
     return user;
   }
