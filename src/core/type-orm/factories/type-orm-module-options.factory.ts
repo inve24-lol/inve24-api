@@ -21,7 +21,7 @@ export class TypeOrmModuleOptionsFactory implements TypeOrmOptionsFactory {
       database: this.dbConfig.mysql.database,
       timezone: this.dbConfig.mysql.timezone,
       entities: ['dist/**/entities/*{.ts,.js}'],
-      logging: this.srvConfig.node.env !== 'prod',
+      logging: this.srvConfig.server.nodeEnv !== 'prod',
     };
   }
 }
