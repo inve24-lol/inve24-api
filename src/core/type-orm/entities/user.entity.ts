@@ -1,5 +1,6 @@
-import { Column, Entity, Generated, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Generated, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Role } from '@common/constants/roles.enum';
+import { SummonerEntity } from './summoner.entity';
 
 @Entity('user')
 @Unique('UQ_IDX_user_uuid', ['uuid'])
@@ -64,4 +65,7 @@ export class UserEntity {
     comment: '생성 일자 (NN)',
   })
   createdAt!: Date;
+
+  @OneToMany(() => SummonerEntity, (summoner) => summoner.user)
+  summoners!: SummonerEntity[];
 }
