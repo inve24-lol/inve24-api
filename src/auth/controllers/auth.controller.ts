@@ -74,7 +74,7 @@ export class AuthController {
     response.clearCookie('refreshToken');
   }
 
-  @ApiOperation({ summary: '엑세스 토큰 재발급' })
+  @ApiOperation({ summary: '엑세스 토큰 갱신' })
   @ApiOkResponse({ type: RefreshResponseDto })
   @ApiCookieAuth('refresh-token')
   @UseGuards(JwtRefreshTokenGuard, RolesGuard) // ⚠ This Must Be Changed
