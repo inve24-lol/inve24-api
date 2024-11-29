@@ -4,8 +4,9 @@ import { SendEmailCertCodeResponseDto } from '@mail/dto/responses/send-email-cer
 import { VerifyEmailCertCodeResponseDto } from '@mail/dto/responses/verify-email-cert-code-response.dto';
 import { MailService } from '@mail/services/mail.service';
 import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Mail')
 @Controller('mail')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
