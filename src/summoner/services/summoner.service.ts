@@ -1,7 +1,10 @@
 import riotConfig from '@core/config/settings/riot.config';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { RiotApiAuthHeaderDto } from '@summoner/dto/externals/common/auth-header.dto';
+import { RiotApiAuthHeaderDto } from '@summoner/dto/externals/api/riot-api-auth-header.dto';
+import { RiotAccountApiResponseDto } from '@summoner/dto/externals/api/riot-account-api-response.dto';
+import { RiotSummonerApiResponseDto } from '@summoner/dto/externals/api/riot-summoner-api-response.dto';
+import { RiotLeagueApiResponseDto } from '@summoner/dto/externals/api/riot-league-api-response.dto';
 import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso-api/rso-access-url-params.dto';
 import { RsoApiResponseDto } from '@summoner/dto/externals/rso-api/rso-api-response.dto';
 import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso-api/rso-auth-credentials.dto';
@@ -40,6 +43,12 @@ export class SummonerService {
       authorization: `${tokenType} ${accessToken}`,
     });
 
+    const riotAccountApiResponse = await this.riotAccountApi(riotApiAuthHeader);
+
+    const riotSummonerApiResponse = await this.riotSummonerApi(riotApiAuthHeader);
+
+    const riotLeagueApiResponse = await this.riotLeagueApi(riotSummonerApiResponse.id);
+
     return { tokenType, accessToken };
   }
 
@@ -61,6 +70,57 @@ export class SummonerService {
       .catch((err) => {
         console.log(err);
         throw new InternalServerErrorException('RSO Http Request failed');
+      });
+  }
+
+  private async riotAccountApi(
+    riotApiAuthHeader: RiotApiAuthHeaderDto,
+  ): Promise<RiotAccountApiResponseDto> {
+    const { asia } = this.config.riot.api;
+
+    return await this.webClientService
+      .create(asia.host)
+      .uri(asia.account.v1.me)
+      .get()
+      .header({ ...riotApiAuthHeader })
+      .retrieve()
+      .then((res) => res.toEntity(RiotAccountApiResponseDto))
+      .catch((err) => {
+        console.log(err);
+        throw new InternalServerErrorException('Riot Account V1 Http Request ailed');
+      });
+  }
+
+  private async riotSummonerApi(
+    riotApiAuthHeader: RiotApiAuthHeaderDto,
+  ): Promise<RiotSummonerApiResponseDto> {
+    const { kr } = this.config.riot.api;
+
+    return await this.webClientService
+      .create(kr.host)
+      .uri(kr.summoner.v1.me)
+      .get()
+      .header({ ...riotApiAuthHeader })
+      .retrieve()
+      .then((res) => res.toEntity(RiotSummonerApiResponseDto))
+      .catch((err) => {
+        console.log(err);
+        throw new InternalServerErrorException('Riot Summoner V1 Http Request failed');
+      });
+  }
+
+  private async riotLeagueApi(encryptedSummonerId: string): Promise<RiotLeagueApiResponseDto> {
+    const { kr, appKey } = this.config.riot.api;
+
+    return await this.webClientService
+      .create(kr.host)
+      .uri(`${kr.league.v4.summonerId}/${encryptedSummonerId}?api_key=${appKey}`)
+      .get()
+      .retrieve()
+      .then((res) => res.toEntity(RiotLeagueApiResponseDto))
+      .catch((err) => {
+        console.log(err);
+        throw new InternalServerErrorException('Riot League V4 Http Request failed');
       });
   }
 }
