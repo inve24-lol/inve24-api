@@ -8,6 +8,7 @@ import { AuthService } from '@auth/services/auth.service';
 import { Role } from '@common/constants/roles.enum';
 import { Roles } from '@common/decorators/roles.decorator';
 import { User } from '@common/decorators/user.decorator';
+import { PayloadDto } from '@common/dto/payload.dto';
 import serverConfig from '@core/config/settings/server.config';
 import {
   Body,
@@ -29,7 +30,6 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { PayloadDto } from '@token/dto/payload.dto';
 import { Response } from 'express';
 
 @ApiTags('Auth')

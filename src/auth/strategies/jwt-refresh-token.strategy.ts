@@ -1,9 +1,9 @@
 import jwtConfig from '@core/config/settings/jwt.config';
+import { PayloadDto } from '@common/dto/payload.dto';
 import { Inject, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
-import { PayloadDto } from '@token/dto/payload.dto';
 import { TokenService } from '@token/services/token.service';
 import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import { UsersService } from '@users/services/users.service';

@@ -1,3 +1,4 @@
+import { PayloadDto } from '@common/dto/payload.dto';
 import bcryptConfig from '@core/config/settings/bcrypt.config';
 import jwtConfig from '@core/config/settings/jwt.config';
 import redisConfig from '@core/config/settings/redis.config';
@@ -7,7 +8,6 @@ import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
 import { AuthTokensDto } from '@token/dto/auth-tokens-dto';
-import { PayloadDto } from '@token/dto/payload.dto';
 import bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 
