@@ -1,29 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
-import { validationSchema } from '@core/config/validations/validation-schema';
 import { TypeOrmModuleOptionsFactory } from '@core/type-orm/factories/type-orm-module-options.factory';
 import { RedisModuleOptionsFactory } from '@core/redis/factories/redis-module-options.factory';
 import { WebClientModule } from '@core/web-client/web-client.module';
-import serverConfig from '@core/config/server.config';
-import databaseConfig from '@core/config/database.config';
-import jwtConfig from '@core/config/jwt.config';
-import bcryptConfig from '@core/config/bcrypt.config';
-import mailConfig from '@core/config/mail.config';
-import redisConfig from '@core/config/redis.config';
+import { ConfigExModule } from './config/config-ex-module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: [`.env.${process.env.NODE_ENV}`],
-      load: [serverConfig, databaseConfig, jwtConfig, bcryptConfig, mailConfig, redisConfig],
-      isGlobal: true,
-      validationSchema: validationSchema,
-    }),
+    ConfigExModule,
+    WebClientModule,
     TypeOrmModule.forRootAsync({ useClass: TypeOrmModuleOptionsFactory }),
     RedisModule.forRootAsync({ useClass: RedisModuleOptionsFactory }),
-    WebClientModule,
   ],
 })
 export class CoreModule {}
