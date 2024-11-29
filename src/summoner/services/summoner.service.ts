@@ -1,6 +1,7 @@
 import riotConfig from '@core/config/settings/riot.config';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { RiotApiAuthHeaderDto } from '@summoner/dto/externals/common/auth-header.dto';
 import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso-api/rso-access-url-params.dto';
 import { RsoApiResponseDto } from '@summoner/dto/externals/rso-api/rso-api-response.dto';
 import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso-api/rso-auth-credentials.dto';
@@ -33,9 +34,13 @@ export class SummonerService {
   async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto): Promise<any> {
     const { rsoAccessCode } = registerRequestDto;
 
-    const { accessToken, tokenType } = await this.riotSignOnApi(rsoAccessCode);
+    const { tokenType, accessToken } = await this.riotSignOnApi(rsoAccessCode);
 
-    return { accessToken, tokenType };
+    const riotApiAuthHeader = plainToInstance(RiotApiAuthHeaderDto, {
+      authorization: `${tokenType} ${accessToken}`,
+    });
+
+    return { tokenType, accessToken };
   }
 
   private async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {
