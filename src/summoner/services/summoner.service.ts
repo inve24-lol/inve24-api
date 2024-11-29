@@ -1,6 +1,7 @@
 import riotConfig from '@core/config/settings/riot.config';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { RsoUrlParamsDto } from '@summoner/dto/internals/rso-url-params.dto';
 import { RsoUrlResponseDto } from '@summoner/dto/responses/rso-url-response.dto';
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
 import { plainToInstance } from 'class-transformer';
@@ -13,18 +14,20 @@ export class SummonerService {
   ) {}
 
   rsoUrl(): RsoUrlResponseDto {
-    const { auth, redirectUri } = this.config.riot.rso;
-    const { host, authorize, clientId, responseType, scope } = auth;
+    const { host, authorize, clientId, responseType, scope, redirectUri } =
+      this.config.riot.rso.auth;
 
-    const urlParams = new URLSearchParams({
-      client_id: clientId || '',
-      redirect_uri: redirectUri || '',
-      response_type: responseType || '',
-      scope: scope || '',
+    const rsoUrlParams = plainToInstance(RsoUrlParamsDto, {
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: responseType,
+      scope,
     });
 
-    const riotSignOnUrl = `${host}/${authorize}?${urlParams.toString()}`;
+    const rsoUrlSearchParams = new URLSearchParams({ ...rsoUrlParams });
 
-    return plainToInstance(RsoUrlResponseDto, { riotSignOnUrl });
+    const rsoUrl = `${host}/${authorize}?${rsoUrlSearchParams.toString()}`;
+
+    return plainToInstance(RsoUrlResponseDto, { rsoUrl });
   }
 }
