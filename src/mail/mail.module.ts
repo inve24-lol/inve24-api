@@ -4,7 +4,7 @@ import { MailService } from '@mail/services/mail.service';
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UsersModule } from '@users/users.module';
-import { MailCacheRepositoryImpl } from '@core/redis/repositories/mail-cache-repository';
+import { MailCacheRepositoryImpl } from '@core/redis/repositories/mail-cache-repository.impl';
 import { IMailCacheRepository } from '@core/redis/abstracts/mail-cache-repository.abstract';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 
