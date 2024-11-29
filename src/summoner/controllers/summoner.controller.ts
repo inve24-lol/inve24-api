@@ -3,7 +3,7 @@ import { User } from '@common/decorators/user.decorator';
 import { Controller, Get, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
-import { RsoUrlResponseDto } from '@summoner/dto/responses/rso-url-response.dto';
+import { RsoAccessUrlResponseDto } from '@summoner/dto/responses/rso-access-url-response.dto';
 import { SummonerService } from '@summoner/services/summoner.service';
 
 @ApiTags('Summoner')
@@ -13,11 +13,11 @@ export class SummonerController {
   constructor(private readonly summonerService: SummonerService) {}
 
   @ApiOperation({ summary: 'RSO URL 조회' })
-  @ApiOkResponse({ type: RsoUrlResponseDto })
+  @ApiOkResponse({ type: RsoAccessUrlResponseDto })
   @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @Get('v1/rso-url')
-  getRiotSignOnUrl(): RsoUrlResponseDto {
+  getRiotSignOnUrl(): RsoAccessUrlResponseDto {
     return this.summonerService.getRiotSignOnAccessUrl();
   }
 
