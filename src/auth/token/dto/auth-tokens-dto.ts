@@ -1,8 +1,7 @@
-import { IAuthTokens } from '@token/interfaces/auth-tokens.interface';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class AuthTokensDto implements IAuthTokens {
+export class AuthTokensDto {
   @Expose()
   readonly accessToken!: string;
 

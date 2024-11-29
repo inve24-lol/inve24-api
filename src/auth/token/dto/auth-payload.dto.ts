@@ -1,8 +1,7 @@
-import { IPayload } from '@token/interfaces/payload.interface';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class AuthPayloadDto implements Pick<IPayload, 'uuid'> {
+export class AuthPayloadDto {
   @Expose()
   readonly uuid!: string;
 }

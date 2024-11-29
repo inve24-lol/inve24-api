@@ -1,8 +1,7 @@
-import { IBase } from '@common/interfaces/base.interface';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-export class BaseDto implements IBase {
+export class BaseDto {
   @ApiProperty({
     description: '고유 ID',
   })

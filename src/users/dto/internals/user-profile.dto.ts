@@ -1,11 +1,10 @@
 import { Role } from '@common/constants/roles.enum';
 import { BaseDto } from '@common/dtos/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { IUserProfile } from '@users/interfaces/user.profile.interface';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class UserProfileDto extends BaseDto implements IUserProfile {
+export class UserProfileDto extends BaseDto {
   @ApiProperty({
     description: '유저 UUID',
   })
