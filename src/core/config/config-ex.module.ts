@@ -7,12 +7,21 @@ import jwtConfig from '@core/config/settings/jwt.config';
 import bcryptConfig from '@core/config/settings/bcrypt.config';
 import mailConfig from '@core/config/settings/mail.config';
 import redisConfig from '@core/config/settings/redis.config';
+import riotConfig from '@core/config/settings/riot.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`],
-      load: [serverConfig, databaseConfig, jwtConfig, bcryptConfig, mailConfig, redisConfig],
+      load: [
+        serverConfig,
+        databaseConfig,
+        jwtConfig,
+        bcryptConfig,
+        mailConfig,
+        redisConfig,
+        riotConfig,
+      ],
       isGlobal: true,
       validationSchema: validationSchema,
     }),
