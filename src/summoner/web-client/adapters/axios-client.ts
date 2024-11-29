@@ -1,7 +1,7 @@
-import { IWebClient } from '@core/web-client/abstracts/web-client.interface';
-import { MediaType } from '@core/web-client/constants/media-type.enum';
-import { WebClientResponseDto } from '@core/web-client/dto/web-client-response.dto';
-import { BodyInserter } from '@core/web-client/utils/body-inserter';
+import { IWebClient } from '@summoner/web-client/abstracts/web-client.interface';
+import { MediaType } from '@summoner/web-client/constants/media-type.enum';
+import { WebClientResponseDto } from '@summoner/web-client/dto/web-client-response.dto';
+import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export class AxiosClient implements IWebClient {

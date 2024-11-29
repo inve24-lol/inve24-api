@@ -1,4 +1,4 @@
-import { MediaType } from '@core/web-client/constants/media-type.enum';
+import { MediaType } from '@summoner/web-client/constants/media-type.enum';
 
 export class BodyInserter<T> {
   private constructor(
