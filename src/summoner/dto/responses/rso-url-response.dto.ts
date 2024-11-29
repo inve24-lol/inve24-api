@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RiotSignOnUrlResponseDto {
+export class RsoUrlResponseDto {
   @ApiProperty({
     description: 'RSO 요청 주소',
     example: '${HOST}/${ENDPOINT}?client_id=&redirect_uri=&response_type=&scope=',
   })
   @Expose()
-  riotSignOnUrl!: string;
+  rsoUrl!: string;
 }
