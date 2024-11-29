@@ -5,10 +5,10 @@ import { RiotApiAuthHeaderDto } from '@summoner/dto/externals/api/riot-api-auth-
 import { RiotAccountApiResponseDto } from '@summoner/dto/externals/api/riot-account-api-response.dto';
 import { RiotSummonerApiResponseDto } from '@summoner/dto/externals/api/riot-summoner-api-response.dto';
 import { RiotLeagueApiResponseDto } from '@summoner/dto/externals/api/riot-league-api-response.dto';
-import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso-api/rso-access-url-params.dto';
-import { RsoApiResponseDto } from '@summoner/dto/externals/rso-api/rso-api-response.dto';
-import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso-api/rso-auth-credentials.dto';
-import { RsoBodyFormDto } from '@summoner/dto/externals/rso-api/rso-body-form.dto';
+import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso/rso-access-url-params.dto';
+import { RsoApiResponseDto } from '@summoner/dto/externals/rso/rso-api-response.dto';
+import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso/rso-auth-credentials.dto';
+import { RsoBodyFormDto } from '@summoner/dto/externals/rso/rso-body-form.dto';
 import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
 import { RsoAccessUrlResponseDto } from '@summoner/dto/responses/rso-access-url-response.dto';
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
