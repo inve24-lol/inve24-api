@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RsoPostBodyFormDto {
+export class RsoBodyFormDto {
   @ApiProperty({
     description: 'RSO 인증 방법',
   })

@@ -30,6 +30,6 @@ export class SummonerController {
     @User('uuid') uuid: string,
     @Query() registerRequestDto: RegisterRequestDto,
   ): Promise<any> {
-    return await this.summonerService.register(uuid, registerRequestDto);
+    return await this.summonerService.registerSummoner(uuid, registerRequestDto);
   }
 }

@@ -2,8 +2,8 @@ import riotConfig from '@core/config/settings/riot.config';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { RsoAccessUrlParamsDto } from '@summoner/dto/internals/rso-access-url-params.dto';
-import { RsoPostAuthCredentialsDto } from '@summoner/dto/internals/rso-post-auth-credentials.dto';
-import { RsoPostBodyFormDto } from '@summoner/dto/internals/rso-post-body-form.dto';
+import { RsoAuthCredentialsDto } from '@summoner/dto/internals/rso-auth-credentials.dto';
+import { RsoBodyFormDto } from '@summoner/dto/internals/rso-body-form.dto';
 import { RegisterRequestDto } from '@summoner/dto/request/register-request.dto';
 import { RsoUrlResponseDto } from '@summoner/dto/responses/rso-url-response.dto';
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
@@ -35,19 +35,19 @@ export class SummonerService {
     return plainToInstance(RsoUrlResponseDto, { rsoAccessUrl });
   }
 
-  async register(uuid: string, registerRequestDto: RegisterRequestDto) {
+  async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto) {
     const { rsoAccessCode } = registerRequestDto;
 
     const { host, token, grantType, clientId, clientSecret, redirectUri } =
       this.config.riot.rso.auth;
 
-    const rsoPostBodyForm = plainToInstance(RsoPostBodyFormDto, {
+    const rsoBodyForm = plainToInstance(RsoBodyFormDto, {
       grant_type: grantType,
       code: rsoAccessCode,
       redirect_uri: redirectUri,
     });
 
-    const rsoPostAuthCredentials = plainToInstance(RsoPostAuthCredentialsDto, {
+    const rsoAuthCredentials = plainToInstance(RsoAuthCredentialsDto, {
       username: clientId,
       password: clientSecret,
     });
@@ -56,8 +56,8 @@ export class SummonerService {
       .create(host)
       .uri(token)
       .post()
-      .body(BodyInserter.fromFormData({ ...rsoPostBodyForm }))
-      .auth(rsoPostAuthCredentials)
+      .body(BodyInserter.fromFormData({ ...rsoBodyForm }))
+      .auth(rsoAuthCredentials)
       .retrieve()
       .then((res) => res.rawBody)
       .catch((err) => {
