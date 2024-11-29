@@ -1,5 +1,5 @@
 import { Role } from '@common/constants/roles.enum';
-import { BaseDto } from '@common/dtos/base.dto';
+import { BaseDto } from '@common/dto/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
