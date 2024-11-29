@@ -24,7 +24,7 @@ export class AxiosClient implements IWebClient {
     });
   }
 
-  uri(uri: string): this {
+  uri(uri?: string): this {
     this._config.url = uri;
     return this;
   }
