@@ -1,10 +1,11 @@
 import riotConfig from '@core/config/settings/riot.config';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { RsoAccessUrlParamsDto } from '@summoner/dto/internals/rso-access-url-params.dto';
-import { RsoAuthCredentialsDto } from '@summoner/dto/internals/rso-auth-credentials.dto';
-import { RsoBodyFormDto } from '@summoner/dto/internals/rso-body-form.dto';
-import { RegisterRequestDto } from '@summoner/dto/request/register-request.dto';
+import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso-access-url-params.dto';
+import { RsoApiResponseDto } from '@summoner/dto/externals/rso-api-response.dto';
+import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso-auth-credentials.dto';
+import { RsoBodyFormDto } from '@summoner/dto/externals/rso-body-form.dto';
+import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
 import { RsoUrlResponseDto } from '@summoner/dto/responses/rso-url-response.dto';
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
 import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
@@ -17,7 +18,7 @@ export class SummonerService {
     @Inject(riotConfig.KEY) private readonly config: ConfigType<typeof riotConfig>,
   ) {}
 
-  rsoUrl(): RsoUrlResponseDto {
+  getRiotSignOnAccessUrl(): RsoUrlResponseDto {
     const { host, authorize, clientId, responseType, scope, redirectUri } =
       this.config.riot.rso.auth;
 
@@ -35,9 +36,15 @@ export class SummonerService {
     return plainToInstance(RsoUrlResponseDto, { rsoAccessUrl });
   }
 
-  async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto) {
+  async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto): Promise<any> {
     const { rsoAccessCode } = registerRequestDto;
 
+    const rsoApiResponse = await this.riotSignOnApi(rsoAccessCode);
+
+    return rsoApiResponse;
+  }
+
+  private async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {
     const { host, token, grantType, clientId, clientSecret, redirectUri } =
       this.config.riot.rso.auth;
 
@@ -52,21 +59,16 @@ export class SummonerService {
       password: clientSecret,
     });
 
-    const rsoResponse = await this.webClientService
+    return await this.webClientService
       .create(host)
       .uri(token)
       .post()
       .body(BodyInserter.fromFormData({ ...rsoBodyForm }))
       .auth(rsoAuthCredentials)
       .retrieve()
-      .then((res) => res.rawBody)
+      .then((res) => res.toEntity(RsoApiResponseDto))
       .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException('RSO request failed');
+        throw new InternalServerErrorException('RSO Http Request failed');
       });
-
-    console.log(rsoResponse);
-
-    return { rsoResponse };
   }
 }

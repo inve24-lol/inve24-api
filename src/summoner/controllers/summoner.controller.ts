@@ -17,8 +17,8 @@ export class SummonerController {
   @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @Get('v1/rso-url')
-  rsoUrl(): RsoUrlResponseDto {
-    return this.summonerService.rsoUrl();
+  getRiotSignOnUrl(): RsoUrlResponseDto {
+    return this.summonerService.getRiotSignOnAccessUrl();
   }
 
   @ApiOperation({ summary: '소환사 등록' })
