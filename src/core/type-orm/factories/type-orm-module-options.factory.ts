@@ -1,5 +1,5 @@
-import databaseConfig from '@core/config/database.config';
-import serverConfig from '@core/config/server.config';
+import databaseConfig from '@core/config/settings/database.config';
+import serverConfig from '@core/config/settings/server.config';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';

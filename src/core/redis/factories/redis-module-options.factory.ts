@@ -1,4 +1,4 @@
-import redisConfig from '@core/config/redis.config';
+import redisConfig from '@core/config/settings/redis.config';
 import {
   EMAIL_CERT_CODE_REDIS_NAMESPACE,
   REFRESH_TOKEN_REDIS_NAMESPACE,

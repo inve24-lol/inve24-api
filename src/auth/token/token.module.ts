@@ -1,5 +1,5 @@
 import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
-import { TokenCacheRepositoryImpl } from '@core/redis/repositories/token-cache-repository';
+import { TokenCacheRepositoryImpl } from '@core/redis/repositories/token-cache-repository.impl';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';

@@ -8,7 +8,7 @@ import { AuthService } from '@auth/services/auth.service';
 import { Role } from '@common/constants/roles.enum';
 import { Roles } from '@common/decorators/roles.decorator';
 import { User } from '@common/decorators/user.decorator';
-import serverConfig from '@core/config/server.config';
+import serverConfig from '@core/config/settings/server.config';
 import {
   Body,
   Controller,

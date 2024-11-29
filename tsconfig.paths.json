@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@summoner/*": ["src/summoner/*"],
       "@mail/*": ["src/mail/*"],
       "@token/*": ["src/auth/token/*"],
       "@auth/*": ["src/auth/*"],

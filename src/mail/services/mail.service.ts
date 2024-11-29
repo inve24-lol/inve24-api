@@ -1,4 +1,4 @@
-import redisConfig from '@core/config/redis.config';
+import redisConfig from '@core/config/settings/redis.config';
 import { IMailCacheRepository } from '@core/redis/abstracts/mail-cache-repository.abstract';
 import { EMAIL_CERT_CODE_RANGE } from '@mail/constants/mail.constant';
 import { SendEmailCertCodeRequestDto } from '@mail/dto/requests/send-email-cert-code-request.dto';

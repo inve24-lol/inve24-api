@@ -1,6 +1,6 @@
-import bcryptConfig from '@core/config/bcrypt.config';
-import jwtConfig from '@core/config/jwt.config';
-import redisConfig from '@core/config/redis.config';
+import bcryptConfig from '@core/config/settings/bcrypt.config';
+import jwtConfig from '@core/config/settings/jwt.config';
+import redisConfig from '@core/config/settings/redis.config';
 import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
