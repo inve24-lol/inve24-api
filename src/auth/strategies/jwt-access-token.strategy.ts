@@ -23,6 +23,8 @@ export class JwtAccessTokenStrategy extends PassportStrategy(Strategy, 'jwt-acce
   async validate(payload: PayloadDto): Promise<PayloadDto> {
     const { uuid } = payload;
 
+    await this.usersService.verifyPayload(uuid);
+
     const userProfile: UserProfileDto = await this.usersService.getUserProfileByUuid(uuid);
 
     return plainToInstance(PayloadDto, userProfile);

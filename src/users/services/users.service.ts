@@ -1,5 +1,6 @@
 import bcryptConfig from '@core/config/settings/bcrypt.config';
 import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
+import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
 import {
   ConflictException,
   Inject,
@@ -19,6 +20,7 @@ import { plainToInstance } from 'class-transformer';
 export class UsersService {
   constructor(
     private readonly userRepository: IUserRepository,
+    private readonly tokenCacheRepository: ITokenCacheRepository,
     @Inject(bcryptConfig.KEY) private readonly config: ConfigType<typeof bcryptConfig>,
   ) {}
 
@@ -46,6 +48,15 @@ export class UsersService {
     if (!isPasswordMatched) throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
 
     return plainToInstance(UserProfileDto, user);
+  }
+
+  async verifyPayload(uuid: string): Promise<void> {
+    const redisHashedRefreshToken = await this.tokenCacheRepository.getToken(uuid);
+
+    if (!redisHashedRefreshToken)
+      throw new UnauthorizedException(
+        '잘못된 접근입니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
+      );
   }
 
   async getUserProfileByUuid(uuid: string): Promise<UserProfileDto> {
