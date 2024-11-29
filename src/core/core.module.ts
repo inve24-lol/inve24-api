@@ -5,6 +5,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { validationSchema } from '@core/config/validations/validation-schema';
 import { TypeOrmModuleOptionsFactory } from '@core/type-orm/factories/type-orm-module-options.factory';
 import { RedisModuleOptionsFactory } from '@core/redis/factories/redis-module-options.factory';
+import { WebClientModule } from '@core/web-client/web-client.module';
 import serverConfig from '@core/config/server.config';
 import databaseConfig from '@core/config/database.config';
 import jwtConfig from '@core/config/jwt.config';
@@ -22,6 +23,7 @@ import redisConfig from '@core/config/redis.config';
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmModuleOptionsFactory }),
     RedisModule.forRootAsync({ useClass: RedisModuleOptionsFactory }),
+    WebClientModule,
   ],
 })
 export class CoreModule {}
