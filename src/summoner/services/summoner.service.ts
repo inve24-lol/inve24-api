@@ -19,14 +19,13 @@ export class SummonerService {
   ) {}
 
   getRiotSignOnAccessUrl(): RsoAccessUrlResponseDto {
-    const { host, authorize, clientId, responseType, scope, redirectUri } =
-      this.config.riot.rso.auth;
+    const { auth, oauth } = this.config.riot.rso;
 
-    const rsoAccessUrlParams = plainToInstance(RsoAccessUrlParamsDto, this.config.riot.rso.auth);
+    const rsoAccessUrlParams = plainToInstance(RsoAccessUrlParamsDto, oauth);
 
     const rsoAccessUrlSearchParams = new URLSearchParams({ ...rsoAccessUrlParams });
 
-    const rsoAccessUrl = `${host}/${authorize}?${rsoAccessUrlSearchParams.toString()}`;
+    const rsoAccessUrl = `${auth.host}/${auth.authorize}?${rsoAccessUrlSearchParams.toString()}`;
 
     return plainToInstance(RsoAccessUrlResponseDto, { rsoAccessUrl });
   }
@@ -40,25 +39,22 @@ export class SummonerService {
   }
 
   private async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {
-    const { host, token, grantType, clientId, clientSecret, redirectUri } =
-      this.config.riot.rso.auth;
+    const { auth, oauth } = this.config.riot.rso;
 
-    const rsoBodyForm = plainToInstance(RsoBodyFormDto, {
-      ...this.config.riot.rso.auth,
-      rsoAccessCode,
-    });
+    const rsoBodyForm = plainToInstance(RsoBodyFormDto, { ...oauth, rsoAccessCode });
 
-    const rsoAuthCredentials = plainToInstance(RsoAuthCredentialsDto, this.config.riot.rso.auth);
+    const rsoAuthCredentials = plainToInstance(RsoAuthCredentialsDto, oauth);
 
     return await this.webClientService
-      .create(host)
-      .uri(token)
+      .create(auth.host)
+      .uri(auth.token)
       .post()
       .body(BodyInserter.fromFormData({ ...rsoBodyForm }))
       .auth(rsoAuthCredentials)
       .retrieve()
       .then((res) => res.toEntity(RsoApiResponseDto))
       .catch((err) => {
+        console.log(err);
         throw new InternalServerErrorException('RSO Http Request failed');
       });
   }
