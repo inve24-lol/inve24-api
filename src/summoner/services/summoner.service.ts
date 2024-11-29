@@ -1,10 +1,10 @@
 import riotConfig from '@core/config/settings/riot.config';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso-access-url-params.dto';
-import { RsoApiResponseDto } from '@summoner/dto/externals/rso-api-response.dto';
-import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso-auth-credentials.dto';
-import { RsoBodyFormDto } from '@summoner/dto/externals/rso-body-form.dto';
+import { RsoAccessUrlParamsDto } from '@summoner/dto/externals/rso-api/rso-access-url-params.dto';
+import { RsoApiResponseDto } from '@summoner/dto/externals/rso-api/rso-api-response.dto';
+import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso-api/rso-auth-credentials.dto';
+import { RsoBodyFormDto } from '@summoner/dto/externals/rso-api/rso-body-form.dto';
 import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
 import { RsoUrlResponseDto } from '@summoner/dto/responses/rso-url-response.dto';
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
