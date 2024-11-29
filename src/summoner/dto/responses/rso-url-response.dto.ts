@@ -8,5 +8,5 @@ export class RsoUrlResponseDto {
     example: '${HOST}/${ENDPOINT}?client_id=&redirect_uri=&response_type=&scope=',
   })
   @Expose()
-  rsoUrl!: string;
+  rsoAccessUrl!: string;
 }
