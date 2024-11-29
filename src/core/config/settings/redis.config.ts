@@ -14,5 +14,9 @@ export default registerAs(REDIS_CONFIG_TOKEN, () => ({
       ttl: +process.env.REDIS_REFRESH_TOKEN_TTL!,
       db: +process.env.REDIS_REFRESH_TOKEN_DB!,
     },
+    summoner: {
+      ttl: +process.env.REDIS_SUMMONER_TTL!,
+      db: +process.env.REDIS_SUMMONER_DB!,
+    },
   },
 }));

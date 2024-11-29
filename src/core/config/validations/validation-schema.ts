@@ -4,6 +4,7 @@ export const validationSchema = Joi.object({
   NODE_ENV: Joi.string().valid('dev', 'local', 'prod').required(),
 
   SERVER_PORT: Joi.number().required(),
+  SERVER_HOST: Joi.string().required(),
 
   MYSQL_HOST: Joi.string().required(),
   MYSQL_USER: Joi.string().required(),
@@ -32,4 +33,19 @@ export const validationSchema = Joi.object({
   REDIS_EMAIL_CERT_CODE_DB: Joi.number().required(),
   REDIS_REFRESH_TOKEN_TTL: Joi.number().required(),
   REDIS_REFRESH_TOKEN_DB: Joi.number().required(),
+  REDIS_SUMMONER_TTL: Joi.number().required(),
+  REDIS_SUMMONER_DB: Joi.number().required(),
+
+  RIOT_RSO_AUTH_HOST: Joi.string().required(),
+  RIOT_RSO_AUTH_AUTHORIZE: Joi.string().required(),
+  RIOT_RSO_AUTH_TOKEN: Joi.string().required(),
+  RIOT_RSO_AUTH_CLIENT_ID: Joi.string().required(),
+  RIOT_RSO_AUTH_CLIENT_SECRET: Joi.string().required(),
+  RIOT_RSO_REDIRECT_URI: Joi.string().required(),
+  RIOT_API_ASIA_HOST: Joi.string().required(),
+  RIOT_API_ASIA_ACCOUNT_V1_ME: Joi.string().required(),
+  RIOT_API_KR_HOST: Joi.string().required(),
+  RIOT_API_KR_SUMMONER_V4_ME: Joi.string().required(),
+  RIOT_API_KR_LEAGUE_V4_SUMMONER_ID: Joi.string().required(),
+  RIOT_API_APP_KEY: Joi.string().required(),
 });
