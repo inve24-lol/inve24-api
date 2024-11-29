@@ -41,6 +41,8 @@ export const validationSchema = Joi.object({
   RIOT_RSO_AUTH_TOKEN: Joi.string().required(),
   RIOT_RSO_AUTH_CLIENT_ID: Joi.string().required(),
   RIOT_RSO_AUTH_CLIENT_SECRET: Joi.string().required(),
+  RIOT_RSO_AUTH_RESPONSE_TYPE: Joi.string().required(),
+  RIOT_RSO_AUTH_SCOPE: Joi.string().required(),
   RIOT_RSO_REDIRECT_URI: Joi.string().required(),
   RIOT_API_ASIA_HOST: Joi.string().required(),
   RIOT_API_ASIA_ACCOUNT_V1_ME: Joi.string().required(),

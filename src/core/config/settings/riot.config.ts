@@ -10,6 +10,8 @@ export default registerAs(RIOT_CONFIG_TOKEN, () => ({
         token: process.env.RIOT_RSO_AUTH_TOKEN,
         clientId: process.env.RIOT_RSO_AUTH_CLIENT_ID,
         clientSecret: process.env.RIOT_RSO_AUTH_CLIENT_SECRET,
+        responseType: process.env.RIOT_RSO_AUTH_RESPONSE_TYPE,
+        scope: process.env.RIOT_RSO_AUTH_SCOPE,
       },
       redirectUri: process.env.RIOT_RSO_REDIRECT_URI,
     },
