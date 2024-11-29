@@ -39,9 +39,7 @@ export class SummonerService {
   async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto): Promise<any> {
     const { rsoAccessCode } = registerRequestDto;
 
-    const rsoApiResponse = await this.riotSignOnApi(rsoAccessCode);
-
-    return rsoApiResponse;
+    const { accessToken, tokenType } = await this.riotSignOnApi(rsoAccessCode);
   }
 
   private async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {

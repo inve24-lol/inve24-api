@@ -6,12 +6,12 @@ export class RsoApiResponseDto {
   @ApiProperty({
     description: '라이엇 계정 인증 엑세스 토큰',
   })
-  @Expose()
-  readonly access_token!: string;
+  @Expose({ name: 'access_token' })
+  readonly accessToken!: string;
 
   @ApiProperty({
     description: '라이엇 계정 인증 토큰 유형',
   })
-  @Expose()
-  readonly token_type!: string;
+  @Expose({ name: 'token_type' })
+  readonly tokenType!: string;
 }
