@@ -1,4 +1,5 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
+import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
 import { SummonerService } from '@summoner/services/summoner.service';
@@ -9,6 +10,7 @@ export class SummonerController {
 
   @ApiOperation({ summary: 'RSO URL 조회' })
   @ApiOkResponse({ type: RiotSignOnUrlResponseDto })
+  @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Get('v1/rso-url')
   riotSignOnUrl(): RiotSignOnUrlResponseDto {
