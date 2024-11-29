@@ -6,18 +6,18 @@ export class RsoBodyFormDto {
   @ApiProperty({
     description: 'RSO 인증 방법',
   })
-  @Expose()
+  @Expose({ name: 'grantType' })
   readonly grant_type!: string;
 
   @ApiProperty({
     description: 'RSO 인증 접근 코드',
   })
-  @Expose()
+  @Expose({ name: 'rsoAccessCode' })
   readonly code!: string;
 
   @ApiProperty({
     description: 'RSO 리다이렉트 URI',
   })
-  @Expose()
+  @Expose({ name: 'redirectUri' })
   readonly redirect_uri!: string;
 }

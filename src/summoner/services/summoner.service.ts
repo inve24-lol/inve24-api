@@ -22,12 +22,7 @@ export class SummonerService {
     const { host, authorize, clientId, responseType, scope, redirectUri } =
       this.config.riot.rso.auth;
 
-    const rsoAccessUrlParams = plainToInstance(RsoAccessUrlParamsDto, {
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      response_type: responseType,
-      scope,
-    });
+    const rsoAccessUrlParams = plainToInstance(RsoAccessUrlParamsDto, this.config.riot.rso.auth);
 
     const rsoAccessUrlSearchParams = new URLSearchParams({ ...rsoAccessUrlParams });
 
@@ -40,6 +35,8 @@ export class SummonerService {
     const { rsoAccessCode } = registerRequestDto;
 
     const { accessToken, tokenType } = await this.riotSignOnApi(rsoAccessCode);
+
+    return { accessToken, tokenType };
   }
 
   private async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {
@@ -47,15 +44,11 @@ export class SummonerService {
       this.config.riot.rso.auth;
 
     const rsoBodyForm = plainToInstance(RsoBodyFormDto, {
-      grant_type: grantType,
-      code: rsoAccessCode,
-      redirect_uri: redirectUri,
+      ...this.config.riot.rso.auth,
+      rsoAccessCode,
     });
 
-    const rsoAuthCredentials = plainToInstance(RsoAuthCredentialsDto, {
-      username: clientId,
-      password: clientSecret,
-    });
+    const rsoAuthCredentials = plainToInstance(RsoAuthCredentialsDto, this.config.riot.rso.auth);
 
     return await this.webClientService
       .create(host)

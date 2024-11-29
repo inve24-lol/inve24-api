@@ -6,19 +6,19 @@ export class RsoAccessUrlParamsDto {
   @ApiProperty({
     description: 'RSO 클라이언트 ID',
   })
-  @Expose()
+  @Expose({ name: 'clientId' })
   readonly client_id!: string;
 
   @ApiProperty({
     description: 'RSO 리다이렉트 URI',
   })
-  @Expose()
+  @Expose({ name: 'redirectUri' })
   readonly redirect_uri!: string;
 
   @ApiProperty({
     description: 'RSO 응답 유형',
   })
-  @Expose()
+  @Expose({ name: 'responseType' })
   readonly response_type!: string;
 
   @ApiProperty({
