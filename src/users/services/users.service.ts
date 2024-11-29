@@ -1,4 +1,4 @@
-import bcryptConfig from '@core/config/bcrypt.config';
+import bcryptConfig from '@core/config/settings/bcrypt.config';
 import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
 import {
   ConflictException,

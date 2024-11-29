@@ -1,4 +1,4 @@
-import mailConfig from '@core/config/mail.config';
+import mailConfig from '@core/config/settings/mail.config';
 import { MailerOptions, MailerOptionsFactory } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Inject, Injectable } from '@nestjs/common';
