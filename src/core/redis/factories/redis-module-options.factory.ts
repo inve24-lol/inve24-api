@@ -2,6 +2,7 @@ import redisConfig from '@core/config/settings/redis.config';
 import {
   EMAIL_CERT_CODE_REDIS_NAMESPACE,
   REFRESH_TOKEN_REDIS_NAMESPACE,
+  SUMMONER_REDIS_NAMESPACE,
 } from '@core/redis/constants/redis.namespace';
 import {
   RedisModuleOptions,
@@ -30,6 +31,13 @@ export class RedisModuleOptionsFactory implements RedisOptionsFactory {
           port: this.config.redis.port,
           password: this.config.redis.password,
           db: this.config.redis.refreshToken.db,
+        },
+        {
+          namespace: SUMMONER_REDIS_NAMESPACE,
+          host: this.config.redis.host,
+          port: this.config.redis.port,
+          password: this.config.redis.password,
+          db: this.config.redis.summoner.db,
         },
       ],
     };
