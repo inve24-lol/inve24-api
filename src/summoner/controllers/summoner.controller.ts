@@ -2,7 +2,7 @@ import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
 import { User } from '@common/decorators/user.decorator';
 import { Controller, Get, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RegisterRequestDto } from '@summoner/dto/request/register-request.dto';
+import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
 import { RsoUrlResponseDto } from '@summoner/dto/responses/rso-url-response.dto';
 import { SummonerService } from '@summoner/services/summoner.service';
 
