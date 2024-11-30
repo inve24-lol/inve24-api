@@ -2,11 +2,16 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@http/*": ["src/summoner/http/*"],
+      "@web-client/*": ["src/summoner/web-client/*"],
       "@summoner/*": ["src/summoner/*"],
       "@mail/*": ["src/mail/*"],
       "@token/*": ["src/auth/token/*"],
       "@auth/*": ["src/auth/*"],
       "@users/*": ["src/users/*"],
+      "@type-orm/*": ["src/core/type-orm/*"],
+      "@redis/*": ["src/core/redis/*"],
+      "@config/*": ["src/core/config/*"],
       "@core/*": ["src/core/*"],
       "@common/*": ["src/common/*"],
       "@src/*": ["src/*"],

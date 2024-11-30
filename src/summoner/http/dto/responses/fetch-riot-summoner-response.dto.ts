@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RiotSummonerApiResponseDto {
+export class FetchRiotSummonerResponseDto {
   @ApiProperty({
     description: '암호화된 소환사 ID',
   })

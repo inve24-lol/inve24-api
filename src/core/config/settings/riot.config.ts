@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { RIOT_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { RIOT_CONFIG_TOKEN } from '@config/constants/config.token';
 
 export default registerAs(RIOT_CONFIG_TOKEN, () => ({
   riot: {

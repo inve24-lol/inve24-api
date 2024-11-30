@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RsoAuthCredentialsDto {
+export class AuthCredentialsDto {
   @ApiProperty({
     description: 'RSO 인증 Client ID',
   })

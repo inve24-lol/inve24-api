@@ -9,7 +9,7 @@ import { Role } from '@common/constants/roles.enum';
 import { Roles } from '@common/decorators/roles.decorator';
 import { User } from '@common/decorators/user.decorator';
 import { PayloadDto } from '@common/dto/payload.dto';
-import serverConfig from '@core/config/settings/server.config';
+import serverConfig from '@config/settings/server.config';
 import {
   Body,
   Controller,

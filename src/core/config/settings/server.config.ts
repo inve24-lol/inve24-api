@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { SERVER_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { SERVER_CONFIG_TOKEN } from '@config/constants/config.token';
 
 export default registerAs(SERVER_CONFIG_TOKEN, () => ({
   server: {

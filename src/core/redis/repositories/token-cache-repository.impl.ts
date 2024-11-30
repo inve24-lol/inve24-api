@@ -1,5 +1,5 @@
-import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
-import { REFRESH_TOKEN_REDIS_NAMESPACE } from '@core/redis/constants/redis.namespace';
+import { ITokenCacheRepository } from '@redis/abstracts/token-cache-repository.abstract';
+import { REFRESH_TOKEN_REDIS_NAMESPACE } from '@redis/constants/redis.namespace';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';

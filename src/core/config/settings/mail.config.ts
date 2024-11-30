@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { MAIL_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { MAIL_CONFIG_TOKEN } from '@config/constants/config.token';
 
 export default registerAs(MAIL_CONFIG_TOKEN, () => ({
   mail: {

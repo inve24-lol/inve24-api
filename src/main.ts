@@ -1,5 +1,5 @@
 import { SwaggerSetup } from '@common/utils/swagger/swagger-setup';
-import { SERVER_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { SERVER_CONFIG_TOKEN } from '@config/constants/config.token';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';

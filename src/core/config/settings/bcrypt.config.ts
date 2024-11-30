@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { BCRYPT_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { BCRYPT_CONFIG_TOKEN } from '@config/constants/config.token';
 
 export default registerAs(BCRYPT_CONFIG_TOKEN, () => ({
   bcrypt: {

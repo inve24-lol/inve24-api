@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { validationSchema } from '@core/config/validations/validation-schema';
-import serverConfig from '@core/config/settings/server.config';
-import databaseConfig from '@core/config/settings/database.config';
-import jwtConfig from '@core/config/settings/jwt.config';
-import bcryptConfig from '@core/config/settings/bcrypt.config';
-import mailConfig from '@core/config/settings/mail.config';
-import redisConfig from '@core/config/settings/redis.config';
-import riotConfig from '@core/config/settings/riot.config';
+import { validationSchema } from '@config/validations/validation-schema';
+import serverConfig from '@config/settings/server.config';
+import databaseConfig from '@config/settings/database.config';
+import jwtConfig from '@config/settings/jwt.config';
+import bcryptConfig from '@config/settings/bcrypt.config';
+import mailConfig from '@config/settings/mail.config';
+import redisConfig from '@config/settings/redis.config';
+import riotConfig from '@config/settings/riot.config';
 
 @Module({
   imports: [

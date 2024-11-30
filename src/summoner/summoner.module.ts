@@ -1,15 +1,15 @@
-import { WebClientModule } from '@summoner/web-client/web-client.module';
 import { Module } from '@nestjs/common';
 import { SummonerController } from '@summoner/controllers/summoner.controller';
 import { SummonerService } from '@summoner/services/summoner.service';
-import { ISummonerRepository } from '@core/type-orm/abstracts/summoner-repository.abstract';
-import { SummonerRepositoryImpl } from '@core/type-orm/repositories/summoner-repository.impl';
-import { TypeOrmExModule } from '@core/type-orm/type-orm-ex.module';
-import { ISummonerCacheRepository } from '@core/redis/abstracts/summoner-cache-repository.abstract';
-import { SummonerCacheRepositoryImpl } from '@core/redis/repositories/summoner-cache-repository.impl';
+import { ISummonerRepository } from '@type-orm/abstracts/summoner-repository.abstract';
+import { SummonerRepositoryImpl } from '@type-orm/repositories/summoner-repository.impl';
+import { TypeOrmExModule } from '@type-orm/type-orm-ex.module';
+import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
+import { SummonerCacheRepositoryImpl } from '@redis/repositories/summoner-cache-repository.impl';
+import { HttpModule } from '@http/http.module';
 
 @Module({
-  imports: [WebClientModule, TypeOrmExModule.forCustomRepository([SummonerRepositoryImpl])],
+  imports: [HttpModule, TypeOrmExModule.forCustomRepository([SummonerRepositoryImpl])],
   controllers: [SummonerController],
   providers: [
     SummonerService,

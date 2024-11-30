@@ -1,8 +1,8 @@
-import { CustomRepository } from '@core/type-orm/decorators/custom-repository.decorator';
-import { UserEntity } from '@core/type-orm/entities/user.entity';
+import { CustomRepository } from '@type-orm/decorators/custom-repository.decorator';
+import { UserEntity } from '@type-orm/entities/user.entity';
 import { InternalServerErrorException, Optional } from '@nestjs/common';
 import { EntityManager, QueryRunner, Repository } from 'typeorm';
-import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
+import { IUserRepository } from '@type-orm/abstracts/user-repository.abstract';
 import { InjectEntityManager } from '@nestjs/typeorm';
 
 @CustomRepository(UserEntity)
