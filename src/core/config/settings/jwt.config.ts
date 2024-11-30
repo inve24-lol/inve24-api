@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { JWT_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { JWT_CONFIG_TOKEN } from '@config/constants/config.token';
 
 export default registerAs(JWT_CONFIG_TOKEN, () => ({
   jwt: {

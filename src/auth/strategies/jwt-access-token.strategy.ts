@@ -1,4 +1,4 @@
-import jwtConfig from '@core/config/settings/jwt.config';
+import jwtConfig from '@config/settings/jwt.config';
 import { PayloadDto } from '@common/dto/payload.dto';
 import { Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';

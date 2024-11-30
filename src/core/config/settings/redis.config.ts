@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { REDIS_CONFIG_TOKEN } from '@core/config/constants/config.token';
+import { REDIS_CONFIG_TOKEN } from '@config/constants/config.token';
 
 export default registerAs(REDIS_CONFIG_TOKEN, () => ({
   redis: {
