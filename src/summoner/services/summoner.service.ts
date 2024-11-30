@@ -1,14 +1,14 @@
 import redisConfig from '@config/settings/redis.config';
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
 import { ISummonerRepository } from '@type-orm/abstracts/summoner-repository.abstract';
 import { HttpService } from '@http/services/http.service';
-import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
+import { RegisterSummonerRequestDto } from '@summoner/dto/requests/register-summoner-request.dto';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
 import { CreateSummonerDto } from '@summoner/dto/internals/create-summoner.dto';
 import { SummonerProfileDto } from '@summoner/dto/internals/summoner-profile.dto';
-import { RegisterSummonerResponseDto } from '@summoner/dto/responses/register-summoner-response.dto';
+import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners-response.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -28,26 +28,46 @@ export class SummonerService {
 
   async registerSummoner(
     uuid: string,
-    registerRequest: RegisterRequestDto,
-  ): Promise<RegisterSummonerResponseDto> {
-    const { rsoAccessCode } = registerRequest;
+    registerSummonerRequest: RegisterSummonerRequestDto,
+  ): Promise<FindSummonersResponseDto> {
+    const { rsoAccessCode } = registerSummonerRequest;
 
     await this.createSummoner(uuid, rsoAccessCode);
 
-    const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
-
-    await this.cacheSummonerProfiles(uuid, summonerProfiles);
-
-    return plainToInstance(RegisterSummonerResponseDto, { summonerProfiles });
+    return await this.findSummoners(uuid);
   }
 
-  private async cacheSummonerProfiles(
+  async findSummoners(uuid: string): Promise<FindSummonersResponseDto> {
+    const cachedSummonerProfiles = await this.getSummonerProfiles(uuid);
+
+    if (cachedSummonerProfiles) return cachedSummonerProfiles;
+
+    const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
+
+    await this.setSummonerProfiles(uuid, summonerProfiles);
+
+    return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
+  }
+
+  private async getSummonerProfiles(uuid: string): Promise<FindSummonersResponseDto | void> {
+    const cachedSummoners = await this.summonerCacheRepository.getSummoner(`summoners:${uuid}`);
+
+    if (cachedSummoners) {
+      const summonerProfiles = JSON.parse(cachedSummoners);
+
+      return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
+    }
+  }
+
+  private async setSummonerProfiles(
     uuid: string,
     summonerProfiles: SummonerProfileDto[],
   ): Promise<void> {
-    const summoners = JSON.stringify({ summonerProfiles });
-
-    this.summonerCacheRepository.setSummoner(uuid, summoners, this.config.redis.summoner.ttl);
+    await this.summonerCacheRepository.setSummoner(
+      `summoners:${uuid}`,
+      JSON.stringify(summonerProfiles),
+      this.config.redis.summoner.ttl,
+    );
   }
 
   private async createSummoner(uuid: string, rsoAccessCode: string): Promise<void> {
@@ -82,6 +102,9 @@ export class SummonerService {
 
   private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[]> {
     const summoners = await this.summonerRepository.findSummonersByUserUuid(uuid);
+
+    if (!summoners.length)
+      throw new NotFoundException('해당 계정으로 등록된 소환사가 존재하지 않습니다.');
 
     return plainToInstance(SummonerProfileDto, summoners);
   }
