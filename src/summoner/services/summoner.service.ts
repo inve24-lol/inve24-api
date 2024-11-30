@@ -1,9 +1,8 @@
 import redisConfig from '@config/settings/redis.config';
-import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
-import { ISummonerRepository } from '@type-orm/abstracts/summoner-repository.abstract';
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { RiotApiAuthHeaderDto } from '@http/dto/requests/riot-api-auth-header.dto';
+import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
+import { ISummonerRepository } from '@type-orm/abstracts/summoner-repository.abstract';
 import { HttpService } from '@http/services/http.service';
 import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
@@ -29,20 +28,20 @@ export class SummonerService {
 
   async registerSummoner(
     uuid: string,
-    registerRequestDto: RegisterRequestDto,
+    registerRequest: RegisterRequestDto,
   ): Promise<RegisterSummonerResponseDto> {
-    const { rsoAccessCode } = registerRequestDto;
+    const { rsoAccessCode } = registerRequest;
 
-    const riotApiAuthHeader = await this.generateRiotApiAuthHeader(rsoAccessCode);
+    await this.createSummoner(uuid, rsoAccessCode);
 
-    const summonerProfileList = await this.findSummonerProfileList(uuid, riotApiAuthHeader);
+    const summonerProfileList = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.setSummonerProfileList(uuid, summonerProfileList);
+    await this.cacheSummonerProfiles(uuid, summonerProfileList);
 
     return plainToInstance(RegisterSummonerResponseDto, { summonerProfileList });
   }
 
-  private async setSummonerProfileList(
+  private async cacheSummonerProfiles(
     uuid: string,
     summonerProfileList: SummonerProfileDto[],
   ): Promise<void> {
@@ -51,45 +50,22 @@ export class SummonerService {
     this.summonerCacheRepository.setSummoner(uuid, summoners, this.config.redis.summoner.ttl);
   }
 
-  private async generateRiotApiAuthHeader(rsoAccessCode: string): Promise<RiotApiAuthHeaderDto> {
-    const { tokenType, accessToken } = await this.httpService.riotSignOnApi(rsoAccessCode);
+  private async createSummoner(uuid: string, rsoAccessCode: string): Promise<void> {
+    const { riotAccountInfo, riotSummonerInfo, riotLeagueInfo } =
+      await this.httpService.getSummonerAccount(rsoAccessCode);
 
-    return plainToInstance(RiotApiAuthHeaderDto, {
-      authorization: `${tokenType} ${accessToken}`,
-    });
-  }
+    await this.checkSummonerExists(riotAccountInfo.puuid);
 
-  private async findSummonerProfileList(
-    uuid: string,
-    riotApiAuthHeader: RiotApiAuthHeaderDto,
-  ): Promise<SummonerProfileDto[]> {
-    const createSummoner = await this.fetchSummoner(uuid, riotApiAuthHeader);
+    await this.checkSummonerCreationLimit(uuid);
 
-    await this.checkSummonerExists(createSummoner.puuid);
-
-    await this.getSummonerCountByUuid(uuid);
-
-    await this.createSummoner(createSummoner);
-
-    return this.getSummonerProfileListByUuid(uuid);
-  }
-
-  private async fetchSummoner(
-    uuid: string,
-    riotApiAuthHeader: RiotApiAuthHeaderDto,
-  ): Promise<CreateSummonerDto> {
-    const riotAccountApiResponse = await this.httpService.riotAccountApi(riotApiAuthHeader);
-
-    const riotSummonerApiResponse = await this.httpService.riotSummonerApi(riotApiAuthHeader);
-
-    const riotLeagueApiResponse = await this.httpService.riotLeagueApi(riotSummonerApiResponse.id);
-
-    return plainToInstance(CreateSummonerDto, {
+    const createSummoner = plainToInstance(CreateSummonerDto, {
       uuid,
-      ...riotAccountApiResponse,
-      ...riotSummonerApiResponse,
-      ...riotLeagueApiResponse,
+      ...riotAccountInfo,
+      ...riotSummonerInfo,
+      ...riotLeagueInfo,
     });
+
+    await this.summonerRepository.saveSummoner(createSummoner);
   }
 
   private async checkSummonerExists(puuid: string): Promise<void> {
@@ -98,18 +74,14 @@ export class SummonerService {
     if (summoner) throw new ConflictException('해당 라이엇 계정으로 등록된 소환사가 존재합니다.');
   }
 
-  private async getSummonerCountByUuid(uuid: string): Promise<void> {
-    const count = await this.summonerRepository.getSummonerCountByUserUuid(uuid);
+  private async checkSummonerCreationLimit(uuid: string): Promise<void> {
+    const count = await this.summonerRepository.findSummonerCountByUserUuid(uuid);
 
     if (count >= 5) throw new ConflictException('등록 가능한 소환사 수를 초과하였습니다.');
   }
 
-  private async createSummoner(createSummoner: CreateSummonerDto): Promise<void> {
-    await this.summonerRepository.saveSummoner(createSummoner);
-  }
-
-  private async getSummonerProfileListByUuid(uuid: string) {
-    const summoners = await this.summonerRepository.findSummonerListByUserUuid(uuid);
+  private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[]> {
+    const summoners = await this.summonerRepository.findSummonersByUserUuid(uuid);
 
     return plainToInstance(SummonerProfileDto, summoners);
   }
