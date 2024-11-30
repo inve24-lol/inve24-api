@@ -15,12 +15,14 @@ import { IWebClientService } from '@summoner/web-client/abstracts/web-client-ser
 import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
 import { plainToInstance } from 'class-transformer';
 import { CreateSummonerDto } from '@summoner/dto/internals/create-summoner.dto';
-import { SummonerRepositoryImpl } from '@core/type-orm/repositories/summoner-repository.impl';
+import { ISummonerCacheRepository } from '@core/redis/abstracts/summoner-cache-repository.abstract';
+import { ISummonerRepository } from '@core/type-orm/abstracts/summoner-repository.abstract';
 
 @Injectable()
 export class SummonerService {
   constructor(
-    private readonly summonerRepository: SummonerRepositoryImpl,
+    private readonly summonerCacheRepository: ISummonerCacheRepository,
+    private readonly summonerRepository: ISummonerRepository,
     private readonly webClientService: IWebClientService,
     @Inject(riotConfig.KEY) private readonly config: ConfigType<typeof riotConfig>,
   ) {}
