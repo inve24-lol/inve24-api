@@ -1,5 +1,5 @@
-import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
-import { TokenCacheRepositoryImpl } from '@core/redis/repositories/token-cache-repository.impl';
+import { ITokenCacheRepository } from '@redis/abstracts/token-cache-repository.abstract';
+import { TokenCacheRepositoryImpl } from '@redis/repositories/token-cache-repository.impl';
 import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
 import { UserRepositoryImpl } from '@core/type-orm/repositories/user-repository.impl';
 import { TypeOrmExModule } from '@core/type-orm/type-orm-ex.module';

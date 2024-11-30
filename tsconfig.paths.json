@@ -9,6 +9,7 @@
       "@token/*": ["src/auth/token/*"],
       "@auth/*": ["src/auth/*"],
       "@users/*": ["src/users/*"],
+      "@redis/*": ["src/core/redis/*"],
       "@config/*": ["src/core/config/*"],
       "@core/*": ["src/core/*"],
       "@common/*": ["src/common/*"],

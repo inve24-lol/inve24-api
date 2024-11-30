@@ -1,5 +1,5 @@
-import { IMailCacheRepository } from '@core/redis/abstracts/mail-cache-repository.abstract';
-import { EMAIL_CERT_CODE_REDIS_NAMESPACE } from '@core/redis/constants/redis.namespace';
+import { IMailCacheRepository } from '@redis/abstracts/mail-cache-repository.abstract';
+import { EMAIL_CERT_CODE_REDIS_NAMESPACE } from '@redis/constants/redis.namespace';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';

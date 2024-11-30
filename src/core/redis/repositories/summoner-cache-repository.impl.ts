@@ -1,4 +1,4 @@
-import { ISummonerCacheRepository } from '@core/redis/abstracts/summoner-cache-repository.abstract';
+import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { SUMMONER_REDIS_NAMESPACE } from '../constants/redis.namespace';
 import { RedisService } from '@liaoliaots/nestjs-redis';

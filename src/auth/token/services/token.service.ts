@@ -2,7 +2,7 @@ import { PayloadDto } from '@common/dto/payload.dto';
 import bcryptConfig from '@config/settings/bcrypt.config';
 import jwtConfig from '@config/settings/jwt.config';
 import redisConfig from '@config/settings/redis.config';
-import { ITokenCacheRepository } from '@core/redis/abstracts/token-cache-repository.abstract';
+import { ITokenCacheRepository } from '@redis/abstracts/token-cache-repository.abstract';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
