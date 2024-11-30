@@ -10,6 +10,8 @@ import { CreateSummonerDto } from '@summoner/dto/internals/create-summoner.dto';
 import { SummonerProfileDto } from '@summoner/dto/internals/summoner-profile.dto';
 import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
+import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 
 @Injectable()
 export class SummonerService {
@@ -38,34 +40,57 @@ export class SummonerService {
   }
 
   async findSummoners(uuid: string): Promise<FindSummonersResponseDto> {
-    const cachedSummonerProfiles = await this.getSummonerProfiles(uuid);
+    const cachedSummonerProfiles = await this.getSummonerProfileData('summoners', uuid);
 
-    if (cachedSummonerProfiles) return cachedSummonerProfiles;
+    if (cachedSummonerProfiles)
+      return plainToInstance(FindSummonersResponseDto, {
+        summonerProfiles: cachedSummonerProfiles,
+      });
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.setSummonerProfiles(uuid, summonerProfiles);
+    await this.setSummonerProfileData('summoners', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
 
-  private async getSummonerProfiles(uuid: string): Promise<FindSummonersResponseDto | void> {
-    const cachedSummoners = await this.summonerCacheRepository.getSummoner(`summoners:${uuid}`);
+  async findSummoner(
+    uuid: string,
+    findSummonerRequest: FindSummonerRequestDto,
+  ): Promise<FindSummonerResponseDto> {
+    const cachedSummonerProfile = await this.getSummonerProfileData('summoner', uuid);
 
-    if (cachedSummoners) {
-      const summonerProfiles = JSON.parse(cachedSummoners);
+    if (cachedSummonerProfile)
+      return plainToInstance(FindSummonerResponseDto, {
+        summonerProfile: cachedSummonerProfile,
+      });
 
-      return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
-    }
+    const { summonerId: id } = findSummonerRequest;
+
+    const summonerProfile = await this.findSummonerProfileById(parseInt(id));
+
+    await this.setSummonerProfileData('summoner', uuid, summonerProfile);
+
+    return plainToInstance(FindSummonerResponseDto, { summonerProfile });
   }
 
-  private async setSummonerProfiles(
+  private async getSummonerProfileData(
+    keyId: string,
     uuid: string,
-    summonerProfiles: SummonerProfileDto[],
+  ): Promise<SummonerProfileDto[] | SummonerProfileDto | void> {
+    const cachedData = await this.summonerCacheRepository.getSummoner(`${keyId}:${uuid}`);
+
+    if (cachedData) return JSON.parse(cachedData);
+  }
+
+  private async setSummonerProfileData(
+    keyId: string,
+    uuid: string,
+    summonerProfileData: SummonerProfileDto[] | SummonerProfileDto,
   ): Promise<void> {
     await this.summonerCacheRepository.setSummoner(
-      `summoners:${uuid}`,
-      JSON.stringify(summonerProfiles),
+      `${keyId}:${uuid}`,
+      JSON.stringify(summonerProfileData),
       this.config.redis.summoner.ttl,
     );
   }
@@ -98,6 +123,14 @@ export class SummonerService {
     const count = await this.summonerRepository.findSummonerCountByUserUuid(uuid);
 
     if (count >= 5) throw new ConflictException('등록 가능한 소환사 수를 초과하였습니다.');
+  }
+
+  private async findSummonerProfileById(id: number): Promise<SummonerProfileDto> {
+    const summoners = await this.summonerRepository.findSummonerById(id);
+
+    if (!summoners) throw new NotFoundException('해당 계정으로 등록된 소환사가 존재하지 않습니다.');
+
+    return plainToInstance(SummonerProfileDto, summoners);
   }
 
   private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[]> {

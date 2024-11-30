@@ -1,8 +1,19 @@
 import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
 import { User } from '@common/decorators/user.decorator';
-import { Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { RegisterSummonerRequestDto } from '@summoner/dto/requests/register-summoner-request.dto';
+import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners-response.dto';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
 import { SummonerService } from '@summoner/services/summoner.service';
@@ -41,7 +52,16 @@ export class SummonerController {
     return await this.summonerService.findSummoners(uuid);
   }
 
-  // TODO: 사용자 본인의 라이엇 계정 조회 API
+  @ApiOperation({ summary: '소환사 조회' })
+  @ApiOkResponse({ type: FindSummonerResponseDto })
+  @HttpCode(HttpStatus.OK)
+  @Get('v1/summoners/:summonerId')
+  async findSummoner(
+    @User('uuid') uuid: string,
+    @Param() findSummonerRequest: FindSummonerRequestDto,
+  ): Promise<FindSummonerResponseDto> {
+    return await this.summonerService.findSummoner(uuid, findSummonerRequest);
+  }
 
   // TODO: 사용자 본인의 라이엇 계정 삭제 API
 }
