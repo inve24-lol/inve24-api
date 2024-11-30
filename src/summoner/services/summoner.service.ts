@@ -52,7 +52,7 @@ export class SummonerService {
 
   private async createSummoner(uuid: string, rsoAccessCode: string): Promise<void> {
     const { riotAccountInfo, riotSummonerInfo, riotLeagueInfo } =
-      await this.httpService.getSummonerAccount(rsoAccessCode);
+      await this.httpService.generateSummonerLeagueAccount(rsoAccessCode);
 
     await this.checkSummonerExists(riotAccountInfo.puuid);
 

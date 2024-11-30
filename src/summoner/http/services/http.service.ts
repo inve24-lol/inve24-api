@@ -31,7 +31,9 @@ export class HttpService {
     return `${auth.host}/${auth.authorize}?${riotSignOnUrlSearchParams}`;
   }
 
-  async getSummonerAccount(rsoAccessCode: string): Promise<RiotSummonerLeagueAccountDto> {
+  async generateSummonerLeagueAccount(
+    rsoAccessCode: string,
+  ): Promise<RiotSummonerLeagueAccountDto> {
     const riotAuthHeader = await this.generateRiotAuthHeader(rsoAccessCode);
 
     const riotAccountInfo = await this.fetchRiotAccount(riotAuthHeader);
@@ -47,13 +49,13 @@ export class HttpService {
     });
   }
 
-  async generateRiotAuthHeader(rsoAccessCode: string): Promise<RiotAuthHeaderDto> {
+  private async generateRiotAuthHeader(rsoAccessCode: string): Promise<RiotAuthHeaderDto> {
     const { tokenType, accessToken } = await this.fetchRiotSignOn(rsoAccessCode);
 
     return plainToInstance(RiotAuthHeaderDto, { authorization: `${tokenType} ${accessToken}` });
   }
 
-  async fetchRiotSignOn(rsoAccessCode: string): Promise<FetchRiotSignOnResponseDto> {
+  private async fetchRiotSignOn(rsoAccessCode: string): Promise<FetchRiotSignOnResponseDto> {
     const { auth, oauth } = this.config.riot.rso;
 
     const oauthBodyFormData = plainToInstance(OauthBodyFormDataDto, { ...oauth, rsoAccessCode });
@@ -73,7 +75,9 @@ export class HttpService {
       });
   }
 
-  async fetchRiotAccount(riotAuthHeader: RiotAuthHeaderDto): Promise<FetchRiotAccountResponseDto> {
+  private async fetchRiotAccount(
+    riotAuthHeader: RiotAuthHeaderDto,
+  ): Promise<FetchRiotAccountResponseDto> {
     const { asia } = this.config.riot.api;
 
     return await this.webClientService
@@ -88,7 +92,7 @@ export class HttpService {
       });
   }
 
-  async fetchRiotSummoner(
+  private async fetchRiotSummoner(
     riotAuthHeader: RiotAuthHeaderDto,
   ): Promise<FetchRiotSummonerResponseDto> {
     const { kr } = this.config.riot.api;
@@ -105,7 +109,7 @@ export class HttpService {
       });
   }
 
-  async fetchRiotLeague(encryptedSummonerId: string): Promise<FetchRiotLeagueResponseDto> {
+  private async fetchRiotLeague(encryptedSummonerId: string): Promise<FetchRiotLeagueResponseDto> {
     const { kr, appKey } = this.config.riot.api;
 
     const riotLeagueResponse = await this.webClientService
