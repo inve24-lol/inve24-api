@@ -7,7 +7,7 @@ export class WebClientResponseDto {
   ) {}
 
   toEntity<T>(entity: ClassConstructor<T>): T {
-    return plainToInstance(entity, JSON.parse(this._body));
+    return plainToInstance(entity, this._body);
   }
 
   get statusCode() {

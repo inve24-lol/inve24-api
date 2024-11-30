@@ -13,7 +13,9 @@ async function bootstrap() {
 
   const PORT = configService.get(SERVER_CONFIG_TOKEN).server.port;
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: ['/summoners'],
+  });
 
   app.use(cookieParser());
 

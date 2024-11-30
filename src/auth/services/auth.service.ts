@@ -1,10 +1,10 @@
 import { SignInRequestDto } from '@auth/dto/requests/sign-in-request.dto';
 import { RefreshResponseDto } from '@auth/dto/responses/refresh-response.dto';
 import { SignInResponseDto } from '@auth/dto/responses/sign-in-response.dto';
+import { PayloadDto } from '@common/dto/payload.dto';
 import { Injectable } from '@nestjs/common';
 import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
 import { AuthTokensDto } from '@token/dto/auth-tokens-dto';
-import { PayloadDto } from '@token/dto/payload.dto';
 import { TokenService } from '@token/services/token.service';
 import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import { UsersService } from '@users/services/users.service';

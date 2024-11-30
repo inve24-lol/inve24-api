@@ -1,8 +1,8 @@
 import jwtConfig from '@core/config/settings/jwt.config';
+import { PayloadDto } from '@common/dto/payload.dto';
 import { Inject } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { PayloadDto } from '@token/dto/payload.dto';
 import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import { UsersService } from '@users/services/users.service';
 import { plainToInstance } from 'class-transformer';
@@ -22,6 +22,8 @@ export class JwtAccessTokenStrategy extends PassportStrategy(Strategy, 'jwt-acce
 
   async validate(payload: PayloadDto): Promise<PayloadDto> {
     const { uuid } = payload;
+
+    await this.usersService.verifyPayload(uuid);
 
     const userProfile: UserProfileDto = await this.usersService.getUserProfileByUuid(uuid);
 

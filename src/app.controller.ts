@@ -1,13 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AppService } from '@src/app.service';
 
-@ApiTags('API-Docs Swagger')
+@ApiTags('클라이언트')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @ApiOperation({ summary: 'RSO 로그인 리다이렉트 페이지' })
+  @Get('summoners')
   getHello(): string {
     return this.appService.getHello();
   }

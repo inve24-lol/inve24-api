@@ -5,7 +5,7 @@ import { WebClientResponseDto } from '@summoner/web-client/dto/web-client-respon
 export interface IWebClient {
   get(): this;
   post(): this;
-  uri(uri: string): this;
+  uri(uri?: string): this;
   header(param: Record<string, string>): this;
   contentType(mediaType: MediaType): this;
   body<T>(inserter: BodyInserter<T>): this;
