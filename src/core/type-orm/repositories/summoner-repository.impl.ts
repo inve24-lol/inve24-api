@@ -25,13 +25,31 @@ export class SummonerRepositoryImpl
     }
   }
 
-  async findSummonersByUserUuid(
-    userUuid: string,
-  ): Promise<{ summoners: SummonerEntity[]; count: number } | null> {
+  async findSummonerByPuuid(puuid: string): Promise<SummonerEntity | null> {
     try {
-      const [summoners, count] = await this.findAndCount({ where: { userUuid } });
+      const summoner = await this.findOne({ where: { puuid } });
 
-      return summoners.length > 0 ? { summoners, count } : null;
+      return summoner || null;
+    } catch (error) {
+      throw new InternalServerErrorException('Query failed.');
+    }
+  }
+
+  async getSummonerCountByUserUuid(userUuid: string): Promise<number> {
+    try {
+      const count = await this.count({ where: { userUuid } });
+
+      return count;
+    } catch (error) {
+      throw new InternalServerErrorException('Query failed.');
+    }
+  }
+
+  async findSummonerListByUserUuid(userUuid: string): Promise<SummonerEntity[]> {
+    try {
+      const summoners = await this.find({ where: { userUuid } });
+
+      return summoners;
     } catch (error) {
       throw new InternalServerErrorException('Query failed.');
     }

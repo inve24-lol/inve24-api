@@ -2,7 +2,8 @@ import { SummonerEntity } from '@core/type-orm/entities/summoner.entity';
 
 export abstract class ISummonerRepository {
   abstract saveSummoner(createSummoner: Partial<SummonerEntity>): Promise<SummonerEntity>;
-  abstract findSummonersByUserUuid(
-    userUuid: string,
-  ): Promise<{ summoners: SummonerEntity[]; count: number } | null>;
+  abstract findSummonerByPuuid(puuid: string): Promise<SummonerEntity | null>;
+  abstract getSummonerCountByUserUuid(userUuid: string): Promise<number>;
+  abstract findSummonerListByUserUuid(userUuid: string): Promise<SummonerEntity[]>;
+  abstract deleteSummoner(userUuid: string): Promise<void>;
 }
