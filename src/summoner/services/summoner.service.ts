@@ -19,8 +19,8 @@ import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso/rso-auth-cred
 import { RsoBodyFormDto } from '@summoner/dto/externals/rso/rso-body-form.dto';
 import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
-import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
-import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
+import { IWebClientService } from '@web-client/abstracts/web-client-service.abstract';
+import { BodyInserter } from '@web-client/utils/body-inserter';
 import { plainToInstance } from 'class-transformer';
 import { CreateSummonerDto } from '@summoner/dto/internals/create-summoner.dto';
 import { SummonerProfileDto } from '@summoner/dto/internals/summoner-profile.dto';

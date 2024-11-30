@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
-import { AxiosClientServiceImpl } from '@summoner/web-client/services/axios-client-service.impl';
+import { IWebClientService } from '@web-client/abstracts/web-client-service.abstract';
+import { AxiosClientServiceImpl } from '@web-client/services/axios-client-service.impl';
 
 @Module({
   providers: [

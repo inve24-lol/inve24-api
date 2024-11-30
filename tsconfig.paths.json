@@ -3,6 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@http/*": ["src/summoner/http/*"],
+      "@web-client/*": ["src/summoner/web-client/*"],
       "@summoner/*": ["src/summoner/*"],
       "@mail/*": ["src/mail/*"],
       "@token/*": ["src/auth/token/*"],

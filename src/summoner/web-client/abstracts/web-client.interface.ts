@@ -1,6 +1,6 @@
-import { MediaType } from '@summoner/web-client/constants/media-type.enum';
-import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
-import { WebClientResponseDto } from '@summoner/web-client/dto/web-client-response.dto';
+import { MediaType } from '@web-client/constants/media-type.enum';
+import { BodyInserter } from '@web-client/utils/body-inserter';
+import { WebClientResponseDto } from '@web-client/dto/web-client-response.dto';
 
 export interface IWebClient {
   get(): this;
