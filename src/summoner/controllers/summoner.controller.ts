@@ -1,6 +1,6 @@
 import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
 import { User } from '@common/decorators/user.decorator';
-import { Controller, Get, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RegisterSummonerRequestDto } from '@summoner/dto/requests/register-summoner-request.dto';
 import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners-response.dto';
@@ -25,7 +25,7 @@ export class SummonerController {
   @ApiOperation({ summary: '소환사 등록' })
   @ApiOkResponse({ type: FindSummonersResponseDto })
   @HttpCode(HttpStatus.CREATED)
-  @Get('v1/summoners')
+  @Post('v1/summoners')
   async registerSummoner(
     @User('uuid') uuid: string,
     @Query() registerSummonerRequest: RegisterSummonerRequestDto,
