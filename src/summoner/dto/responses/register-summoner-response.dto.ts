@@ -5,7 +5,7 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class RegisterSummonerResponseDto {
   @ApiProperty({
-    description: '소환사 프로필',
+    description: '소환사 프로필 목록',
     type: [SummonerProfileDto],
   })
   @Expose()
