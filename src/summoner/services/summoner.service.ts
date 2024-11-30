@@ -12,6 +12,7 @@ import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners
 import { plainToInstance } from 'class-transformer';
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
+import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
 
 @Injectable()
 export class SummonerService {
@@ -73,6 +74,20 @@ export class SummonerService {
     return plainToInstance(FindSummonerResponseDto, { summonerProfile });
   }
 
+  async removeSummoner(uuid: string, removeSummonerRequest: RemoveSummonerRequestDto) {
+    const { summonerId } = removeSummonerRequest;
+
+    const cachedSummonerProfiles = await this.getSummonerProfileData('uuid', uuid);
+
+    if (cachedSummonerProfiles) await this.delSummonerProfileData('uuid', uuid);
+
+    const cachedSummonerProfile = await this.getSummonerProfileData('summonerId', summonerId);
+
+    if (cachedSummonerProfile) await this.delSummonerProfileData('summonerId', summonerId);
+
+    await this.summonerRepository.deleteSummoner(parseInt(summonerId));
+  }
+
   private async getSummonerProfileData(
     keyId: string,
     keyValue: string,
@@ -92,6 +107,10 @@ export class SummonerService {
       JSON.stringify(summonerProfileData),
       this.config.redis.summoner.ttl,
     );
+  }
+
+  private async delSummonerProfileData(keyId: string, keyValue: string): Promise<void> {
+    await this.summonerCacheRepository.delSummoner(`${keyId}:${keyValue}`);
   }
 
   private async createSummoner(uuid: string, rsoAccessCode: string): Promise<void> {

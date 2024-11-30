@@ -65,9 +65,9 @@ export class SummonerRepositoryImpl
     }
   }
 
-  async deleteSummoner(userUuid: string): Promise<void> {
+  async deleteSummoner(id: number): Promise<void> {
     try {
-      await this.delete({ userUuid });
+      await this.delete({ id });
     } catch (error) {
       throw new InternalServerErrorException('Query failed.');
     }

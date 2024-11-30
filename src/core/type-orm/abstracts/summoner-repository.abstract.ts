@@ -6,5 +6,5 @@ export abstract class ISummonerRepository {
   abstract findSummonerByPuuid(puuid: string): Promise<SummonerEntity | null>;
   abstract findSummonerCountByUserUuid(userUuid: string): Promise<number>;
   abstract findSummonersByUserUuid(userUuid: string): Promise<SummonerEntity[]>;
-  abstract deleteSummoner(userUuid: string): Promise<void>;
+  abstract deleteSummoner(id: number): Promise<void>;
 }

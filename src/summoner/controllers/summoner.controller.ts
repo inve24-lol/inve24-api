@@ -2,6 +2,7 @@ import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
 import { User } from '@common/decorators/user.decorator';
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -10,9 +11,17 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { RegisterSummonerRequestDto } from '@summoner/dto/requests/register-summoner-request.dto';
+import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners-response.dto';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
@@ -34,7 +43,7 @@ export class SummonerController {
   }
 
   @ApiOperation({ summary: '소환사 등록' })
-  @ApiOkResponse({ type: FindSummonersResponseDto })
+  @ApiCreatedResponse({ type: FindSummonersResponseDto })
   @HttpCode(HttpStatus.CREATED)
   @Post('v1/summoners')
   async registerSummoner(
@@ -62,5 +71,14 @@ export class SummonerController {
     return await this.summonerService.findSummoner(findSummonerRequest);
   }
 
-  // TODO: 사용자 본인의 라이엇 계정 삭제 API
+  @ApiOperation({ summary: '소환사 삭제' })
+  @ApiNoContentResponse({ description: 'No content' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete('v1/summoners/:summonerId')
+  async removeSummoner(
+    @User('uuid') uuid: string,
+    @Param() removeSummonerRequest: RemoveSummonerRequestDto,
+  ): Promise<void> {
+    await this.summonerService.removeSummoner(uuid, removeSummonerRequest);
+  }
 }
