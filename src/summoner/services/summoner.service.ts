@@ -40,7 +40,7 @@ export class SummonerService {
   }
 
   async findSummoners(uuid: string): Promise<FindSummonersResponseDto> {
-    const cachedSummonerProfiles = await this.getSummonerProfileData('summoners', uuid);
+    const cachedSummonerProfiles = await this.getSummonerProfileData('uuid', uuid);
 
     if (cachedSummonerProfiles)
       return plainToInstance(FindSummonersResponseDto, {
@@ -49,47 +49,46 @@ export class SummonerService {
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.setSummonerProfileData('summoners', uuid, summonerProfiles);
+    await this.setSummonerProfileData('uuid', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
 
   async findSummoner(
-    uuid: string,
     findSummonerRequest: FindSummonerRequestDto,
   ): Promise<FindSummonerResponseDto> {
-    const cachedSummonerProfile = await this.getSummonerProfileData('summoner', uuid);
+    const { summonerId } = findSummonerRequest;
+
+    const cachedSummonerProfile = await this.getSummonerProfileData('summonerId', summonerId);
 
     if (cachedSummonerProfile)
       return plainToInstance(FindSummonerResponseDto, {
         summonerProfile: cachedSummonerProfile,
       });
 
-    const { summonerId: id } = findSummonerRequest;
+    const summonerProfile = await this.findSummonerProfileById(parseInt(summonerId));
 
-    const summonerProfile = await this.findSummonerProfileById(parseInt(id));
-
-    await this.setSummonerProfileData('summoner', uuid, summonerProfile);
+    await this.setSummonerProfileData('summonerId', summonerId, summonerProfile);
 
     return plainToInstance(FindSummonerResponseDto, { summonerProfile });
   }
 
   private async getSummonerProfileData(
     keyId: string,
-    uuid: string,
+    keyValue: string,
   ): Promise<SummonerProfileDto[] | SummonerProfileDto | void> {
-    const cachedData = await this.summonerCacheRepository.getSummoner(`${keyId}:${uuid}`);
+    const cachedData = await this.summonerCacheRepository.getSummoner(`${keyId}:${keyValue}`);
 
     if (cachedData) return JSON.parse(cachedData);
   }
 
   private async setSummonerProfileData(
     keyId: string,
-    uuid: string,
+    keyValue: string,
     summonerProfileData: SummonerProfileDto[] | SummonerProfileDto,
   ): Promise<void> {
     await this.summonerCacheRepository.setSummoner(
-      `${keyId}:${uuid}`,
+      `${keyId}:${keyValue}`,
       JSON.stringify(summonerProfileData),
       this.config.redis.summoner.ttl,
     );

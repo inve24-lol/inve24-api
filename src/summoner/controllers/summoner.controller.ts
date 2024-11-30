@@ -57,10 +57,9 @@ export class SummonerController {
   @HttpCode(HttpStatus.OK)
   @Get('v1/summoners/:summonerId')
   async findSummoner(
-    @User('uuid') uuid: string,
     @Param() findSummonerRequest: FindSummonerRequestDto,
   ): Promise<FindSummonerResponseDto> {
-    return await this.summonerService.findSummoner(uuid, findSummonerRequest);
+    return await this.summonerService.findSummoner(findSummonerRequest);
   }
 
   // TODO: 사용자 본인의 라이엇 계정 삭제 API
