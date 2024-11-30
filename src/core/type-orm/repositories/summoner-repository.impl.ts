@@ -1,6 +1,6 @@
-import { ISummonerRepository } from '@core/type-orm/abstracts/summoner-repository.abstract';
-import { CustomRepository } from '@core/type-orm/decorators/custom-repository.decorator';
-import { SummonerEntity } from '@core/type-orm/entities/summoner.entity';
+import { ISummonerRepository } from '@type-orm/abstracts/summoner-repository.abstract';
+import { CustomRepository } from '@type-orm/decorators/custom-repository.decorator';
+import { SummonerEntity } from '@type-orm/entities/summoner.entity';
 import { InternalServerErrorException, Optional } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager, QueryRunner, Repository } from 'typeorm';

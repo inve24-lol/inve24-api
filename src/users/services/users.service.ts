@@ -1,5 +1,5 @@
 import bcryptConfig from '@config/settings/bcrypt.config';
-import { IUserRepository } from '@core/type-orm/abstracts/user-repository.abstract';
+import { IUserRepository } from '@type-orm/abstracts/user-repository.abstract';
 import { ITokenCacheRepository } from '@redis/abstracts/token-cache-repository.abstract';
 import {
   ConflictException,

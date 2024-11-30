@@ -1,4 +1,4 @@
-import { UserEntity } from '@core/type-orm/entities/user.entity';
+import { UserEntity } from '@type-orm/entities/user.entity';
 
 export abstract class IUserRepository {
   abstract saveUser(createUser: Partial<UserEntity>): Promise<UserEntity>;

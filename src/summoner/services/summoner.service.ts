@@ -1,7 +1,7 @@
 import redisConfig from '@config/settings/redis.config';
 import riotConfig from '@config/settings/riot.config';
 import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
-import { ISummonerRepository } from '@core/type-orm/abstracts/summoner-repository.abstract';
+import { ISummonerRepository } from '@type-orm/abstracts/summoner-repository.abstract';
 import {
   ConflictException,
   Inject,
