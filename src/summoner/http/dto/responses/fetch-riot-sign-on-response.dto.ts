@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RsoApiResponseDto {
+export class FetchRiotSignOnResponseDto {
   @ApiProperty({
     description: '라이엇 계정 인증 토큰 유형',
   })

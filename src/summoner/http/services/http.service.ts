@@ -1,12 +1,13 @@
 import riotConfig from '@config/settings/riot.config';
-import { RiotApiAuthHeaderDto } from '@http/dto/requests/riot-api-auth-header.dto';
-import { RsoAccessUrlParamsDto } from '@http/dto/requests/rso-access-url-params.dto';
-import { RsoAuthCredentialsDto } from '@http/dto/requests/rso-auth-credentials.dto';
-import { RsoBodyFormDto } from '@http/dto/requests/rso-body-form.dto';
-import { RiotAccountApiResponseDto } from '@http/dto/responses/riot-account-api-response.dto';
-import { RiotLeagueApiResponseDto } from '@http/dto/responses/riot-league-api-response.dto';
-import { RiotSummonerApiResponseDto } from '@http/dto/responses/riot-summoner-api-response.dto';
-import { RsoApiResponseDto } from '@http/dto/responses/rso-api-response.dto';
+import { RiotAuthHeaderDto } from '@http/dto/internals/riot-auth-header.dto';
+import { RiotSummonerLeagueAccountDto } from '@http/dto/internals/riot-summoner-league-account.dto';
+import { RiotSignOnUrlParamsDto } from '@http/dto/requests/riot-sign-on-url-params.dto';
+import { AuthCredentialsDto } from '@http/dto/requests/auth-credentials.dto';
+import { OauthBodyFormDataDto } from '@http/dto/requests/oauth-body-form-data.dto';
+import { FetchRiotAccountResponseDto } from '@http/dto/responses/fetch-riot-account-response.dto';
+import { FetchRiotLeagueResponseDto } from '@http/dto/responses/fetch-riot-league-response.dto';
+import { FetchRiotSummonerResponseDto } from '@http/dto/responses/fetch-riot-summoner-response.dto';
+import { FetchRiotSignOnResponseDto } from '@http/dto/responses/fetch-riot-sign-on-response.dto';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { IWebClientService } from '@web-client/abstracts/web-client-service.abstract';
@@ -23,84 +24,100 @@ export class HttpService {
   generateRiotSignOnUrl(): string {
     const { auth, oauth } = this.config.riot.rso;
 
-    const rsoAccessUrlParams = plainToInstance(RsoAccessUrlParamsDto, oauth);
+    const riotSignOnUrlParams = plainToInstance(RiotSignOnUrlParamsDto, oauth);
 
-    const rsoAccessUrlSearchParams = new URLSearchParams({ ...rsoAccessUrlParams });
+    const riotSignOnUrlSearchParams = new URLSearchParams({ ...riotSignOnUrlParams }).toString();
 
-    return `${auth.host}/${auth.authorize}?${rsoAccessUrlSearchParams.toString()}`;
+    return `${auth.host}/${auth.authorize}?${riotSignOnUrlSearchParams}`;
   }
 
-  async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {
+  async getSummonerAccount(rsoAccessCode: string): Promise<RiotSummonerLeagueAccountDto> {
+    const riotAuthHeader = await this.generateRiotAuthHeader(rsoAccessCode);
+
+    const riotAccountInfo = await this.fetchRiotAccount(riotAuthHeader);
+
+    const riotSummonerInfo = await this.fetchRiotSummoner(riotAuthHeader);
+
+    const riotLeagueInfo = await this.fetchRiotLeague(riotSummonerInfo.id);
+
+    return plainToInstance(RiotSummonerLeagueAccountDto, {
+      riotAccountInfo,
+      riotSummonerInfo,
+      riotLeagueInfo,
+    });
+  }
+
+  async generateRiotAuthHeader(rsoAccessCode: string): Promise<RiotAuthHeaderDto> {
+    const { tokenType, accessToken } = await this.fetchRiotSignOn(rsoAccessCode);
+
+    return plainToInstance(RiotAuthHeaderDto, { authorization: `${tokenType} ${accessToken}` });
+  }
+
+  async fetchRiotSignOn(rsoAccessCode: string): Promise<FetchRiotSignOnResponseDto> {
     const { auth, oauth } = this.config.riot.rso;
 
-    const rsoBodyForm = plainToInstance(RsoBodyFormDto, { ...oauth, rsoAccessCode });
+    const oauthBodyFormData = plainToInstance(OauthBodyFormDataDto, { ...oauth, rsoAccessCode });
 
-    const rsoAuthCredentials = plainToInstance(RsoAuthCredentialsDto, oauth);
+    const authCredentials = plainToInstance(AuthCredentialsDto, oauth);
 
     return await this.webClientService
       .create(auth.host)
       .uri(auth.token)
       .post()
-      .body(BodyInserter.fromFormData({ ...rsoBodyForm }))
-      .auth(rsoAuthCredentials)
+      .body(BodyInserter.fromFormData({ ...oauthBodyFormData }))
+      .auth(authCredentials)
       .retrieve()
-      .then((res) => res.toEntity(RsoApiResponseDto))
+      .then((res) => res.toEntity(FetchRiotSignOnResponseDto))
       .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException('RSO Http Request failed');
+        throw new InternalServerErrorException('RSO Fetch failed');
       });
   }
 
-  async riotAccountApi(
-    riotApiAuthHeader: RiotApiAuthHeaderDto,
-  ): Promise<RiotAccountApiResponseDto> {
+  async fetchRiotAccount(riotAuthHeader: RiotAuthHeaderDto): Promise<FetchRiotAccountResponseDto> {
     const { asia } = this.config.riot.api;
 
     return await this.webClientService
       .create(asia.host)
       .uri(asia.account.v1.me)
       .get()
-      .header({ ...riotApiAuthHeader })
+      .header({ ...riotAuthHeader })
       .retrieve()
-      .then((res) => res.toEntity(RiotAccountApiResponseDto))
+      .then((res) => res.toEntity(FetchRiotAccountResponseDto))
       .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException('Riot Account V1 Http Request failed');
+        throw new InternalServerErrorException('RIOT-ACCOUNT-V1 Fetch failed');
       });
   }
 
-  async riotSummonerApi(
-    riotApiAuthHeader: RiotApiAuthHeaderDto,
-  ): Promise<RiotSummonerApiResponseDto> {
+  async fetchRiotSummoner(
+    riotAuthHeader: RiotAuthHeaderDto,
+  ): Promise<FetchRiotSummonerResponseDto> {
     const { kr } = this.config.riot.api;
 
     return await this.webClientService
       .create(kr.host)
       .uri(kr.summoner.v1.me)
       .get()
-      .header({ ...riotApiAuthHeader })
+      .header({ ...riotAuthHeader })
       .retrieve()
-      .then((res) => res.toEntity(RiotSummonerApiResponseDto))
+      .then((res) => res.toEntity(FetchRiotSummonerResponseDto))
       .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException('Riot Summoner V1 Http Request failed');
+        throw new InternalServerErrorException('RIOT-SUMMONER-V1 Fetch failed');
       });
   }
 
-  async riotLeagueApi(encryptedSummonerId: string): Promise<RiotLeagueApiResponseDto> {
+  async fetchRiotLeague(encryptedSummonerId: string): Promise<FetchRiotLeagueResponseDto> {
     const { kr, appKey } = this.config.riot.api;
 
-    const response = await this.webClientService
+    const riotLeagueResponse = await this.webClientService
       .create(kr.host)
       .uri(`${kr.league.v4.summonerId}/${encryptedSummonerId}?api_key=${appKey}`)
       .get()
       .retrieve()
       .then((res) => res.rawBody)
       .catch((err) => {
-        console.log(err);
-        throw new InternalServerErrorException('Riot League V4 Http Request failed');
+        throw new InternalServerErrorException('RIOT-LEAGUE-V4 Fetch failed');
       });
 
-    return plainToInstance(RiotLeagueApiResponseDto, response[0]);
+    return plainToInstance(FetchRiotLeagueResponseDto, riotLeagueResponse[0]);
   }
 }

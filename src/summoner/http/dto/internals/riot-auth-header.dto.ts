@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RiotApiAuthHeaderDto {
+export class RiotAuthHeaderDto {
   @ApiProperty({
     description: '라이엇 API 요청 헤더',
   })

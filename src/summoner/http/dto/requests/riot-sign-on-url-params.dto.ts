@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class RsoAccessUrlParamsDto {
+export class RiotSignOnUrlParamsDto {
   @ApiProperty({
     description: 'RSO 클라이언트 ID',
   })
