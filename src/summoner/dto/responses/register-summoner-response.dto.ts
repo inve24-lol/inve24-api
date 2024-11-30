@@ -9,5 +9,5 @@ export class RegisterSummonerResponseDto {
     type: [SummonerProfileDto],
   })
   @Expose()
-  readonly summonerProfileList!: SummonerProfileDto[];
+  readonly summonerProfiles!: SummonerProfileDto[];
 }

@@ -34,18 +34,18 @@ export class SummonerService {
 
     await this.createSummoner(uuid, rsoAccessCode);
 
-    const summonerProfileList = await this.findSummonerProfilesByUuid(uuid);
+    const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.cacheSummonerProfiles(uuid, summonerProfileList);
+    await this.cacheSummonerProfiles(uuid, summonerProfiles);
 
-    return plainToInstance(RegisterSummonerResponseDto, { summonerProfileList });
+    return plainToInstance(RegisterSummonerResponseDto, { summonerProfiles });
   }
 
   private async cacheSummonerProfiles(
     uuid: string,
-    summonerProfileList: SummonerProfileDto[],
+    summonerProfiles: SummonerProfileDto[],
   ): Promise<void> {
-    const summoners = JSON.stringify({ summonerProfileList });
+    const summoners = JSON.stringify({ summonerProfiles });
 
     this.summonerCacheRepository.setSummoner(uuid, summoners, this.config.redis.summoner.ttl);
   }
