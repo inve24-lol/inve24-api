@@ -10,7 +10,7 @@ import { RsoApiResponseDto } from '@summoner/dto/externals/rso/rso-api-response.
 import { RsoAuthCredentialsDto } from '@summoner/dto/externals/rso/rso-auth-credentials.dto';
 import { RsoBodyFormDto } from '@summoner/dto/externals/rso/rso-body-form.dto';
 import { RegisterRequestDto } from '@summoner/dto/requests/register-request.dto';
-import { RsoAccessUrlResponseDto } from '@summoner/dto/responses/rso-access-url-response.dto';
+import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
 import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
 import { plainToInstance } from 'class-transformer';
@@ -22,7 +22,7 @@ export class SummonerService {
     @Inject(riotConfig.KEY) private readonly config: ConfigType<typeof riotConfig>,
   ) {}
 
-  getRiotSignOnAccessUrl(): RsoAccessUrlResponseDto {
+  riotSignOnUrl(): RiotSignOnUrlResponseDto {
     const { auth, oauth } = this.config.riot.rso;
 
     const rsoAccessUrlParams = plainToInstance(RsoAccessUrlParamsDto, oauth);
@@ -31,7 +31,7 @@ export class SummonerService {
 
     const rsoAccessUrl = `${auth.host}/${auth.authorize}?${rsoAccessUrlSearchParams.toString()}`;
 
-    return plainToInstance(RsoAccessUrlResponseDto, { rsoAccessUrl });
+    return plainToInstance(RiotSignOnUrlResponseDto, { rsoAccessUrl });
   }
 
   async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto): Promise<any> {
