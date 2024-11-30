@@ -7,7 +7,6 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { RiotApiAuthHeaderDto } from '@summoner/dto/externals/api/riot-api-auth-header.dto';
