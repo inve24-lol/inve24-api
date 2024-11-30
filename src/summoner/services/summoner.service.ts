@@ -14,6 +14,7 @@ import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-u
 import { IWebClientService } from '@summoner/web-client/abstracts/web-client-service.abstract';
 import { BodyInserter } from '@summoner/web-client/utils/body-inserter';
 import { plainToInstance } from 'class-transformer';
+import { CreateSummonerDto } from '@summoner/dto/internals/create-summoner.dto';
 
 @Injectable()
 export class SummonerService {
@@ -29,27 +30,41 @@ export class SummonerService {
 
     const rsoAccessUrlSearchParams = new URLSearchParams({ ...rsoAccessUrlParams });
 
-    const rsoAccessUrl = `${auth.host}/${auth.authorize}?${rsoAccessUrlSearchParams.toString()}`;
+    const riotSignOnUrl = `${auth.host}/${auth.authorize}?${rsoAccessUrlSearchParams.toString()}`;
 
-    return plainToInstance(RiotSignOnUrlResponseDto, { rsoAccessUrl });
+    return plainToInstance(RiotSignOnUrlResponseDto, { riotSignOnUrl });
   }
 
   async registerSummoner(uuid: string, registerRequestDto: RegisterRequestDto): Promise<any> {
     const { rsoAccessCode } = registerRequestDto;
 
+    const riotApiAuthHeader = await this.generateRiotApiAuthHeader(rsoAccessCode);
+
+    return await this.createSummoner(riotApiAuthHeader);
+  }
+
+  private async generateRiotApiAuthHeader(rsoAccessCode: string): Promise<RiotApiAuthHeaderDto> {
     const { tokenType, accessToken } = await this.riotSignOnApi(rsoAccessCode);
 
-    const riotApiAuthHeader = plainToInstance(RiotApiAuthHeaderDto, {
+    return plainToInstance(RiotApiAuthHeaderDto, {
       authorization: `${tokenType} ${accessToken}`,
     });
+  }
 
+  private async createSummoner(
+    riotApiAuthHeader: RiotApiAuthHeaderDto,
+  ): Promise<CreateSummonerDto> {
     const riotAccountApiResponse = await this.riotAccountApi(riotApiAuthHeader);
 
     const riotSummonerApiResponse = await this.riotSummonerApi(riotApiAuthHeader);
 
     const riotLeagueApiResponse = await this.riotLeagueApi(riotSummonerApiResponse.id);
 
-    return { tokenType, accessToken };
+    return plainToInstance(CreateSummonerDto, {
+      ...riotAccountApiResponse,
+      ...riotSummonerApiResponse,
+      ...riotLeagueApiResponse,
+    });
   }
 
   private async riotSignOnApi(rsoAccessCode: string): Promise<RsoApiResponseDto> {
@@ -87,7 +102,7 @@ export class SummonerService {
       .then((res) => res.toEntity(RiotAccountApiResponseDto))
       .catch((err) => {
         console.log(err);
-        throw new InternalServerErrorException('Riot Account V1 Http Request ailed');
+        throw new InternalServerErrorException('Riot Account V1 Http Request failed');
       });
   }
 
@@ -112,15 +127,17 @@ export class SummonerService {
   private async riotLeagueApi(encryptedSummonerId: string): Promise<RiotLeagueApiResponseDto> {
     const { kr, appKey } = this.config.riot.api;
 
-    return await this.webClientService
+    const response = await this.webClientService
       .create(kr.host)
       .uri(`${kr.league.v4.summonerId}/${encryptedSummonerId}?api_key=${appKey}`)
       .get()
       .retrieve()
-      .then((res) => res.toEntity(RiotLeagueApiResponseDto))
+      .then((res) => res.rawBody)
       .catch((err) => {
         console.log(err);
         throw new InternalServerErrorException('Riot League V4 Http Request failed');
       });
+
+    return plainToInstance(RiotLeagueApiResponseDto, response[0]);
   }
 }

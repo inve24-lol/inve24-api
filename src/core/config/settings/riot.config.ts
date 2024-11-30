@@ -20,11 +20,11 @@ export default registerAs(RIOT_CONFIG_TOKEN, () => ({
     },
     api: {
       asia: {
-        host: process.env.RIOT_ASIA_HOST,
+        host: process.env.RIOT_API_ASIA_HOST,
         account: { v1: { me: process.env.RIOT_API_ASIA_ACCOUNT_V1_ME } },
       },
       kr: {
-        host: process.env.RIOT_KR_HOST,
+        host: process.env.RIOT_API_KR_HOST,
         summoner: { v1: { me: process.env.RIOT_API_KR_SUMMONER_V4_ME } },
         league: { v4: { summonerId: process.env.RIOT_API_KR_LEAGUE_V4_SUMMONER_ID } },
       },
