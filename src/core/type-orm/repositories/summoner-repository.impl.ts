@@ -25,6 +25,16 @@ export class SummonerRepositoryImpl
     }
   }
 
+  async findSummonerById(id: number): Promise<SummonerEntity | null> {
+    try {
+      const summoner = await this.findOne({ where: { id } });
+
+      return summoner || null;
+    } catch (error) {
+      throw new InternalServerErrorException('Query failed.');
+    }
+  }
+
   async findSummonerByPuuid(puuid: string): Promise<SummonerEntity | null> {
     try {
       const summoner = await this.findOne({ where: { puuid } });
@@ -55,9 +65,9 @@ export class SummonerRepositoryImpl
     }
   }
 
-  async deleteSummoner(userUuid: string): Promise<void> {
+  async deleteSummoner(id: number): Promise<void> {
     try {
-      await this.delete({ userUuid });
+      await this.delete({ id });
     } catch (error) {
       throw new InternalServerErrorException('Query failed.');
     }
