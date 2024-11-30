@@ -35,7 +35,7 @@ export class SummonerRepositoryImpl
     }
   }
 
-  async getSummonerCountByUserUuid(userUuid: string): Promise<number> {
+  async findSummonerCountByUserUuid(userUuid: string): Promise<number> {
     try {
       const count = await this.count({ where: { userUuid } });
 
@@ -45,7 +45,7 @@ export class SummonerRepositoryImpl
     }
   }
 
-  async findSummonerListByUserUuid(userUuid: string): Promise<SummonerEntity[]> {
+  async findSummonersByUserUuid(userUuid: string): Promise<SummonerEntity[]> {
     try {
       const summoners = await this.find({ where: { userUuid } });
 
