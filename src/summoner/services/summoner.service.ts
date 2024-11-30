@@ -85,7 +85,7 @@ export class SummonerService {
     uuid: string,
     riotApiAuthHeader: RiotApiAuthHeaderDto,
   ): Promise<SummonerProfileDto[]> {
-    const createSummoner = await this.fetchSummoner(riotApiAuthHeader);
+    const createSummoner = await this.fetchSummoner(uuid, riotApiAuthHeader);
 
     await this.checkSummonerExists(createSummoner.puuid);
 
@@ -96,7 +96,10 @@ export class SummonerService {
     return this.getSummonerProfileListByUuid(uuid);
   }
 
-  private async fetchSummoner(riotApiAuthHeader: RiotApiAuthHeaderDto): Promise<CreateSummonerDto> {
+  private async fetchSummoner(
+    uuid: string,
+    riotApiAuthHeader: RiotApiAuthHeaderDto,
+  ): Promise<CreateSummonerDto> {
     const riotAccountApiResponse = await this.riotAccountApi(riotApiAuthHeader);
 
     const riotSummonerApiResponse = await this.riotSummonerApi(riotApiAuthHeader);
@@ -104,6 +107,7 @@ export class SummonerService {
     const riotLeagueApiResponse = await this.riotLeagueApi(riotSummonerApiResponse.id);
 
     return plainToInstance(CreateSummonerDto, {
+      uuid,
       ...riotAccountApiResponse,
       ...riotSummonerApiResponse,
       ...riotLeagueApiResponse,

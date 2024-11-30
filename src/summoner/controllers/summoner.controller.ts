@@ -37,4 +37,6 @@ export class SummonerController {
   // TODO: 사용자 본인의 라이엇 계정 목록 조회 API
 
   // TODO: 사용자 본인의 라이엇 계정 조회 API
+
+  // TODO: 사용자 본인의 라이엇 계정 삭제 API
 }

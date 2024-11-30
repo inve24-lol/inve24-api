@@ -4,6 +4,12 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class CreateSummonerDto {
   @ApiProperty({
+    description: '유저 UUID',
+  })
+  @Expose({ name: 'uuid' })
+  readonly userUuid!: string;
+
+  @ApiProperty({
     description: '암호화된 소환사 PUUID',
   })
   @Expose()
