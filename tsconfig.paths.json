@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@socket/*": ["src/socket/*"],
       "@web-client/*": ["src/summoner/http/web-client/*"],
       "@http/*": ["src/summoner/http/*"],
       "@summoner/*": ["src/summoner/*"],
