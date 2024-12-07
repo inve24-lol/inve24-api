@@ -22,5 +22,6 @@ import { HttpModule } from '@http/http.module';
       useClass: SummonerCacheRepositoryImpl,
     },
   ],
+  exports: [SummonerService],
 })
 export class SummonerModule {}

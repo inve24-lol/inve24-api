@@ -22,6 +22,7 @@ import {
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { RegisterSummonerRequestDto } from '@summoner/dto/requests/register-summoner-request.dto';
 import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
+import { VerifySocketEntryCodeRequest } from '@summoner/dto/requests/verify-lol-client-entry-code-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { FindSummonersResponseDto } from '@summoner/dto/responses/find-summoners-response.dto';
 import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-url-response.dto';
@@ -80,5 +81,14 @@ export class SummonerController {
     @Param() removeSummonerRequest: RemoveSummonerRequestDto,
   ): Promise<void> {
     await this.summonerService.removeSummoner(uuid, removeSummonerRequest);
+  }
+
+  @ApiOperation({ summary: '소켓 입장 인증 코드 검증' })
+  @Post('v1/:socketEntryCode/enter')
+  async verifyLolClientEntryCode(
+    @User('uuid') uuid: string,
+    @Param() verifySocketEntryCodeRequest: VerifySocketEntryCodeRequest,
+  ): Promise<any> {
+    return await this.summonerService.verifySocketEntryCode(verifySocketEntryCodeRequest);
   }
 }

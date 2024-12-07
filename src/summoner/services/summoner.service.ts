@@ -13,6 +13,7 @@ import { plainToInstance } from 'class-transformer';
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
+import { VerifySocketEntryCodeRequest } from '@summoner/dto/requests/verify-lol-client-entry-code-request.dto';
 
 @Injectable()
 export class SummonerService {
@@ -41,7 +42,7 @@ export class SummonerService {
   }
 
   async findSummoners(uuid: string): Promise<FindSummonersResponseDto> {
-    const cachedSummonerProfiles = await this.getSummonerProfileData('uuid', uuid);
+    const cachedSummonerProfiles = await this.getSummonerData('uuid', uuid);
 
     if (cachedSummonerProfiles)
       return plainToInstance(FindSummonersResponseDto, {
@@ -50,7 +51,7 @@ export class SummonerService {
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.setSummonerProfileData('uuid', uuid, summonerProfiles);
+    await this.setSummonerData('uuid', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
@@ -60,7 +61,7 @@ export class SummonerService {
   ): Promise<FindSummonerResponseDto> {
     const { summonerId } = findSummonerRequest;
 
-    const cachedSummonerProfile = await this.getSummonerProfileData('summonerId', summonerId);
+    const cachedSummonerProfile = await this.getSummonerData('summonerId', summonerId);
 
     if (cachedSummonerProfile)
       return plainToInstance(FindSummonerResponseDto, {
@@ -69,7 +70,7 @@ export class SummonerService {
 
     const summonerProfile = await this.findSummonerProfileById(parseInt(summonerId));
 
-    await this.setSummonerProfileData('summonerId', summonerId, summonerProfile);
+    await this.setSummonerData('summonerId', summonerId, summonerProfile);
 
     return plainToInstance(FindSummonerResponseDto, { summonerProfile });
   }
@@ -77,18 +78,54 @@ export class SummonerService {
   async removeSummoner(uuid: string, removeSummonerRequest: RemoveSummonerRequestDto) {
     const { summonerId } = removeSummonerRequest;
 
-    const cachedSummonerProfiles = await this.getSummonerProfileData('uuid', uuid);
+    const cachedSummonerProfiles = await this.getSummonerData('uuid', uuid);
 
-    if (cachedSummonerProfiles) await this.delSummonerProfileData('uuid', uuid);
+    if (cachedSummonerProfiles) await this.delSummonerData('uuid', uuid);
 
-    const cachedSummonerProfile = await this.getSummonerProfileData('summonerId', summonerId);
+    const cachedSummonerProfile = await this.getSummonerData('summonerId', summonerId);
 
-    if (cachedSummonerProfile) await this.delSummonerProfileData('summonerId', summonerId);
+    if (cachedSummonerProfile) await this.delSummonerData('summonerId', summonerId);
 
     await this.summonerRepository.deleteSummoner(parseInt(summonerId));
   }
 
-  private async getSummonerProfileData(
+  // QR코드에서 뽑아낸 puuid로 검증하는 기능
+  async verifySocketEntryCode(
+    verifySocketEntryCodeRequest: VerifySocketEntryCodeRequest,
+  ): Promise<any> {
+    const { socketEntryCode: puuid } = verifySocketEntryCodeRequest;
+
+    const summoner = await this.findSummonerProfileByPuuid(puuid);
+
+    if (!summoner)
+      throw new NotFoundException('해당 라이엇 계정으로 등록된 소환사가 존재하지 않습니다.');
+
+    // 레디스에 있는지 검사
+
+    // 레디스 값과 일치하는지 검사
+
+    // puuid 반환하고 클라이언트는 바로 소켓 연결 시도하기
+  }
+
+  async getSocketEntryCode(socketEntryCode: string): Promise<string | void> {
+    const cachedSocketEntryCode = await this.summonerCacheRepository.getSummoner(socketEntryCode);
+
+    if (cachedSocketEntryCode) return cachedSocketEntryCode;
+  }
+
+  async setSocketEntryCode(socketEntryCode: string, socketId: string): Promise<void> {
+    await this.summonerCacheRepository.setSummoner(
+      socketEntryCode,
+      socketId,
+      this.config.redis.summoner.ttl,
+    );
+  }
+
+  async delSocketEntryCode(socketEntryCode: string): Promise<void> {
+    await this.summonerCacheRepository.delSummoner(socketEntryCode);
+  }
+
+  private async getSummonerData(
     keyId: string,
     keyValue: string,
   ): Promise<SummonerProfileDto[] | SummonerProfileDto | void> {
@@ -97,20 +134,26 @@ export class SummonerService {
     if (cachedData) return JSON.parse(cachedData);
   }
 
-  private async setSummonerProfileData(
+  private async setSummonerData(
     keyId: string,
     keyValue: string,
-    summonerProfileData: SummonerProfileDto[] | SummonerProfileDto,
+    summonerData: SummonerProfileDto[] | SummonerProfileDto,
   ): Promise<void> {
     await this.summonerCacheRepository.setSummoner(
       `${keyId}:${keyValue}`,
-      JSON.stringify(summonerProfileData),
+      JSON.stringify(summonerData),
       this.config.redis.summoner.ttl,
     );
   }
 
-  private async delSummonerProfileData(keyId: string, keyValue: string): Promise<void> {
+  private async delSummonerData(keyId: string, keyValue: string): Promise<void> {
     await this.summonerCacheRepository.delSummoner(`${keyId}:${keyValue}`);
+  }
+
+  async findSummonerProfileByPuuid(puuid: string): Promise<SummonerProfileDto | null> {
+    const summoner = await this.summonerRepository.findSummonerByPuuid(puuid);
+
+    return plainToInstance(SummonerProfileDto, summoner);
   }
 
   private async createSummoner(uuid: string, rsoAccessCode: string): Promise<void> {
