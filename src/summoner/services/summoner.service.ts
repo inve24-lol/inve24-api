@@ -37,7 +37,11 @@ export class SummonerService {
 
     await this.createSummoner(uuid, rsoAccessCode);
 
-    return await this.findSummoners(uuid);
+    const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
+
+    await this.setSummonerData('uuid', uuid, summonerProfiles);
+
+    return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
 
   async findSummoners(uuid: string): Promise<FindSummonersResponseDto> {
