@@ -1,5 +1,4 @@
-import { AuthService } from '@auth/services/auth.service';
-import { forwardRef, Inject, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -10,6 +9,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { SocketService } from '@socket/services/socket.service';
 import { SummonerService } from '@summoner/services/summoner.service';
 import { Server, Socket } from 'socket.io';
 
@@ -22,8 +22,8 @@ export class WebClientSocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(
-    private readonly authService: AuthService,
-    @Inject(forwardRef(() => SummonerService)) private readonly summonerService: SummonerService,
+    private readonly socketService: SocketService,
+    private readonly summonerService: SummonerService,
   ) {}
 
   @WebSocketServer() private server!: Server;

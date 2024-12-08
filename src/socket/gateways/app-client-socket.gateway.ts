@@ -9,6 +9,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { SocketService } from '@socket/services/socket.service';
 import { SummonerService } from '@summoner/services/summoner.service';
 import { Server, Socket } from 'socket.io';
 
@@ -21,7 +22,8 @@ export class AppClientSocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(
-    @Inject(forwardRef(() => SummonerService)) private readonly summonerService: SummonerService,
+    private readonly socketService: SocketService,
+    private readonly summonerService: SummonerService,
   ) {}
 
   @WebSocketServer() private server!: Server;
@@ -48,7 +50,7 @@ export class AppClientSocketGateway
 
       // if (cachedAppClientId) await this.disconnectOldSocket(socketEntryCode, cachedAppClientId);
 
-      await this.summonerService.setSocketEntryCode(socketEntryCode, appClient.id);
+      await this.socketService.setSocketStatus(socketEntryCode, 'pending');
 
       console.log('기본 방', appClient.rooms);
 
@@ -89,7 +91,7 @@ export class AppClientSocketGateway
   async handleDisconnectRequest(@MessageBody() body: { socketEntryCode: string }): Promise<void> {
     const { socketEntryCode } = body;
 
-    await this.summonerService.delSocketEntryCode(socketEntryCode);
+    await this.socketService.delSocketStatus(socketEntryCode);
   }
 
   // async disconnectOldSocket(socketEntryCode: string, cachedAppClientId: string): Promise<void> {

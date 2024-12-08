@@ -127,7 +127,7 @@ export class SummonerService {
   private async checkSummonerExists(puuid: string): Promise<void> {
     const summoner = await this.summonerRepository.findSummonerByPuuid(puuid);
 
-    if (summoner) throw new ConflictException('해당 라이엇 계정으로 등록된 소환사가 존재합니다.');
+    if (summoner) throw new ConflictException('이미 등록된 소환사 계정입니다.');
   }
 
   private async checkSummonerCreationLimit(uuid: string): Promise<void> {
