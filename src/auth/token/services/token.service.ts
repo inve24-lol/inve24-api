@@ -8,8 +8,9 @@ import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthPayloadDto } from '@token/dto/auth-payload.dto';
 import { AuthTokensDto } from '@token/dto/auth-tokens-dto';
-import bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
+import bcrypt from 'bcrypt';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 @Injectable()
 export class TokenService {
@@ -27,6 +28,22 @@ export class TokenService {
     const refreshToken = await this.generateRefreshToken(authPayload);
 
     return plainToInstance(AuthTokensDto, { accessToken, refreshToken });
+  }
+
+  async verifyAccessToken(accessToken: string): Promise<PayloadDto> {
+    try {
+      const payload = this.jwtService.verify(accessToken);
+
+      return plainToInstance(PayloadDto, payload);
+    } catch (error) {
+      if (error instanceof TokenExpiredError)
+        throw new UnauthorizedException('엑세스 토큰이 만료되었습니다.');
+      else if (error instanceof JsonWebTokenError)
+        throw new UnauthorizedException(
+          '엑세스 토큰이 유효하지 않습니다. 유효한 토큰을 제공해 주세요.',
+        );
+      else throw new UnauthorizedException('Socket Authentication failed.');
+    }
   }
 
   async verifyRefreshToken(uuid: string, refreshToken: string): Promise<void> {
