@@ -75,24 +75,6 @@ export class SummonerService {
     await this.summonerRepository.deleteSummoner(parseInt(summonerId));
   }
 
-  async getSocketEntryCode(socketEntryCode: string): Promise<string | void> {
-    const cachedSocketEntryCode = await this.summonerCacheRepository.getSummoner(socketEntryCode);
-
-    if (cachedSocketEntryCode) return cachedSocketEntryCode;
-  }
-
-  async setSocketEntryCode(socketEntryCode: string, socketId: string): Promise<void> {
-    await this.summonerCacheRepository.setSummoner(
-      socketEntryCode,
-      socketId,
-      this.config.redis.summoner.ttl,
-    );
-  }
-
-  async delSocketEntryCode(socketEntryCode: string): Promise<void> {
-    await this.summonerCacheRepository.delSummoner(socketEntryCode);
-  }
-
   private async getSummonerData(
     keyId: string,
     keyValue: string,
