@@ -18,5 +18,9 @@ export default registerAs(REDIS_CONFIG_TOKEN, () => ({
       ttl: +process.env.REDIS_SUMMONER_TTL!,
       db: +process.env.REDIS_SUMMONER_DB!,
     },
+    socketClient: {
+      ttl: +process.env.REDIS_SOCKET_CLIENT_TTL!,
+      db: +process.env.REDIS_SOCKET_CLIENT_DB!,
+    },
   },
 }));

@@ -41,6 +41,10 @@ export class AuthService {
     return plainToInstance(RefreshResponseDto, { accessToken });
   }
 
+  async verifyWebClientSocket(accessToken: string): Promise<PayloadDto> {
+    return await this.tokenService.verifyAccessToken(accessToken);
+  }
+
   private async signInToken(userProfile: UserProfileDto): Promise<AuthTokensDto> {
     const payload: PayloadDto = plainToInstance(PayloadDto, userProfile);
 
