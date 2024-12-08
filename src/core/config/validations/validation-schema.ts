@@ -35,6 +35,8 @@ export const validationSchema = Joi.object({
   REDIS_REFRESH_TOKEN_DB: Joi.number().required(),
   REDIS_SUMMONER_TTL: Joi.number().required(),
   REDIS_SUMMONER_DB: Joi.number().required(),
+  REDIS_SOCKET_CLIENT_TTL: Joi.number().required(),
+  REDIS_SOCKET_CLIENT_DB: Joi.number().required(),
 
   RIOT_RSO_AUTH_HOST: Joi.string().required(),
   RIOT_RSO_AUTH_AUTHORIZE: Joi.string().required(),
