@@ -1,4 +1,4 @@
-import { forwardRef, Inject, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -32,7 +32,6 @@ export class AppClientSocketGateway
     this.server = server;
   }
 
-  // puuid로 존재하는 소환사 계정인지 검사 후 연결
   async handleConnection(@ConnectedSocket() appClient: Socket): Promise<void> {
     try {
       const { socketEntryCode } = appClient.handshake.auth;
@@ -45,10 +44,6 @@ export class AppClientSocketGateway
       //   throw new UnauthorizedException(
       //     '플레이 중이신 라이엇 계정이 서비스에 등록되어 있지 않습니다.',
       //   );
-
-      // const cachedAppClientId = await this.summonerService.getSocketEntryCode(socketEntryCode);
-
-      // if (cachedAppClientId) await this.disconnectOldSocket(socketEntryCode, cachedAppClientId);
 
       await this.socketService.setSocketStatus(socketEntryCode, 'pending');
 
@@ -93,24 +88,4 @@ export class AppClientSocketGateway
 
     await this.socketService.delSocketStatus(socketEntryCode);
   }
-
-  // async disconnectOldSocket(socketEntryCode: string, cachedAppClientId: string): Promise<void> {
-  //   console.log(this.server.sockets.sockets);
-  //   const oldAppClient = this.server.sockets.sockets.get(cachedAppClientId);
-
-  //   if (oldAppClient) {
-  //     await this.summonerService.delSocketEntryCode(socketEntryCode);
-
-  //     console.error(`중복 로그인 감지 (id: ${cachedAppClientId})`);
-
-  //     oldAppClient.emit(
-  //       'session-conflict-error',
-  //       '새로운 PC 접근이 감지되어 현재 연결을 종료합니다.',
-  //     );
-
-  //     oldAppClient.disconnect(true);
-  //   }
-
-  //   return;
-  // }
 }

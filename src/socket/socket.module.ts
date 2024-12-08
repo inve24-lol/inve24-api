@@ -5,9 +5,10 @@ import { WebClientSocketGateway } from '@socket/gateways/web-client-socket.gatew
 import { SummonerModule } from '@summoner/summoner.module';
 import { ISocketClientCacheRepository } from '@redis/abstracts/socket-client-repository.abstract';
 import { SocketClientCacheRepositoryImpl } from '@redis/repositories/socket-client-cache-repository.impl';
+import { AuthModule } from '@auth/auth.module';
 
 @Module({
-  imports: [SummonerModule],
+  imports: [SummonerModule, AuthModule],
   providers: [
     SocketService,
     AppClientSocketGateway,
