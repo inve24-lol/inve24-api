@@ -17,7 +17,7 @@ export class InitSummoner1732815987365 implements MigrationInterface {
             type: 'varchar',
             length: '36',
             isNullable: false,
-            comment: '유저 UUID (FK, NN, UQ)',
+            comment: '유저 UUID (FK, NN)',
           }),
           new TableColumn({
             name: 'puuid',
@@ -103,10 +103,6 @@ export class InitSummoner1732815987365 implements MigrationInterface {
           },
         ],
         uniques: [
-          {
-            name: 'UQ_IDX_summoner_user_uuid',
-            columnNames: ['user_uuid'],
-          },
           {
             name: 'UQ_IDX_summoner_puuid',
             columnNames: ['puuid'],

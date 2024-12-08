@@ -2,7 +2,6 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique }
 import { UserEntity } from './user.entity';
 
 @Entity('summoner')
-@Unique('UQ_IDX_summoner_user_uuid', ['userUuid'])
 @Unique('UQ_IDX_summoner_puuid', ['puuid'])
 export class SummonerEntity {
   @PrimaryGeneratedColumn({
@@ -16,7 +15,7 @@ export class SummonerEntity {
   @Column('varchar', {
     name: 'user_uuid',
     length: 36,
-    comment: '유저 UUID (FK, NN, UQ)',
+    comment: '유저 UUID (FK, NN)',
   })
   userUuid!: string;
 
