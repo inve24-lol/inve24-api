@@ -13,7 +13,6 @@ import { plainToInstance } from 'class-transformer';
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
-import { VerifySocketEntryCodeRequest } from '@summoner/dto/requests/verify-lol-client-entry-code-request.dto';
 
 @Injectable()
 export class SummonerService {
@@ -74,24 +73,6 @@ export class SummonerService {
     if (cachedSummonerProfiles) await this.delSummonerData('uuid', uuid);
 
     await this.summonerRepository.deleteSummoner(parseInt(summonerId));
-  }
-
-  // QR코드에서 뽑아낸 puuid로 검증하는 기능
-  async verifySocketEntryCode(
-    verifySocketEntryCodeRequest: VerifySocketEntryCodeRequest,
-  ): Promise<any> {
-    const { socketEntryCode: puuid } = verifySocketEntryCodeRequest;
-
-    const summoner = await this.findSummonerProfileByPuuid(puuid);
-
-    if (!summoner)
-      throw new NotFoundException('해당 라이엇 계정으로 등록된 소환사가 존재하지 않습니다.');
-
-    // 레디스에 있는지 검사
-
-    // 레디스 값과 일치하는지 검사
-
-    // puuid 반환하고 클라이언트는 바로 소켓 연결 시도하기
   }
 
   async getSocketEntryCode(socketEntryCode: string): Promise<string | void> {
