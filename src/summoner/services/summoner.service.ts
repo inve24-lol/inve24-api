@@ -61,16 +61,7 @@ export class SummonerService {
   ): Promise<FindSummonerResponseDto> {
     const { summonerId } = findSummonerRequest;
 
-    const cachedSummonerProfile = await this.getSummonerData('summonerId', summonerId);
-
-    if (cachedSummonerProfile)
-      return plainToInstance(FindSummonerResponseDto, {
-        summonerProfile: cachedSummonerProfile,
-      });
-
     const summonerProfile = await this.findSummonerProfileById(parseInt(summonerId));
-
-    await this.setSummonerData('summonerId', summonerId, summonerProfile);
 
     return plainToInstance(FindSummonerResponseDto, { summonerProfile });
   }
@@ -81,10 +72,6 @@ export class SummonerService {
     const cachedSummonerProfiles = await this.getSummonerData('uuid', uuid);
 
     if (cachedSummonerProfiles) await this.delSummonerData('uuid', uuid);
-
-    const cachedSummonerProfile = await this.getSummonerData('summonerId', summonerId);
-
-    if (cachedSummonerProfile) await this.delSummonerData('summonerId', summonerId);
 
     await this.summonerRepository.deleteSummoner(parseInt(summonerId));
   }
@@ -128,7 +115,7 @@ export class SummonerService {
   private async getSummonerData(
     keyId: string,
     keyValue: string,
-  ): Promise<SummonerProfileDto[] | SummonerProfileDto | void> {
+  ): Promise<SummonerProfileDto[] | void> {
     const cachedData = await this.summonerCacheRepository.getSummoner(`${keyId}:${keyValue}`);
 
     if (cachedData) return JSON.parse(cachedData);
@@ -137,7 +124,7 @@ export class SummonerService {
   private async setSummonerData(
     keyId: string,
     keyValue: string,
-    summonerData: SummonerProfileDto[] | SummonerProfileDto,
+    summonerData: SummonerProfileDto[],
   ): Promise<void> {
     await this.summonerCacheRepository.setSummoner(
       `${keyId}:${keyValue}`,
