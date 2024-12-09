@@ -2,14 +2,14 @@
   font-size: 30px;
 }
 
-#nav_bar {
+#nav_bar_container {
   margin: 0 20px 10px 20px;
 }
 
-#nav_logo {
+#nav_bar_logo {
   color: #16B7B8;
 }
 
-#nav_menu {
+#nav_bar_menu {
   font-size: 35px;
 }

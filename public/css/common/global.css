@@ -31,6 +31,41 @@ body {
 
 .font-default {
   font-family: "Do Hyeon", sans-serif;
+  font-size: 17px;
+}
+
+.container-default {
+  margin: 20px;
+  color: white;
+  background-color: #515163;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.input-default {
+  width: 80%;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #333333;
+  border-radius: 4px;
+  background-color: #2e2e2e;
+  color: #ffffff;
+  outline: none;
+}
+
+.btn-default {
+  width: 80%;
+  padding: 12px;
+  color: #ffffff;
+  background-color: #6c63ff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-default:hover {
+  background-color: #5750d1;
 }
 
 .cursor-pointer {
