@@ -1,0 +1,13 @@
+#login_container {
+  height: 250px;
+}
+
+#login_title {
+  font-size: 20px;
+}
+
+#login_description {
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
