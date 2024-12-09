@@ -1,10 +1,19 @@
+const EMAIL = document.getElementById('email_input');
+const PASSWORD = document.getElementById('password_input');
+
 const check = async () => {
   try {
     if (!EMAIL.value) return alert('이메일을 입력해주세요.');
 
     const params = EMAIL.value;
 
-    await axios.get(`${HOST}/users/v1/check/${params}`);
+    const { data } = await axios.get(`${HOST}/users/v1/check/${params}`);
+
+    if (!data) {
+      setLocalStorage('signupEmail', params);
+      redirectLocation(`${HOST}/signup`);
+      return;
+    }
 
     replaceText('login_title', '비밀번호를 입력해주세요.');
     hideElement('check_btn');
@@ -15,8 +24,6 @@ const check = async () => {
     const { status, data } = error.response;
     if (status === 400) alert('올바른 형식의 이메일을 입력해주세요.');
     else alert(data.message);
-
-    // 회원 가입 페이지로 이동
   }
 };
 

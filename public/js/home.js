@@ -1,3 +1,3 @@
 const redirectLoginPage = () => {
-  window.location.href = `${HOST}/login`;
+  redirectLocation(`${HOST}/login`);
 };
