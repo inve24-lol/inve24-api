@@ -1,0 +1,19 @@
+.home-font {
+  font-size: 17px;
+}
+
+#redirect_login {
+  height: 150px;
+  margin: 20px;
+  color: white;
+  background-color: #515163;
+  border-radius: 15px;
+}
+
+#redirect_login_btn {
+  padding: 5px 20px;
+  color: greenyellow;
+  background-color: #515163;
+  border: 1px solid greenyellow;
+  border-radius: 10px;
+}
