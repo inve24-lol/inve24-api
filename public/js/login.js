@@ -1,13 +1,10 @@
-const email = document.getElementById('email_input');
-const password = document.getElementById('password_input');
-
 const check = async () => {
   try {
-    if (!email.value) return alert('이메일을 입력해주세요.');
+    if (!EMAIL.value) return alert('이메일을 입력해주세요.');
 
-    const params = email.value;
+    const params = EMAIL.value;
 
-    await axios.get(`${hostBaseUrl}/users/v1/check/${params}`);
+    await axios.get(`${HOST}/users/v1/check/${params}`);
 
     replaceText('login_title', '비밀번호를 입력해주세요.');
     hideElement('check_btn');
@@ -25,11 +22,11 @@ const check = async () => {
 
 const login = async () => {
   try {
-    if (!password.value) return alert('비밀번호를 입력해주세요.');
+    if (!PASSWORD.value) return alert('비밀번호를 입력해주세요.');
 
-    const body = { email: email.value, password: password.value };
+    const body = { email: EMAIL.value, password: PASSWORD.value };
 
-    const { data } = await axios.post(`${hostBaseUrl}/auth/v1/signin`, body);
+    const { data } = await axios.post(`${HOST}/auth/v1/signin`, body);
 
     const { accessToken, userProfile } = data;
 
