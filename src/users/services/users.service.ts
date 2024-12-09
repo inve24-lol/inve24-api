@@ -51,12 +51,12 @@ export class UsersService {
     return plainToInstance(UserProfileDto, user);
   }
 
-  async checkUser(checkRequestDto: CheckRequestDto): Promise<void> {
+  async checkUser(checkRequestDto: CheckRequestDto): Promise<boolean> {
     const { email } = checkRequestDto;
 
     const user = await this.userRepository.findUserByEmail(email);
 
-    if (!user) throw new NotFoundException('해당 이메일로 생성된 계정이 존재하지 않습니다.');
+    return !!user;
   }
 
   async verifyPayload(uuid: string): Promise<void> {
