@@ -1,0 +1,40 @@
+body {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.flex-row-c-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-row-sb-c {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-col-c-c {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.font-default {
+  font-family: "Do Hyeon", sans-serif;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  body {
+    width: 500px;
+  }
+}
