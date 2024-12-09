@@ -46,17 +46,17 @@ body {
   width: 80%;
   padding: 12px;
   font-size: 14px;
-  border: 1px solid #333333;
+  border: 1px solid #b3b3b3;
   border-radius: 4px;
   background-color: #2e2e2e;
-  color: #ffffff;
+  color: white;
   outline: none;
 }
 
 .btn-default {
   width: 80%;
   padding: 12px;
-  color: #ffffff;
+  color: white;
   background-color: #6c63ff;
   border: none;
   border-radius: 4px;

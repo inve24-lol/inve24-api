@@ -1,13 +1,15 @@
 #login_container {
-  height: 250px;
+  height: 270px;
 }
 
 #login_title {
   font-size: 20px;
 }
 
-#login_description {
-  font-size: 14px;
-  color: #b3b3b3;
+#password_input {
+  display: none;
 }
 
+#login_btn {
+  display: none;
+}
