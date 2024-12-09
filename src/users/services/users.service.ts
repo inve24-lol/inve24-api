@@ -15,6 +15,7 @@ import { SignUpResponseDto } from '@users/dto/responses/sign-up-response.dto';
 import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
+import { CheckRequestDto } from '@users/dto/requests/check-request.dto';
 
 @Injectable()
 export class UsersService {
@@ -48,6 +49,14 @@ export class UsersService {
     if (!isPasswordMatched) throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
 
     return plainToInstance(UserProfileDto, user);
+  }
+
+  async checkUser(checkRequestDto: CheckRequestDto): Promise<void> {
+    const { email } = checkRequestDto;
+
+    const user = await this.userRepository.findUserByEmail(email);
+
+    if (!user) throw new NotFoundException('해당 이메일로 생성된 계정이 존재하지 않습니다.');
   }
 
   async verifyPayload(uuid: string): Promise<void> {
