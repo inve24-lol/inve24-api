@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <html class="flex-row-c-c" lang="ko">
-
   <head>
     {{> head }}
   </head>
-
   <body class="font-default">
     <header>
       {{> header }}
     </header>
-
     <div>
       {{> adfit }}
     </div>
-
     <main>
       <div id="redirect_login" class="home-font flex-col-se-c">
         <span>로그인 후 이용해 주세요.</span>
-        <div id="redirect_login_btn" class="cursor-pointer">
+        <div id="redirect_login_btn" class="cursor-pointer" onclick="redirectLoginPage()">
             <span>로그인</span>
         </div>
       </div>
     </main>
-
     <footer>
       {{> footer }}
     </footer>
+  {{> data }}
   </body>
 
 </html>
