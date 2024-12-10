@@ -82,8 +82,6 @@ const signup = async () => {
 
     alert(`안녕하세요, '${responseBody.userProfile.nickname}'님. 로그인을 진행해 주세요.`);
 
-    delLocalStorage('signupEmail');
-
     // 로그인 페이지로 이동
     redirectLocation(HOST, 'login');
   } catch (error) {

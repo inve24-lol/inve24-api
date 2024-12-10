@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   checkCurrentPageSession('userSession');
+
+  delLocalStorage('signupEmail');
 });
 
 const emailCheck = async () => {
@@ -15,6 +17,7 @@ const emailCheck = async () => {
 
       // 회원 가입 페이지로 이동
       redirectLocation(HOST, 'signup');
+
       return;
     }
 
@@ -42,7 +45,6 @@ const login = async () => {
   try {
     const { data: responseBody } = await axios.post(`${HOST}/auth/v1/signin`, loginRequestBody);
 
-    delLocalStorage('signupEmail');
     setLocalStorage('userSession', responseBody);
 
     alert(`'${responseBody.userProfile.nickname}'님. 로그인에 성공하였습니다.`);
