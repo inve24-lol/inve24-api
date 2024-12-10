@@ -1,9 +1,16 @@
-<div id="nav_bar_container" class="header-font flex-row-sb-c cursor-pointer"> 
-  <div>
-    <span id="nav_bar_logo">INVE24</span>
+<div id="nav_container" class="flex-row-sb-c"> 
+  <div id="nav_logo_box">
+    <div id="nav_logo" class="cursor-pointer nav-logo-font">
+      INVE24
+    </div>
   </div>
-  <div>
-    <div id="nav_bar_menu" class="btn-default" onclick="redirectLoginPage()">로그인</div>
+  <div id="nav_btn_box">
+    <div id="nav_login_btn" class="btn nav-btn-font" onclick="redirectLoginPage()">
+      로그인
+    </div>
+    <div id="nav_logout_btn" class="btn nav-btn-font" onclick="logout()">
+      로그아웃
+    </div>
   </div>
 </div>
 
