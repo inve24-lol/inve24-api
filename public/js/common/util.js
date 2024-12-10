@@ -1,5 +1,5 @@
-const redirectLocation = (url) => {
-  window.location.href = url;
+const redirectLocation = (host, endPoint = '') => {
+  window.location.href = `${host}/${endPoint}`;
 };
 
 const replaceText = (elementId, content) => {

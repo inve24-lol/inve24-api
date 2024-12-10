@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  if (getLocalStorage('userSession')) {
+    alert('올바른 접근이 아닙니다.');
+
+    // 메인 페이지로 이동
+    redirectLocation(HOST);
+  }
+
   hideElement('nav_login_btn');
 });
 
@@ -8,13 +15,13 @@ const emailCheck = async () => {
   if (!EMAIL) return alert('이메일을 입력해주세요.');
 
   try {
-    const { data } = await axios.get(`${HOST}/users/v1/check/${EMAIL}`);
+    const { data: responseBody } = await axios.get(`${HOST}/users/v1/check/${EMAIL}`);
 
-    if (!data) {
+    if (!responseBody) {
       setLocalStorage('signupEmail', EMAIL);
 
       // 회원 가입 페이지로 이동
-      redirectLocation(`${HOST}/signup`);
+      redirectLocation(HOST, 'signup');
       return;
     }
 
@@ -23,9 +30,11 @@ const emailCheck = async () => {
     showElement('password_input');
     showElement('login_btn');
   } catch (error) {
-    const { status, data } = error.response;
-    if (status === 400) alert('올바른 형식의 이메일을 입력해주세요.');
-    else alert(data.message);
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400) alert(`올바른 형식의 이메일을 입력해주세요. code: ${status}`);
+      else alert(`${data.message} code: ${status}`);
+    } else alert('client error');
   }
 };
 
@@ -38,21 +47,21 @@ const login = async () => {
   const loginRequestBody = { email: EMAIL, password: PASSWORD };
 
   try {
-    const { data } = await axios.post(`${HOST}/auth/v1/signin`, loginRequestBody);
-
-    const { accessToken, userProfile } = data;
+    const { data: responseBody } = await axios.post(`${HOST}/auth/v1/signin`, loginRequestBody);
 
     delLocalStorage('signupEmail');
-    setLocalStorage('accessToken', accessToken);
-    setLocalStorage('userProfile', userProfile);
+    setLocalStorage('userSession', responseBody);
 
-    alert(`'${userProfile.nickname}'님. 로그인에 성공하였습니다.`);
+    alert(`'${responseBody.userProfile.nickname}'님. 로그인에 성공하였습니다.`);
 
     // 메인 페이지로 이동
-    redirectLocation(`${HOST}`);
+    redirectLocation(HOST);
   } catch (error) {
-    const { status, data } = error.response;
-    if (status === 400) alert('올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
-    else alert(data.message);
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400)
+        alert(`올바른 형식의 이메일 또는 비밀번호를 입력해주세요. code: ${status}`);
+      else alert(`${data.message} code: ${status}`);
+    } else alert('client error');
   }
 };

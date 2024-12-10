@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  if (getLocalStorage('userSession')) {
+    alert('올바른 접근이 아닙니다.');
+
+    // 메인 페이지로 이동
+    redirectLocation(HOST);
+  }
+
   hideElement('nav_login_btn');
   disableBtn('verify_email_btn');
 });
@@ -9,17 +16,17 @@ const sendEmail = async () => {
   if (!EMAIL) return alert('올바른 접근이 아닙니다.');
 
   try {
-    const { data } = await axios.get(`${HOST}/mail/v1/${EMAIL}`);
+    const { data: responseBody } = await axios.get(`${HOST}/mail/v1/${EMAIL}`);
 
-    const { email } = data;
-
-    alert(`${email}로 인증 코드를 전송하였습니다.`);
+    alert(`${responseBody.email}로 인증 코드를 전송하였습니다.`);
 
     enableBtn('verify_email_btn');
   } catch (error) {
-    const { status, data } = error.response;
-    if (status === 400) alert('올바른 형식의 이메일을 입력해주세요.');
-    else alert(data.message);
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400) alert(`올바른 형식의 이메일을 입력해주세요. code: ${status}`);
+      else alert(`${data.message} code: ${status}`);
+    } else alert('client error');
   }
 };
 
@@ -37,11 +44,9 @@ const verifyEmail = async () => {
   if (EMAIL_CODE.length !== 6) return alert('6자리의 이메일 인증 코드를 입력해주세요.');
 
   try {
-    const { data } = await axios.get(`${HOST}/mail/v1/${EMAIL_CODE}/${EMAIL}`);
+    const { data: responseBody } = await axios.get(`${HOST}/mail/v1/${EMAIL_CODE}/${EMAIL}`);
 
-    const { email } = data;
-
-    alert(`${email} 인증에 성공하였습니다.`);
+    alert(`${responseBody.email} 인증에 성공하였습니다.`);
 
     replaceText('signup_title', '가입 정보를 입력해주세요.');
     hideElement('send_email_box');
@@ -50,9 +55,11 @@ const verifyEmail = async () => {
     showElement('password_input');
     showElement('signup_btn');
   } catch (error) {
-    const { status, data } = error.response;
-    if (status === 400) alert('올바른 형식의 이메일 인증 코드를 입력해주세요.');
-    else alert(data.message);
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400) alert(`올바른 형식의 이메일 인증 코드를 입력해주세요. code: ${status}`);
+      else alert(`${data.message} code: ${status}`);
+    } else alert('client error');
   }
 };
 
@@ -77,19 +84,20 @@ const signup = async () => {
   const signupRequestBody = { email: EMAIL, password: PASSWORD, nickname: NICKNAME };
 
   try {
-    const { data } = await axios.post(`${HOST}/users/v1/signup/`, signupRequestBody);
+    const { data: responseBody } = await axios.post(`${HOST}/users/v1/signup/`, signupRequestBody);
 
-    const { userProfile } = data;
-
-    alert(`안녕하세요, '${userProfile.nickname}'님. 로그인을 진행해 주세요.`);
+    alert(`안녕하세요, '${responseBody.userProfile.nickname}'님. 로그인을 진행해 주세요.`);
 
     delLocalStorage('signupEmail');
 
     // 로그인 페이지로 이동
-    redirectLocation(`${HOST}/login`);
+    redirectLocation(HOST, 'login');
   } catch (error) {
-    const { status, data } = error.response;
-    if (status === 400) alert('올바른 형식의 닉네임 또는 비밀번호를 입력해주세요.');
-    else alert(data.message);
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400)
+        alert(`올바른 형식의 닉네임 또는 비밀번호를 입력해주세요. code: ${status}`);
+      else alert(`${data.message} code: ${status}`);
+    } else alert('client error');
   }
 };
