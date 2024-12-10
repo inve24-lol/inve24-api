@@ -16,6 +16,16 @@ const checkCurrentPageSession = (userSession) => {
   }
 };
 
+const redirectHomePage = () => {
+  // 메인 페이지로 이동
+  redirectLocation(HOST);
+};
+
+const redirectLoginPage = () => {
+  // 로그인 페이지로 이동
+  redirectLocation(HOST, 'login');
+};
+
 const logout = async () => {
   if (!getLocalStorage('userSession')) return alert('올바른 접근이 아닙니다.');
 
