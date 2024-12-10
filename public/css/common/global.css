@@ -49,11 +49,11 @@ body {
   align-items: center;
 }
 
-.container-default {
+.container {
   margin: 20px;
+  border-radius: 15px;
   color: white;
   background-color: #515163;
-  border-radius: 15px;
   text-align: center;
 }
 
