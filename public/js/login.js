@@ -1,4 +1,6 @@
-hideElement('nav_login_btn');
+document.addEventListener('DOMContentLoaded', () => {
+  hideElement('nav_login_btn');
+});
 
 const emailCheck = async () => {
   const EMAIL = document.getElementById('email_input').value;

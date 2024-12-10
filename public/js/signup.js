@@ -1,9 +1,11 @@
-hideElement('nav_login_btn');
-disableBtn('verify_email_btn');
-
-const EMAIL = getLocalStorage('signupEmail');
+document.addEventListener('DOMContentLoaded', () => {
+  hideElement('nav_login_btn');
+  disableBtn('verify_email_btn');
+});
 
 const sendEmail = async () => {
+  const EMAIL = getLocalStorage('signupEmail');
+
   if (!EMAIL) return alert('올바른 접근이 아닙니다.');
 
   try {
@@ -22,6 +24,8 @@ const sendEmail = async () => {
 };
 
 const verifyEmail = async () => {
+  const EMAIL = getLocalStorage('signupEmail');
+
   const EMAIL_CODE = document.getElementById('email_code_input').value;
 
   if (!EMAIL) return alert('올바른 접근이 아닙니다.');
@@ -53,6 +57,8 @@ const verifyEmail = async () => {
 };
 
 const signup = async () => {
+  const EMAIL = getLocalStorage('signupEmail');
+
   const NICKNAME = document.getElementById('nickname_input').value;
   const PASSWORD = document.getElementById('password_input').value;
 
