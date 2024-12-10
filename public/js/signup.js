@@ -1,12 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  if (getLocalStorage('userSession')) {
-    alert('올바른 접근이 아닙니다.');
+  checkCurrentPageSession('userSession');
 
-    // 메인 페이지로 이동
-    redirectLocation(HOST);
-  }
-
-  hideElement('nav_login_btn');
   disableBtn('verify_email_btn');
 });
 
