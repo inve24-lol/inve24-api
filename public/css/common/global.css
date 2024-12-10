@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   width: 100%;
   margin: 0px;
@@ -57,22 +61,20 @@ body {
   text-align: center;
 }
 
-.input-default {
-  width: 80%;
+.input {
   padding: 12px;
-  font-size: 14px;
   border: 1px solid #b3b3b3;
   border-radius: 4px;
-  background-color: #2e2e2e;
   color: white;
-  outline: none;
+  background-color: #2e2e2e;
 }
 
 .btn {
+  border-radius: 4px;
   color: white;
   background-color: #6c63ff;
-  border-radius: 4px;
   text-align: center;
+  cursor: pointer;
   transition: background-color 0.3s;
 }
 

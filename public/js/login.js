@@ -1,7 +1,7 @@
 const EMAIL = document.getElementById('email_input');
 const PASSWORD = document.getElementById('password_input');
 
-const check = async () => {
+const emailCheck = async () => {
   try {
     if (!EMAIL.value) return alert('이메일을 입력해주세요.');
 
@@ -16,8 +16,7 @@ const check = async () => {
     }
 
     replaceText('login_title', '비밀번호를 입력해주세요.');
-    hideElement('check_btn');
-    hideElement('email_input');
+    hideElement('email_check_btn');
     showElement('password_input');
     showElement('login_btn');
   } catch (error) {

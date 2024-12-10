@@ -1,15 +1,38 @@
+.login-input-font {
+  font-size: 14px;
+}
+
 #login_container {
-  height: 270px;
+  height: 300px;
 }
 
 #login_title {
   font-size: 20px;
 }
 
+#login_input_box {
+  width: 70%;
+  gap: 10px;
+}
+
+#email_input {
+  width: 100%;
+}
+
 #password_input {
+  width: 100%;
   display: none;
 }
 
+#login_btn_box {
+  width: 70%;
+}
+
+#email_check_btn {
+  padding: 8px;
+}
+
 #login_btn {
+  padding: 8px;
   display: none;
 }
