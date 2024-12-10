@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  if (getLocalStorage('summonerInfo')) showElement('summoner_container');
+  else hideElement('summoner_container');
+
   delLocalStorage('signupEmail');
 });
 
