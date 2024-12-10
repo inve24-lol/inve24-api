@@ -45,7 +45,12 @@ const login = async () => {
   try {
     const { data: responseBody } = await axios.post(`${HOST}/auth/v1/signin`, loginRequestBody);
 
-    setLocalStorage('userSession', responseBody);
+    const userSession = {
+      userProfile: responseBody.userProfile,
+      header: { headers: { Authorization: `Bearer ${responseBody.accessToken}` } },
+    };
+
+    setLocalStorage('userSession', userSession);
 
     alert(`'${responseBody.userProfile.nickname}'님. 로그인에 성공하였습니다.`);
 

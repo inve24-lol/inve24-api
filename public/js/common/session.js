@@ -38,14 +38,10 @@ const redirectLoginPage = () => {
 const logout = async () => {
   if (!getLocalStorage('userSession')) return alert('올바른 접근이 아닙니다.');
 
-  const { accessToken } = getLocalStorage('userSession');
-
-  const logoutRequestHeader = {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  };
+  const { header } = getLocalStorage('userSession');
 
   try {
-    await axios.delete(`${HOST}/auth/v1/signout`, logoutRequestHeader);
+    await axios.delete(`${HOST}/auth/v1/signout`, header);
 
     delLocalStorage('userSession');
 
