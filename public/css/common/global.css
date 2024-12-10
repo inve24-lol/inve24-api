@@ -78,6 +78,13 @@ body {
   transition: background-color 0.3s;
 }
 
+.btn-disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  pointer-events: none; /* 클릭 비활성화 */
+}
+
 .btn:hover {
   background-color: #5750d1;
 }

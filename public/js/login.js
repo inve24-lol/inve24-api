@@ -1,16 +1,17 @@
-const EMAIL = document.getElementById('email_input');
-const PASSWORD = document.getElementById('password_input');
+hideElement('nav_login_btn');
 
 const emailCheck = async () => {
+  const EMAIL = document.getElementById('email_input').value;
+
+  if (!EMAIL) return alert('이메일을 입력해주세요.');
+
   try {
-    if (!EMAIL.value) return alert('이메일을 입력해주세요.');
-
-    const params = EMAIL.value;
-
-    const { data } = await axios.get(`${HOST}/users/v1/check/${params}`);
+    const { data } = await axios.get(`${HOST}/users/v1/check/${EMAIL}`);
 
     if (!data) {
-      setLocalStorage('signupEmail', params);
+      setLocalStorage('signupEmail', EMAIL);
+
+      // 회원 가입 페이지로 이동
       redirectLocation(`${HOST}/signup`);
       return;
     }
@@ -27,21 +28,29 @@ const emailCheck = async () => {
 };
 
 const login = async () => {
+  const EMAIL = document.getElementById('email_input').value;
+  const PASSWORD = document.getElementById('password_input').value;
+
+  if (!PASSWORD) return alert('비밀번호를 입력해주세요.');
+
+  const loginRequestBody = { email: EMAIL, password: PASSWORD };
+
   try {
-    if (!PASSWORD.value) return alert('비밀번호를 입력해주세요.');
-
-    const body = { email: EMAIL.value, password: PASSWORD.value };
-
-    const { data } = await axios.post(`${HOST}/auth/v1/signin`, body);
+    const { data } = await axios.post(`${HOST}/auth/v1/signin`, loginRequestBody);
 
     const { accessToken, userProfile } = data;
 
-    console.log(accessToken, userProfile);
+    delLocalStorage('signupEmail');
+    setLocalStorage('accessToken', accessToken);
+    setLocalStorage('userProfile', userProfile);
 
-    // 롤 계정 등록 페이지로 이동
+    alert(`'${userProfile.nickname}'님. 로그인에 성공하였습니다.`);
+
+    // 메인 페이지로 이동
+    redirectLocation(`${HOST}`);
   } catch (error) {
     const { status, data } = error.response;
-    if (status === 400) alert('올바른 형식의 이메일 또는 비밀번호를 입력해주세요');
+    if (status === 400) alert('올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
     else alert(data.message);
   }
 };
