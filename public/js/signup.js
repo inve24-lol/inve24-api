@@ -16,11 +16,8 @@ const sendEmail = async () => {
 
     enableBtn('verify_email_btn');
   } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400) alert(`올바른 형식의 이메일을 입력해주세요. code: ${status}`);
-      else alert(`${data.message} code: ${status}`);
-    } else alert('client error');
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response, '올바른 형식의 이메일을 입력해주세요.');
   }
 };
 
@@ -49,11 +46,8 @@ const verifyEmail = async () => {
     showElement('password_input');
     showElement('signup_btn');
   } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400) alert(`올바른 형식의 이메일 인증 코드를 입력해주세요. code: ${status}`);
-      else alert(`${data.message} code: ${status}`);
-    } else alert('client error');
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response, '올바른 형식의 이메일 인증 코드를 입력해주세요.');
   }
 };
 
@@ -85,11 +79,7 @@ const signup = async () => {
     // 로그인 페이지로 이동
     redirectLocation(HOST, 'login');
   } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400)
-        alert(`올바른 형식의 닉네임 또는 비밀번호를 입력해주세요. code: ${status}`);
-      else alert(`${data.message} code: ${status}`);
-    } else alert('client error');
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response, '올바른 형식의 닉네임 또는 비밀번호를 입력해주세요.');
   }
 };

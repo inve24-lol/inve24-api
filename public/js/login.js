@@ -16,9 +16,7 @@ const emailCheck = async () => {
       setLocalStorage('signupEmail', EMAIL);
 
       // 회원 가입 페이지로 이동
-      redirectLocation(HOST, 'signup');
-
-      return;
+      return redirectLocation(HOST, 'signup');
     }
 
     replaceText('login_title', '비밀번호를 입력해주세요.');
@@ -26,11 +24,8 @@ const emailCheck = async () => {
     showElement('password_input');
     showElement('login_btn');
   } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400) alert(`올바른 형식의 이메일을 입력해주세요. code: ${status}`);
-      else alert(`${data.message} code: ${status}`);
-    } else alert('client error');
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response, '올바른 형식의 이메일을 입력해주세요.');
   }
 };
 
@@ -57,11 +52,7 @@ const login = async () => {
     // 메인 페이지로 이동
     redirectLocation(HOST);
   } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400)
-        alert(`올바른 형식의 이메일 또는 비밀번호를 입력해주세요. code: ${status}`);
-      else alert(`${data.message} code: ${status}`);
-    } else alert('client error');
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response, '올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
   }
 };
