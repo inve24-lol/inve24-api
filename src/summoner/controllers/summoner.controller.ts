@@ -1,4 +1,7 @@
 import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
+import { RolesGuard } from '@auth/guards/roles.guard';
+import { Role } from '@common/constants/roles.enum';
+import { Roles } from '@common/decorators/roles.decorator';
 import { User } from '@common/decorators/user.decorator';
 import {
   Controller,
@@ -28,14 +31,14 @@ import { RiotSignOnUrlResponseDto } from '@summoner/dto/responses/riot-sign-on-u
 import { SummonerService } from '@summoner/services/summoner.service';
 
 @ApiTags('Summoner')
-@ApiBearerAuth('access-token')
-@UseGuards(JwtAccessTokenGuard)
 @Controller('summoner')
 export class SummonerController {
   constructor(private readonly summonerService: SummonerService) {}
 
   @ApiOperation({ summary: 'RSO URL 조회' })
   @ApiOkResponse({ type: RiotSignOnUrlResponseDto })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Get('v1/rso-url')
   riotSignOnUrl(): RiotSignOnUrlResponseDto {
@@ -44,6 +47,8 @@ export class SummonerController {
 
   @ApiOperation({ summary: '소환사 등록' })
   @ApiCreatedResponse({ type: FindSummonersResponseDto })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post('v1/summoners')
   async registerSummoner(
@@ -55,6 +60,9 @@ export class SummonerController {
 
   @ApiOperation({ summary: '소환사 목록 조회' })
   @ApiOkResponse({ type: FindSummonersResponseDto })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAccessTokenGuard, RolesGuard)
+  @Roles(Role.MEMBER, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Get('v1/summoners')
   async findSummoners(@User('uuid') uuid: string): Promise<FindSummonersResponseDto> {
@@ -63,6 +71,9 @@ export class SummonerController {
 
   @ApiOperation({ summary: '소환사 조회' })
   @ApiOkResponse({ type: FindSummonerResponseDto })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAccessTokenGuard, RolesGuard)
+  @Roles(Role.MEMBER, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Get('v1/summoners/:summonerId')
   async findSummoner(
@@ -73,6 +84,9 @@ export class SummonerController {
 
   @ApiOperation({ summary: '소환사 삭제' })
   @ApiNoContentResponse({ description: 'No content' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAccessTokenGuard, RolesGuard)
+  @Roles(Role.MEMBER, Role.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('v1/summoners/:summonerId')
   async removeSummoner(
