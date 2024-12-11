@@ -56,7 +56,7 @@ const getMySummoners = async () => {
 
     const { summonerProfiles } = responseBody;
 
-    setLocalStorage('summonerProfiles', summonerProfiles);
+    if (summonerProfiles) setLocalStorage('summonerProfiles', summonerProfiles);
   } catch (error) {
     if (!error.response) return alert('client error');
     await handleSessionError(error.response);
