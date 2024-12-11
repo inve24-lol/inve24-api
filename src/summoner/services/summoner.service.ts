@@ -13,11 +13,14 @@ import { plainToInstance } from 'class-transformer';
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
+import { UsersService } from '@users/services/users.service';
+import { Role } from '@common/constants/roles.enum';
 
 @Injectable()
 export class SummonerService {
   constructor(
     private readonly httpService: HttpService,
+    private readonly usersService: UsersService,
     private readonly summonerCacheRepository: ISummonerCacheRepository,
     private readonly summonerRepository: ISummonerRepository,
     @Inject(redisConfig.KEY) private readonly config: ConfigType<typeof redisConfig>,
@@ -37,9 +40,13 @@ export class SummonerService {
 
     await this.createSummoner(uuid, rsoAccessCode);
 
+    const summonerCount = await this.summonerRepository.findSummonerCountByUserUuid(uuid);
+
+    if (summonerCount === 1) await this.usersService.updateUserRole(uuid, Role.MEMBER);
+
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.setSummonerData('uuid', uuid, summonerProfiles);
+    if (summonerProfiles) await this.setSummonerData('uuid', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
@@ -54,7 +61,7 @@ export class SummonerService {
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    await this.setSummonerData('uuid', uuid, summonerProfiles);
+    if (summonerProfiles) await this.setSummonerData('uuid', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
@@ -77,6 +84,10 @@ export class SummonerService {
     if (cachedSummonerProfiles) await this.delSummonerData('uuid', uuid);
 
     await this.summonerRepository.deleteSummoner(parseInt(summonerId));
+
+    const summonerCount = await this.summonerRepository.findSummonerCountByUserUuid(uuid);
+
+    if (summonerCount === 0) await this.usersService.updateUserRole(uuid, Role.GUEST);
   }
 
   private async getSummonerData(
@@ -148,12 +159,9 @@ export class SummonerService {
     return plainToInstance(SummonerProfileDto, summoners);
   }
 
-  private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[]> {
+  private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[] | null> {
     const summoners = await this.summonerRepository.findSummonersByUserUuid(uuid);
 
-    if (!summoners.length)
-      throw new NotFoundException('해당 계정으로 등록된 소환사가 존재하지 않습니다.');
-
-    return plainToInstance(SummonerProfileDto, summoners);
+    return summoners.length ? plainToInstance(SummonerProfileDto, summoners) : null;
   }
 }

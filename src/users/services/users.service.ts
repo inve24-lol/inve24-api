@@ -16,6 +16,8 @@ import { UserProfileDto } from '@users/dto/internals/user-profile.dto';
 import bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import { CheckRequestDto } from '@users/dto/requests/check-request.dto';
+import { Role } from '@common/constants/roles.enum';
+import { UpdateUserRoleDto } from '@users/dto/internals/update-user-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -49,6 +51,16 @@ export class UsersService {
     if (!isPasswordMatched) throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
 
     return plainToInstance(UserProfileDto, user);
+  }
+
+  async updateUserRole(uuid: string, role: Role): Promise<void> {
+    const user = await this.userRepository.findUserByUuid(uuid);
+
+    if (!user) throw new NotFoundException('계정이 존재하지 않습니다.');
+
+    const updateUserRole = plainToInstance(UpdateUserRoleDto, { ...user, role });
+
+    await this.userRepository.saveUser(updateUserRole);
   }
 
   async checkUser(checkRequestDto: CheckRequestDto): Promise<boolean> {
@@ -93,7 +105,7 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, this.config.bcrypt.passwordSalt);
 
-    const createUser: CreateUserDto = plainToInstance(CreateUserDto, {
+    const createUser = plainToInstance(CreateUserDto, {
       ...signUpRequest,
       password: hashedPassword,
     });
