@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   checkCurrentPageSession('userSession');
 
-  delLocalStorage('signupEmail');
+  if (getLocalStorage('signupEmail')) delLocalStorage('signupEmail');
 });
 
 const emailCheck = async () => {

@@ -74,8 +74,8 @@ const logout = async () => {
     redirectLocation(HOST);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response);
     await handleSessionError(error.response);
+    await handleCommonError(error.response);
   }
 };
 
