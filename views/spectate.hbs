@@ -1,7 +1,28 @@
-<div id="spectate_container" class="flex-col-se-c container">
-  <div id="spectate_title_box">
-    <div id="spectate_title">
-      관전 페이지 입니다.
+<div id="spectate_wrap" class="flex-col-se-c">
+  <div id="summoner_profile_container" class="flex-col-sb-c container spectate-container">
+    <div id="summoner_profile_box" class="flex-row-s-c">
+      <div id="rank_img_box">
+        <img id="rank_img" src="img/Rank=challenger.png" />
+      </div>
+      <div id="league_box" class="flex-col-sb-c">
+        <div id="league_summoner_box" class="flex-row-s-c">
+          <div id="summoner_name" class="league-font">닉네임</div>
+          <div id="summoner_tag" class="league-font">태그</div>
+        </div>
+        <div id="league_tier" class="league-font">티어</div>
+        <div id="league_point" class="league-font">점수</div>
+        <div id="league_score" class="league-font">승률</div>
+      </div>
+    </div>
+    <div id="summoner_btn_box">
+      <div id="summoner_btn" class="btn">
+        게임 조회
+      </div>
+    </div>
+  </div>
+  <div id="spectate_container" class="flex-col-c-c container spectate-container">
+    <div id="spectate_log_box" class="flex-row-c-c">
+      <textarea id="spectate_log_area" rows="10" placeholder="로그가 출력되는 곳입니다." disabled></textarea>
     </div>
   </div>
 </div>
