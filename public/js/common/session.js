@@ -46,7 +46,7 @@ const logout = async () => {
     await axios.delete(`${HOST}/auth/v1/signout`, header);
 
     delLocalStorage('userSession');
-    delLocalStorage('summonerInfo');
+    delLocalStorage('summonerProfiles');
 
     alert(`로그아웃 되었습니다.`);
 

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (getCodeFromUrl()) await riotSignOn(getCodeFromUrl());
 
-  if (getLocalStorage('summonerInfo')) displaySummonerList(getLocalStorage('summonerInfo'));
+  if (getLocalStorage('summonerProfiles')) displaySummonerList(getLocalStorage('summonerProfiles'));
 });
 
 const redirectRiotSignOnPage = async () => {
@@ -37,7 +37,7 @@ const riotSignOn = async (code) => {
 
     const { summonerProfiles } = responseBody;
 
-    setLocalStorage('summonerInfo', summonerProfiles);
+    setLocalStorage('summonerProfiles', summonerProfiles);
 
     openNewPage(RIOT_SIGN_OUT_URL);
 
@@ -59,7 +59,7 @@ const getMySummoners = async () => {
 
     const { summonerProfiles } = responseBody;
 
-    setLocalStorage('summonerInfo', summonerProfiles);
+    setLocalStorage('summonerProfiles', summonerProfiles);
   } catch (error) {
     if (error.response) {
       const { status, data } = error.response;
@@ -68,23 +68,57 @@ const getMySummoners = async () => {
   }
 };
 
-const displaySummonerList = (summonerInfo) => {
-  const wrap = document.getElementById('home_wrap');
+const deleteMySummoner = async (summonerId) => {
+  const { header } = checkUserSessionExists('userSession');
 
-  summonerInfo.forEach((summoner) => {
-    const container = createDivClass('summoner-container flex-col-se-c container home-container');
+  try {
+    await axios.delete(`${HOST}/summoner/v1/summoners/${summonerId}`, header);
 
-    const summonerDiv = createDivClass('summoner flex-row-sb-c');
+    delLocalStorage('summonerProfiles');
+
+    redirectLocation(HOST);
+  } catch (error) {
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400) alert(`올바른 소환사 ID 형식이 아닙니다. code: ${status}`);
+      else alert(`${data.message} code: ${status}`);
+    } else alert('client error');
+  }
+};
+
+const displaySummonerList = (summonerProfiles) => {
+  const summonerWrap = document.getElementById('home_wrap');
+
+  summonerProfiles.forEach((summoner) => {
+    const summonerContainer = createDivClass(
+      'summoner-container flex-col-se-c container home-container',
+    );
+
+    const summonerBoxDiv = createDivClass('summoner-box flex-row-sb-c');
+
+    const summonerDeleteBtnDiv = createDivClass('btn summoner-delete-btn');
+    setDivText(summonerDeleteBtnDiv, '< 삭제');
 
     const summonerTitleDiv = createDivClass('summoner-title');
     setDivText(summonerTitleDiv, `${summoner.gameName} #${summoner.tagLine}`);
 
-    const summonerBtnDiv = createDivClass('btn summoner-select-btn');
-    setDivText(summonerBtnDiv, '선택 >');
+    const summonerSelectBtnDiv = createDivClass('btn summoner-select-btn');
+    setDivText(summonerSelectBtnDiv, '선택 >');
 
-    appendChildToParent(summonerTitleDiv, summonerDiv);
-    appendChildToParent(summonerBtnDiv, summonerDiv);
-    appendChildToParent(summonerDiv, container);
-    appendChildToParent(container, wrap);
+    summonerDeleteBtnDiv.addEventListener('click', async () => {
+      if (confirm(`'${summoner.gameName}' 계정을 삭제하시겠습니까?`))
+        await deleteMySummoner(summoner.id);
+    });
+
+    summonerSelectBtnDiv.addEventListener('click', () => {
+      if (confirm(`'${summoner.gameName}' 계정으로 조회를 시작합니다.`))
+        setLocalStorage('selectedSummonerProfile', summoner);
+    });
+
+    appendChildToParent(summonerDeleteBtnDiv, summonerBoxDiv);
+    appendChildToParent(summonerTitleDiv, summonerBoxDiv);
+    appendChildToParent(summonerSelectBtnDiv, summonerBoxDiv);
+    appendChildToParent(summonerBoxDiv, summonerContainer);
+    appendChildToParent(summonerContainer, summonerWrap);
   });
 };

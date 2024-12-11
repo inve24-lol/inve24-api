@@ -11,13 +11,21 @@
   height: 50px;
 }
 
-.summoner {
+.summoner-box {
   width: 100%;
   gap: 10px;
 }
 
 .summoner-title{
-  margin-left: 20px;
+  font-size: 17px;
+}
+
+.summoner-delete-btn {
+  background-color: #b3b3b3;
+  margin-left: 5px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  padding: 8px;
 }
 
 .summoner-select-btn {
