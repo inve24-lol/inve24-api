@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  delLocalStorage('signupEmail');
+  if (getLocalStorage('signupEmail')) delLocalStorage('signupEmail');
 
-  if (getLocalStorage('userSession')) await getMySummoners();
+  if (getLocalStorage('userSession')) {
+    const { userProfile } = getLocalStorage('userSession');
+    if (userProfile.role !== 'GUEST') await getMySummoners();
+  }
 
   if (getCodeFromUrl()) await riotSignOn(getCodeFromUrl());
 
@@ -19,8 +22,8 @@ const redirectRiotSignOnPage = async () => {
     redirectLocation(riotSignOnUrl);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response, '올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
     await handleSessionError(error.response);
+    await handleCommonError(error.response, '올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
   }
 };
 
@@ -43,8 +46,8 @@ const riotSignOn = async (code) => {
     redirectLocation(HOST);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response, 'rso access code 필요합니다.');
     await handleSessionError(error.response);
+    await handleCommonError(error.response, 'rso access code 필요합니다.');
   }
 };
 
@@ -56,11 +59,11 @@ const getMySummoners = async () => {
 
     const { summonerProfiles } = responseBody;
 
-    setLocalStorage('summonerProfiles', summonerProfiles);
+    if (summonerProfiles) setLocalStorage('summonerProfiles', summonerProfiles);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response);
     await handleSessionError(error.response);
+    await handleCommonError(error.response);
   }
 };
 
@@ -75,8 +78,8 @@ const deleteMySummoner = async (summonerId) => {
     redirectLocation(HOST);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response, '올바른 소환사 ID 형식이 아닙니다.');
     await handleSessionError(error.response);
+    await handleCommonError(error.response, '올바른 소환사 ID 형식이 아닙니다.');
   }
 };
 

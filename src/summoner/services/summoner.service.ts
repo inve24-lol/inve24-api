@@ -13,11 +13,14 @@ import { plainToInstance } from 'class-transformer';
 import { FindSummonerRequestDto } from '@summoner/dto/requests/find-summoner-request.dto';
 import { FindSummonerResponseDto } from '@summoner/dto/responses/find-summoner-response.dto';
 import { RemoveSummonerRequestDto } from '@summoner/dto/requests/remove-summoner-request.dto';
+import { UsersService } from '@users/services/users.service';
+import { Role } from '@common/constants/roles.enum';
 
 @Injectable()
 export class SummonerService {
   constructor(
     private readonly httpService: HttpService,
+    private readonly usersService: UsersService,
     private readonly summonerCacheRepository: ISummonerCacheRepository,
     private readonly summonerRepository: ISummonerRepository,
     @Inject(redisConfig.KEY) private readonly config: ConfigType<typeof redisConfig>,
@@ -36,6 +39,10 @@ export class SummonerService {
     const { rsoAccessCode } = registerSummonerRequest;
 
     await this.createSummoner(uuid, rsoAccessCode);
+
+    const summonerCount = await this.summonerRepository.findSummonerCountByUserUuid(uuid);
+
+    if (summonerCount === 1) await this.usersService.updateUserRole(uuid, Role.MEMBER);
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
@@ -77,6 +84,10 @@ export class SummonerService {
     if (cachedSummonerProfiles) await this.delSummonerData('uuid', uuid);
 
     await this.summonerRepository.deleteSummoner(parseInt(summonerId));
+
+    const summonerCount = await this.summonerRepository.findSummonerCountByUserUuid(uuid);
+
+    if (summonerCount === 0) await this.usersService.updateUserRole(uuid, Role.GUEST);
   }
 
   private async getSummonerData(

@@ -27,14 +27,6 @@ const checkCurrentPageSession = (userSession) => {
   }
 };
 
-const handleCommonError = async (error, description = '') => {
-  const { status, data } = error;
-  const { message } = data;
-
-  if (status === 400) alert(`${description} code: ${status}`);
-  else alert(`${message} code: ${status}`);
-};
-
 const handleSessionError = async (error) => {
   const { message } = error.data;
 
@@ -45,6 +37,14 @@ const handleSessionError = async (error) => {
   ) {
     redirectLocation(HOST, 'login');
   }
+};
+
+const handleCommonError = async (error, description = '') => {
+  const { status, data } = error;
+  const { message } = data;
+
+  if (status === 400) alert(`${description} code: ${status}`);
+  else alert(`${message} code: ${status}`);
 };
 
 const redirectHomePage = () => {
@@ -74,8 +74,8 @@ const logout = async () => {
     redirectLocation(HOST);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response);
     await handleSessionError(error.response);
+    await handleCommonError(error.response);
   }
 };
 

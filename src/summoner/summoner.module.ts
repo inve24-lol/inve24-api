@@ -7,9 +7,10 @@ import { TypeOrmExModule } from '@type-orm/type-orm-ex.module';
 import { ISummonerCacheRepository } from '@redis/abstracts/summoner-cache-repository.abstract';
 import { SummonerCacheRepositoryImpl } from '@redis/repositories/summoner-cache-repository.impl';
 import { HttpModule } from '@http/http.module';
+import { UsersModule } from '@users/users.module';
 
 @Module({
-  imports: [HttpModule, TypeOrmExModule.forCustomRepository([SummonerRepositoryImpl])],
+  imports: [HttpModule, UsersModule, TypeOrmExModule.forCustomRepository([SummonerRepositoryImpl])],
   controllers: [SummonerController],
   providers: [
     SummonerService,
