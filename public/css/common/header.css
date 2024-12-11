@@ -1,0 +1,25 @@
+.nav-logo-font{
+  font-size: 30px;
+}
+
+.nav-btn-font {
+  font-size: 17px;
+}
+
+#nav_container {
+  width: 100%;
+  margin: 10px 20px;
+}
+
+#nav_logo {
+  color: #16B7B8;
+}
+
+#nav_login_btn {
+  padding: 8px;
+}
+
+#nav_logout_btn {
+  padding: 8px;
+  display: none;
+}

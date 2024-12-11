@@ -7,10 +7,10 @@ import { SendEmailCertCodeResponseDto } from '@mail/dto/responses/send-email-cer
 import { VerifyEmailCertCodeResponseDto } from '@mail/dto/responses/verify-email-cert-code-response.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
-  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { UsersService } from '@users/services/users.service';
@@ -45,10 +45,10 @@ export class MailService {
 
     const redisCertCode = await this.mailCacheRepository.getCertCode(email);
 
-    if (!redisCertCode) throw new BadRequestException('이메일 인증 코드가 만료되었습니다.');
+    if (!redisCertCode) throw new UnauthorizedException('이메일 인증 코드가 만료되었습니다.');
 
     if (certCode !== redisCertCode)
-      throw new BadRequestException('이메일 인증 코드가 일치하지 않습니다.');
+      throw new UnauthorizedException('이메일 인증 코드가 일치하지 않습니다.');
 
     await this.mailCacheRepository.delCertCode(email);
 

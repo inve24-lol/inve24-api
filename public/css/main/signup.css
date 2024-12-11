@@ -1,0 +1,53 @@
+.signup-input-font {
+  font-size: 14px;
+}
+
+.send-email-btn-font {
+  font-size: 17px;
+}
+
+#signup_container {
+  height: 300px;
+}
+
+#signup_input_box {
+  width: 70%;
+  gap: 10px;
+}
+
+#send_email_box {
+  width: 100%;
+  gap: 10px;
+}
+
+#email_code_input {
+  width: 70%;
+}
+
+#send_email_btn {
+  width: 30%;
+  padding: 8px;
+}
+
+#nickname_input {
+  width: 100%;
+  display: none;
+}
+
+#password_input {
+  width: 100%;
+  display: none;
+}
+
+#signup_btn_box {
+  width: 70%;
+}
+
+#verify_email_btn {
+  padding: 8px;
+}
+
+#signup_btn {
+  padding: 8px;
+  display: none;
+}

@@ -1,0 +1,102 @@
+document.addEventListener('DOMContentLoaded', () => {
+  if (getLocalStorage('userSession')) {
+    hideElement('nav_login_btn');
+    showElement('nav_logout_btn');
+  }
+});
+
+const checkUserSessionExists = (userSession) => {
+  if (!getLocalStorage(userSession)) {
+    alert('로그인이 필요한 서비스입니다.');
+
+    // 로그인 페이지로 이동
+    redirectLocation(HOST, 'login');
+  }
+
+  return getLocalStorage(userSession);
+};
+
+const checkCurrentPageSession = (userSession) => {
+  if (getLocalStorage(userSession)) {
+    alert('올바른 접근이 아닙니다.');
+
+    // 메인 페이지로 이동
+    redirectLocation(HOST);
+  } else {
+    hideElement('nav_login_btn');
+  }
+};
+
+const handleCommonError = async (error, description = '') => {
+  const { status, data } = error;
+  const { message } = data;
+
+  if (status === 400) alert(`${description} code: ${status}`);
+  else alert(`${message} code: ${status}`);
+};
+
+const handleSessionError = async (error) => {
+  const { message } = error.data;
+
+  if (message === '엑세스 토큰이 만료되었습니다.') {
+    await refreshSession();
+  } else if (
+    message === '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.'
+  ) {
+    redirectLocation(HOST, 'login');
+  }
+};
+
+const redirectHomePage = () => {
+  // 메인 페이지로 이동
+  redirectLocation(HOST);
+};
+
+const redirectLoginPage = () => {
+  // 로그인 페이지로 이동
+  redirectLocation(HOST, 'login');
+};
+
+const logout = async () => {
+  if (!getLocalStorage('userSession')) return alert('올바른 접근이 아닙니다.');
+
+  const { header } = getLocalStorage('userSession');
+
+  try {
+    await axios.delete(`${HOST}/auth/v1/signout`, header);
+
+    delLocalStorage('userSession');
+    delLocalStorage('summonerProfiles');
+
+    alert(`로그아웃 되었습니다.`);
+
+    // 메인 페이지로 이동
+    redirectLocation(HOST);
+  } catch (error) {
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response);
+    await handleSessionError(error.response);
+  }
+};
+
+const refreshSession = async () => {
+  try {
+    const { data: responseBody } = await axios.post(
+      `${HOST}/auth/v1/refresh`,
+      {},
+      { withCredentials: true },
+    );
+
+    const { userProfile } = getLocalStorage('userSession');
+
+    const userSession = {
+      userProfile,
+      header: { headers: { Authorization: `Bearer ${responseBody.accessToken}` } },
+    };
+
+    setLocalStorage('userSession', userSession);
+  } catch (error) {
+    if (!error.response) return alert('client error');
+    await handleCommonError(error.response);
+  }
+};

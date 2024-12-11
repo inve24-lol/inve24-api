@@ -1,0 +1,23 @@
+<div id="signup_container" class="flex-col-se-c container">
+  <div id="signp_title_box">
+    <div id="signup_title">이메일을 인증해주세요.</div>
+  </div>
+  <div id="signup_input_box" class="flex-col-c-c">
+    <div id="send_email_box" class="flex-row-sb-c">
+      <input id="email_code_input" class="input signup-input-font" maxlength="6" pattern="\d{6}" placeholder="6자리 인증 코드 입력" required />
+      <div id="send_email_btn" class="btn send-email-btn-font" onclick="sendEmail()">
+        코드 전송
+      </div>
+    </div>
+    <input id="nickname_input" class="input signup-input-font" type="string" placeholder="닉네임 (10자 이하)" required />
+    <input id="password_input" class="input signup-input-font" type="password" placeholder="비밀번호 (8자 이상, 1개 이상의 특수 문자)" required />
+  </div>
+  <div id="signup_btn_box">
+    <div id="verify_email_btn" class="btn btn-disabled" onclick="verifyEmail()">
+      인증하기
+    </div>
+    <div id="signup_btn" class="btn" onclick="signup()">
+      회원 가입
+    </div>
+  </div>
+</div>
