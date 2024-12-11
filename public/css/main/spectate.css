@@ -1,5 +1,10 @@
-.league-font {
+.high-font {
   font-size: 17px;
+}
+
+.fade-font {
+  font-size: 14px;
+  color: #b3b3b3;
 }
 
 .spectate-container {
@@ -40,6 +45,10 @@
   width: 70%;
   height: 75%;
   margin-right: 20px;
+}
+
+#league_summoner_box {
+  gap: 5px
 }
 
 #spectate_container {

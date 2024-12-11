@@ -14,6 +14,10 @@ const replaceText = (elementId, content) => {
   document.getElementById(elementId).innerHTML = content;
 };
 
+const setRankImg = (elementId, rank) => {
+  document.getElementById(elementId).src = `img/Rank=${rank}.png`;
+};
+
 const createDivClass = (className) => {
   const div = document.createElement('div');
   div.className = className;
