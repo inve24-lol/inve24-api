@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
   if (getLocalStorage('signupEmail')) delLocalStorage('signupEmail');
 
-  if (getLocalStorage('userSession')) await getMySummoners();
+  if (getLocalStorage('userSession')) {
+    const { userProfile } = getLocalStorage('userSession');
+    if (userProfile.role !== 'GUEST') await getMySummoners();
+  }
 
   if (getCodeFromUrl()) await riotSignOn(getCodeFromUrl());
 
