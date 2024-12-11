@@ -3,10 +3,7 @@ import { RefreshResponseDto } from '@auth/dto/responses/refresh-response.dto';
 import { SignInResponseDto } from '@auth/dto/responses/sign-in-response.dto';
 import { JwtAccessTokenGuard } from '@auth/guards/jwt-access-token.guard';
 import { JwtRefreshTokenGuard } from '@auth/guards/jwt-refresh-token.guard';
-import { RolesGuard } from '@auth/guards/roles.guard';
 import { AuthService } from '@auth/services/auth.service';
-import { Role } from '@common/constants/roles.enum';
-import { Roles } from '@common/decorators/roles.decorator';
 import { User } from '@common/decorators/user.decorator';
 import { PayloadDto } from '@common/dto/payload.dto';
 import serverConfig from '@config/settings/server.config';
@@ -77,8 +74,7 @@ export class AuthController {
   @ApiOperation({ summary: '엑세스 토큰 갱신' })
   @ApiOkResponse({ type: RefreshResponseDto })
   @ApiCookieAuth('refresh-token')
-  @UseGuards(JwtRefreshTokenGuard, RolesGuard) // ⚠ This Must Be Changed
-  @Roles(Role.GUEST, Role.MEMBER, Role.ADMIN) // ⚠ This Must Be Deleted
+  @UseGuards(JwtRefreshTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Post('v1/refresh')
   async refresh(@User() payload: PayloadDto): Promise<RefreshResponseDto> {
