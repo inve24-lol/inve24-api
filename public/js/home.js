@@ -108,8 +108,12 @@ const displaySummonerList = (summonerProfiles) => {
     });
 
     summonerSelectBtnDiv.addEventListener('click', () => {
-      if (confirm(`'${summoner.gameName}' 계정으로 조회를 시작합니다.`))
-        setLocalStorage('selectedSummonerProfile', summoner);
+      if (confirm(`'${summoner.gameName}' 계정으로 조회를 시작합니다.`)) {
+        setLocalStorage('selectedSummonerProfile', { selectedSummonerProfile: summoner });
+
+        // 관전 페이지로 이동
+        redirectLocation(HOST, 'spectate');
+      }
     });
 
     appendChildToParent(summonerDeleteBtnDiv, summonerBoxDiv);
