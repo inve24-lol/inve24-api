@@ -7,6 +7,10 @@
   margin: 0px;
 }
 
+.summoner-container {
+  height: 50px;
+}
+
 .summoner {
   width: 100%;
   gap: 10px;
@@ -48,6 +52,3 @@
   margin-right: 15px;
 }
 
-#summoner_container {
-  height: 50px;
-}

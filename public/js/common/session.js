@@ -12,6 +12,8 @@ const checkUserSessionExists = (userSession) => {
     // 로그인 페이지로 이동
     redirectLocation(HOST, 'login');
   }
+
+  return getLocalStorage(userSession);
 };
 
 const checkCurrentPageSession = (userSession) => {
@@ -44,6 +46,7 @@ const logout = async () => {
     await axios.delete(`${HOST}/auth/v1/signout`, header);
 
     delLocalStorage('userSession');
+    delLocalStorage('summonerInfo');
 
     alert(`로그아웃 되었습니다.`);
 

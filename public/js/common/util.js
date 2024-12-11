@@ -2,8 +2,30 @@ const redirectLocation = (host, endPoint = '') => {
   window.location.href = `${host}/${endPoint}`;
 };
 
+const getCodeFromUrl = () => {
+  return new URLSearchParams(window.location.search).get('code');
+};
+
+const openNewPage = (url) => {
+  window.open(url, '_blank');
+};
+
 const replaceText = (elementId, content) => {
   document.getElementById(elementId).innerHTML = content;
+};
+
+const createDivClass = (className) => {
+  const div = document.createElement('div');
+  div.className = className;
+  return div;
+};
+
+const setDivText = (div, text) => {
+  div.textContent = text;
+};
+
+const appendChildToParent = (child, parent) => {
+  parent.appendChild(child);
 };
 
 const showElement = (elementId) => {
