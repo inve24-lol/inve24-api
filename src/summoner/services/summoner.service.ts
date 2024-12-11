@@ -46,7 +46,7 @@ export class SummonerService {
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    if (summonerProfiles) await this.setSummonerData('uuid', uuid, summonerProfiles);
+    await this.setSummonerData('uuid', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
@@ -61,7 +61,7 @@ export class SummonerService {
 
     const summonerProfiles = await this.findSummonerProfilesByUuid(uuid);
 
-    if (summonerProfiles) await this.setSummonerData('uuid', uuid, summonerProfiles);
+    await this.setSummonerData('uuid', uuid, summonerProfiles);
 
     return plainToInstance(FindSummonersResponseDto, { summonerProfiles });
   }
@@ -159,9 +159,12 @@ export class SummonerService {
     return plainToInstance(SummonerProfileDto, summoners);
   }
 
-  private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[] | null> {
+  private async findSummonerProfilesByUuid(uuid: string): Promise<SummonerProfileDto[]> {
     const summoners = await this.summonerRepository.findSummonersByUserUuid(uuid);
 
-    return summoners.length ? plainToInstance(SummonerProfileDto, summoners) : null;
+    if (!summoners.length)
+      throw new NotFoundException('해당 계정으로 등록된 소환사가 존재하지 않습니다.');
+
+    return plainToInstance(SummonerProfileDto, summoners);
   }
 }
