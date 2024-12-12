@@ -75,6 +75,12 @@ const spectate = async () => {
     appendLog(`🟩 ${message}`);
   });
 
+  webServerSocket.on('game-status', (body) => {
+    const { message } = body;
+
+    appendLog(`🟦 현재 게임 상태: ${message}`);
+  });
+
   webServerSocket.on('app-not-found', async (body) => {
     const { message } = body;
 
