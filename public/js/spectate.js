@@ -81,6 +81,12 @@ const spectate = async () => {
     appendLog(`🟦 현재 게임 상태: ${message}`);
   });
 
+  webServerSocket.on('game-start-time', (body) => {
+    const { message } = body;
+
+    gameProgressTime(Number(message));
+  });
+
   webServerSocket.on('app-not-found', async (body) => {
     const { message } = body;
 
@@ -111,6 +117,22 @@ const joinWebServerRoom = async (webServerSocket, puuid) => {
 
     appendLog(`🟩 ${message}`);
   });
+};
+
+const gameProgressTime = (gameStartTime) => {
+  let counter = 0;
+  const intervalId = setInterval(async () => {
+    deleteLog();
+    appendLog(`🟪 게임 진행 시간: ${counter + gameStartTime}초`);
+
+    counter++;
+
+    if (counter + gameStartTime >= 60) {
+      appendLog('🟨 1분이 경과되어 서버 연결을 종료합니다.');
+      clearInterval(intervalId);
+      await finishSpectate();
+    }
+  }, 1000);
 };
 
 const finishSpectate = async (puuid) => {
