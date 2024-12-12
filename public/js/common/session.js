@@ -27,9 +27,7 @@ const checkCurrentPageSession = (userSession) => {
   }
 };
 
-const handleSessionError = async (error) => {
-  const { message } = error.data;
-
+const handleSocketSessionError = async (message) => {
   if (message === '엑세스 토큰이 만료되었습니다.') {
     await refreshSession();
   } else if (
@@ -39,10 +37,29 @@ const handleSessionError = async (error) => {
   }
 };
 
+const handleSessionError = async (error) => {
+  const { message } = error.data;
+  let isSessionError = false;
+  console.log(11111111);
+
+  if (message === '엑세스 토큰이 만료되었습니다.') {
+    await refreshSession();
+    isSessionError = true;
+  } else if (
+    message === '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.'
+  ) {
+    isSessionError = true;
+    redirectLocation(HOST, 'login');
+  }
+
+  return isSessionError;
+};
+
 const handleCommonError = async (error, description = '') => {
   const { status, data } = error;
   const { message } = data;
-
+  console.log(22222222);
+  console.log(message);
   if (status === 400) alert(`${description} code: ${status}`);
   else alert(`${message} code: ${status}`);
 };
@@ -67,6 +84,8 @@ const logout = async () => {
 
     delLocalStorage('userSession');
     delLocalStorage('summonerProfiles');
+    delLocalStorage('selectedSummonerProfile');
+    delLocalStorage('webServerSocket');
 
     alert(`로그아웃 되었습니다.`);
 
@@ -87,6 +106,8 @@ const refreshSession = async () => {
       { withCredentials: true },
     );
 
+    console.log('엑세스 토큰 갱신 :', responseBody);
+
     const { userProfile } = getLocalStorage('userSession');
 
     const userSession = {
@@ -97,6 +118,7 @@ const refreshSession = async () => {
     setLocalStorage('userSession', userSession);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response);
+    let isSessionError = await handleSessionError(error.response);
+    if (!isSessionError) await handleCommonError(error.response);
   }
 };
