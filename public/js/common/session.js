@@ -27,16 +27,43 @@ const checkCurrentPageSession = (userSession) => {
   }
 };
 
-const handleSessionError = async (error) => {
-  const { message } = error.data;
+const handleSocketSessionError = async (message) => {
+  let isSessionError = false;
 
   if (message === '엑세스 토큰이 만료되었습니다.') {
     await refreshSession();
-  } else if (
-    message === '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.'
-  ) {
-    redirectLocation(HOST, 'login');
+    isSessionError = true;
   }
+
+  if (message === '리프레시 토큰이 만료되었습니다.') {
+    alert('로그인 세션 만료. 다시 로그인해 주세요.');
+    delLocalStorage('userSession');
+    delLocalStorage('summonerProfiles');
+    redirectHomePage();
+    isSessionError = true;
+  }
+
+  return isSessionError;
+};
+
+const handleSessionError = async (error) => {
+  const { message } = error.data;
+  let isSessionError = false;
+
+  if (message === '엑세스 토큰이 만료되었습니다.') {
+    await refreshSession();
+    isSessionError = true;
+  }
+
+  if (message === '리프레시 토큰이 만료되었습니다.') {
+    alert('로그인 세션 만료. 다시 로그인해 주세요.');
+    delLocalStorage('userSession');
+    delLocalStorage('summonerProfiles');
+    redirectHomePage();
+    isSessionError = true;
+  }
+
+  return isSessionError;
 };
 
 const handleCommonError = async (error, description = '') => {
@@ -67,6 +94,8 @@ const logout = async () => {
 
     delLocalStorage('userSession');
     delLocalStorage('summonerProfiles');
+    delLocalStorage('selectedSummonerProfile');
+    delLocalStorage('webServerSocket');
 
     alert(`로그아웃 되었습니다.`);
 
@@ -87,6 +116,8 @@ const refreshSession = async () => {
       { withCredentials: true },
     );
 
+    console.log('엑세스 토큰 갱신 됨');
+
     const { userProfile } = getLocalStorage('userSession');
 
     const userSession = {
@@ -97,6 +128,7 @@ const refreshSession = async () => {
     setLocalStorage('userSession', userSession);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response);
+    let isSessionError = await handleSessionError(error.response);
+    if (!isSessionError) await handleCommonError(error.response);
   }
 };

@@ -1,12 +1,11 @@
 import { AuthService } from '@auth/services/auth.service';
 import { Role } from '@common/constants/roles.enum';
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, UnauthorizedException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -20,20 +19,16 @@ import { Server, Socket } from 'socket.io';
   namespace: '/ws/socket/web',
 })
 @WebSocketGateway()
-export class WebClientSocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class WebClientSocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly authService: AuthService,
-    private readonly socketService: SocketService,
+    @Inject(forwardRef(() => SocketService)) private socketService: SocketService,
     private readonly summonerService: SummonerService,
   ) {}
 
-  @WebSocketServer() private server!: Server;
+  @WebSocketServer() public server!: Server;
 
-  afterInit(server: Server) {
-    this.server = server;
-  }
+  private _socketEntryCode!: string;
 
   async handleConnection(@ConnectedSocket() webClient: Socket) {
     try {
@@ -47,7 +42,7 @@ export class WebClientSocketGateway
 
       const { role } = await this.authService.verifyWebClientSocket(accessToken);
 
-      if (role !== Role.GUEST)
+      if (role === Role.GUEST)
         throw new ForbiddenException('해당 리소스에 접근할 수 있는 권한이 없습니다.');
 
       const { socketEntryCode } = webClient.handshake.auth;
@@ -56,19 +51,26 @@ export class WebClientSocketGateway
 
       const summoner = await this.summonerService.findSummonerProfileByPuuid(socketEntryCode);
 
-      // if (!summoner)
-      //   throw new UnauthorizedException(
-      //     '플레이 중이신 라이엇 계정이 서비스에 등록되어 있지 않습니다.',
-      //   );
+      if (!summoner)
+        throw new UnauthorizedException(
+          '플레이 중이신 라이엇 계정이 서비스에 등록되어 있지 않습니다.',
+        );
 
       const cachedSocketStatus = await this.socketService.getSocketStatus(socketEntryCode);
 
       if (!cachedSocketStatus)
         throw new UnauthorizedException('연결된 데스크탑 앱이 존재하지 않습니다.');
 
+      if (cachedSocketStatus !== 'pending')
+        throw new UnauthorizedException('이미 연결된 클라이언트가 존재합니다.');
+
       await this.socketService.setSocketStatus(socketEntryCode, 'active');
 
-      console.log('기본 방', webClient.rooms);
+      this._socketEntryCode = socketEntryCode;
+
+      console.log('클라이언트 기본 방', webClient.rooms);
+
+      webClient.emit('invite-room', { message: '데스크탑 앱 인증 성공', data: null });
     } catch (error) {
       console.error(`클라이언트 소켓 연결 실패 (id: ${webClient.id})`);
       webClient.emit('handle-connection-error', error);
@@ -76,31 +78,32 @@ export class WebClientSocketGateway
     }
   }
 
-  handleDisconnect(@ConnectedSocket() webClient: Socket) {
+  async handleDisconnect(@ConnectedSocket() webClient: Socket): Promise<void> {
     console.log(`종료된 클라이언트 소켓 (id: ${webClient.id})`);
+
+    await this.socketService.setSocketStatus(this._socketEntryCode, 'pending');
   }
 
   @SubscribeMessage('join-room')
   handleJoinRoom(
     @ConnectedSocket() webClient: Socket,
     @MessageBody() body: { socketEntryCode: string },
-  ) {
+  ): void {
     const { socketEntryCode } = body;
 
     webClient.join(socketEntryCode);
 
-    console.log('puuid 방 추가', webClient.rooms);
+    console.log('클라이언트 puuid 방 추가', webClient.rooms);
 
-    webClient.emit('join-room-reply-web', {
-      message: '데스크탑 앱과 연결되었습니다.',
-      data: null,
-    });
+    webClient.emit('join-room-reply', { message: '데스크탑 앱과 연결되었습니다.', data: null });
+
+    this.socketService.emitToAll(socketEntryCode, 'hello');
   }
 
   @SubscribeMessage('disconnect-request')
   async handleDisconnectRequest(@MessageBody() body: { socketEntryCode: string }): Promise<void> {
     const { socketEntryCode } = body;
 
-    await this.socketService.delSocketStatus(socketEntryCode);
+    await this.socketService.setSocketStatus(socketEntryCode, 'pending');
   }
 }

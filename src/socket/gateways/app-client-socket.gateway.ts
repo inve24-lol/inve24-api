@@ -1,10 +1,9 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { forwardRef, Inject, UnauthorizedException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -18,19 +17,13 @@ import { Server, Socket } from 'socket.io';
   namespace: '/ws/socket/app',
 })
 @WebSocketGateway()
-export class AppClientSocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class AppClientSocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
-    private readonly socketService: SocketService,
+    @Inject(forwardRef(() => SocketService)) private socketService: SocketService,
     private readonly summonerService: SummonerService,
   ) {}
 
-  @WebSocketServer() private server!: Server;
-
-  afterInit(server: Server) {
-    this.server = server;
-  }
+  @WebSocketServer() public server!: Server;
 
   async handleConnection(@ConnectedSocket() appClient: Socket): Promise<void> {
     try {
@@ -40,14 +33,14 @@ export class AppClientSocketGateway
 
       const summoner = await this.summonerService.findSummonerProfileByPuuid(socketEntryCode);
 
-      // if (!summoner)
-      //   throw new UnauthorizedException(
-      //     '플레이 중이신 라이엇 계정이 서비스에 등록되어 있지 않습니다.',
-      //   );
+      if (!summoner)
+        throw new UnauthorizedException(
+          '플레이 중이신 라이엇 계정이 서비스에 등록되어 있지 않습니다.',
+        );
 
       await this.socketService.setSocketStatus(socketEntryCode, 'pending');
 
-      console.log('기본 방', appClient.rooms);
+      console.log('일렉트론 기본 방', appClient.rooms);
 
       appClient.emit('invite-room', { message: '라이엇 계정 인증 성공', data: null });
     } catch (error) {
@@ -64,22 +57,15 @@ export class AppClientSocketGateway
   @SubscribeMessage('join-room')
   handleJoinRoom(
     @ConnectedSocket() appClient: Socket,
-    @MessageBody() body: { roomId: string },
+    @MessageBody() body: { socketEntryCode: string },
   ): void {
-    const { roomId } = body;
+    const { socketEntryCode } = body;
 
-    appClient.join(roomId);
+    appClient.join(socketEntryCode);
 
-    console.log('puuid 방 추가', appClient.rooms);
+    console.log('일렉트론 puuid 방 추가', appClient.rooms);
 
-    // this.server
-    //   .to(roomId)
-    //   .emit('join-room-reply-app', { message: '화면에 발급된 QR코드를 찍어주세요.', data: null });
-
-    appClient.emit('join-room-reply-app', {
-      message: '서버 방 참여 성공',
-      data: null,
-    });
+    appClient.emit('join-room-reply', { message: '서버 방 참여 성공', data: null });
   }
 
   @SubscribeMessage('disconnect-request')

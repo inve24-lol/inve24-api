@@ -5,6 +5,7 @@ export const validationSchema = Joi.object({
 
   SERVER_PORT: Joi.number().required(),
   SERVER_HOST: Joi.string().required(),
+  SERVER_HOST_IP: Joi.string().required(),
   SERVER_CLIENT_KAKAO_ADFIT: Joi.string().required(),
   SERVER_CLIENT_RIOT_SIGN_OUT_URL: Joi.string().required(),
 

@@ -47,4 +47,17 @@ export class AppController {
       hostBaseUrl: this.config.server.host,
     };
   }
+
+  @ApiOperation({ summary: '관전 페이지' })
+  @Get('/spectate')
+  @Render('spectate')
+  spectatePage() {
+    return {
+      layout: 'layouts/layout',
+      title: '관전 페이지',
+      vertex: 'spectate',
+      adfit: this.config.server.client.kakaoAdfitKey,
+      hostBaseUrl: this.config.server.host,
+    };
+  }
 }

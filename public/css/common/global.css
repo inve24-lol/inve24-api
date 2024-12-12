@@ -26,6 +26,12 @@ body {
   align-items: center;
 }
 
+.flex-row-s-c {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
 .flex-row-sb-c {
   display: flex;
   justify-content: space-between;
@@ -56,6 +62,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  align-items: center;
+}
+
+.flex-col-sa-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
 }
 

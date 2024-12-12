@@ -19,7 +19,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  const PORT = configService.get(SERVER_CONFIG_TOKEN).server.port;
+  const { port: PORT, host: HOST, hostIp: HOST_IP } = configService.get(SERVER_CONFIG_TOKEN).server;
+
+  app.enableCors({ origin: [HOST, HOST_IP], credentials: true });
 
   app.use(cookieParser());
 

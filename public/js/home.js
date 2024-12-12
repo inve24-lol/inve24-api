@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  if (getLocalStorage('signupEmail')) delLocalStorage('signupEmail');
-
   if (getLocalStorage('userSession')) {
     const { userProfile } = getLocalStorage('userSession');
     if (userProfile.role !== 'GUEST') await getMySummoners();
@@ -8,7 +6,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (getCodeFromUrl()) await riotSignOn(getCodeFromUrl());
 
+  if (getLocalStorage('signupEmail')) delLocalStorage('signupEmail');
+
   if (getLocalStorage('summonerProfiles')) displaySummonerList(getLocalStorage('summonerProfiles'));
+
+  if (getLocalStorage('selectedSummonerProfile')) delLocalStorage('selectedSummonerProfile');
+
+  if (getLocalStorage('webServerSocket')) delLocalStorage('webServerSocket');
 });
 
 const redirectRiotSignOnPage = async () => {
@@ -62,8 +66,8 @@ const getMySummoners = async () => {
     if (summonerProfiles) setLocalStorage('summonerProfiles', summonerProfiles);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleSessionError(error.response);
-    await handleCommonError(error.response);
+    let isSessionError = await handleSessionError(error.response);
+    if (!isSessionError) await handleCommonError(error.response);
   }
 };
 
@@ -78,8 +82,9 @@ const deleteMySummoner = async (summonerId) => {
     redirectLocation(HOST);
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleSessionError(error.response);
-    await handleCommonError(error.response, '올바른 소환사 ID 형식이 아닙니다.');
+    let isSessionError = await handleSessionError(error.response);
+    if (!isSessionError)
+      await handleCommonError(error.response, '올바른 소환사 ID 형식이 아닙니다.');
   }
 };
 
@@ -108,8 +113,12 @@ const displaySummonerList = (summonerProfiles) => {
     });
 
     summonerSelectBtnDiv.addEventListener('click', () => {
-      if (confirm(`'${summoner.gameName}' 계정으로 조회를 시작합니다.`))
-        setLocalStorage('selectedSummonerProfile', summoner);
+      if (confirm(`'${summoner.gameName}' 계정으로 조회를 시작합니다.`)) {
+        setLocalStorage('selectedSummonerProfile', { selectedSummonerProfile: summoner });
+
+        // 관전 페이지로 이동
+        redirectLocation(HOST, 'spectate');
+      }
     });
 
     appendChildToParent(summonerDeleteBtnDiv, summonerBoxDiv);

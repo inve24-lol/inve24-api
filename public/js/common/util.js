@@ -14,6 +14,24 @@ const replaceText = (elementId, content) => {
   document.getElementById(elementId).innerHTML = content;
 };
 
+const appendLog = (message, isError = false) => {
+  const logArea = document.getElementById('spectate_log_area');
+  const time = new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' });
+
+  if (isError) logArea.value += `[${time}] - ${message}\n`;
+  else logArea.value += `[${time}] - ${message}\n`;
+
+  logArea.scrollTop = logArea.scrollHeight;
+};
+
+const deleteLog = () => {
+  document.getElementById('spectate_log_area').value = '';
+};
+
+const setRankImg = (elementId, rank) => {
+  document.getElementById(elementId).src = `img/Rank=${rank}.png`;
+};
+
 const createDivClass = (className) => {
   const div = document.createElement('div');
   div.className = className;

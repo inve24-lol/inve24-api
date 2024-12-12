@@ -6,6 +6,7 @@ export default registerAs(SERVER_CONFIG_TOKEN, () => ({
     nodeEnv: process.env.NODE_ENV,
     port: +process.env.SERVER_PORT!,
     host: process.env.SERVER_HOST,
+    hostIp: process.env.SERVER_HOST_IP,
     cookieMaxAge: +process.env.REDIS_REFRESH_TOKEN_TTL! * 1000,
     client: {
       kakaoAdfitKey: process.env.SERVER_CLIENT_KAKAO_ADFIT,
