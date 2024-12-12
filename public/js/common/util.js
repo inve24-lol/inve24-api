@@ -18,7 +18,7 @@ const appendLog = (message, isError = false) => {
   const logArea = document.getElementById('spectate_log_area');
   const time = new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' });
 
-  if (isError) logArea.value += `[${time}] [ERROR] - ${message}\n`;
+  if (isError) logArea.value += `[${time}] - ${message}\n`;
   else logArea.value += `[${time}] - ${message}\n`;
 
   logArea.scrollTop = logArea.scrollHeight;

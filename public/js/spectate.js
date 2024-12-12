@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (getLocalStorage('selectedSummonerProfile')) {
     const { selectedSummonerProfile } = getLocalStorage('selectedSummonerProfile');
-    console.log(selectedSummonerProfile);
     displaySummonerProfile(selectedSummonerProfile);
   }
 
@@ -58,7 +57,7 @@ const spectate = async () => {
     let isSessionError = await handleSocketSessionError(message);
 
     if (!isSessionError) appendLog(`🟨 ${message}`, true);
-    else alert('다시 시도해주세요.');
+    else appendLog('🟨 다시 시도해주세요.');
 
     showElement('start_spectate_btn');
     hideElement('end_spectate_btn');

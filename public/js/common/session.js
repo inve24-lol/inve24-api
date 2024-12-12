@@ -116,7 +116,7 @@ const refreshSession = async () => {
       { withCredentials: true },
     );
 
-    console.log('엑세스 토큰 갱신 :', responseBody);
+    console.log('엑세스 토큰 갱신 됨');
 
     const { userProfile } = getLocalStorage('userSession');
 
