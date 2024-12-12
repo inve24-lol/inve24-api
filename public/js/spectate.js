@@ -55,11 +55,14 @@ const spectate = async () => {
 
     console.log('클라이언트 소켓 서버 에러: ', message);
 
-    await handleSocketSessionError(message);
+    let isSessionError = await handleSocketSessionError(message);
 
-    appendLog(`🟨 ${message}`, true);
+    if (!isSessionError) appendLog(`🟨 ${message}`, true);
+    else alert('다시 시도해주세요.');
+
+    showElement('start_spectate_btn');
+    hideElement('end_spectate_btn');
   });
-
   webServerSocket.on('session-conflict-error', (message) => {
     appendLog(`🟨 ${message}`, true);
   });
@@ -82,6 +85,9 @@ const spectate = async () => {
     delLocalStorage('webServerSocket');
 
     appendLog('🟥 서버 연결 종료');
+
+    showElement('start_spectate_btn');
+    hideElement('end_spectate_btn');
   });
 };
 

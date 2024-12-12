@@ -14,14 +14,10 @@ export class JwtRefreshTokenGuard extends AuthGuard('jwt-refresh') {
     if (err) throw err;
 
     if (info?.message === 'No auth token')
-      throw new UnauthorizedException(
-        '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
-      );
+      throw new UnauthorizedException('리프레시 토큰이 만료되었습니다.');
 
     if (info instanceof TokenExpiredError)
-      throw new UnauthorizedException(
-        '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.',
-      );
+      throw new UnauthorizedException('리프레시 토큰이 만료되었습니다.');
 
     if (info instanceof JsonWebTokenError)
       throw new UnauthorizedException(

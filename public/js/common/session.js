@@ -28,28 +28,39 @@ const checkCurrentPageSession = (userSession) => {
 };
 
 const handleSocketSessionError = async (message) => {
+  let isSessionError = false;
+
   if (message === '엑세스 토큰이 만료되었습니다.') {
     await refreshSession();
-  } else if (
-    message === '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.'
-  ) {
-    redirectLocation(HOST, 'login');
+    isSessionError = true;
   }
+
+  if (message === '리프레시 토큰이 만료되었습니다.') {
+    alert('로그인 세션 만료. 다시 로그인해 주세요.');
+    delLocalStorage('userSession');
+    delLocalStorage('summonerProfiles');
+    redirectHomePage();
+    isSessionError = true;
+  }
+
+  return isSessionError;
 };
 
 const handleSessionError = async (error) => {
   const { message } = error.data;
   let isSessionError = false;
-  console.log(11111111);
 
   if (message === '엑세스 토큰이 만료되었습니다.') {
     await refreshSession();
     isSessionError = true;
-  } else if (
-    message === '리프레시 토큰이 만료되었습니다. 다시 로그인하여 새로운 토큰을 발급받으세요.'
-  ) {
+  }
+
+  if (message === '리프레시 토큰이 만료되었습니다.') {
+    alert('로그인 세션 만료. 다시 로그인해 주세요.');
+    delLocalStorage('userSession');
+    delLocalStorage('summonerProfiles');
+    redirectHomePage();
     isSessionError = true;
-    redirectLocation(HOST, 'login');
   }
 
   return isSessionError;
@@ -58,8 +69,7 @@ const handleSessionError = async (error) => {
 const handleCommonError = async (error, description = '') => {
   const { status, data } = error;
   const { message } = data;
-  console.log(22222222);
-  console.log(message);
+
   if (status === 400) alert(`${description} code: ${status}`);
   else alert(`${message} code: ${status}`);
 };
