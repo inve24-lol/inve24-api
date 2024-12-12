@@ -25,6 +25,8 @@ export class AppClientSocketGateway implements OnGatewayConnection, OnGatewayDis
 
   @WebSocketServer() public server!: Server;
 
+  private _socketEntryCode!: string;
+
   async handleConnection(@ConnectedSocket() appClient: Socket): Promise<void> {
     try {
       const { socketEntryCode } = appClient.handshake.auth;
@@ -40,6 +42,8 @@ export class AppClientSocketGateway implements OnGatewayConnection, OnGatewayDis
 
       await this.socketService.setSocketStatus(socketEntryCode, 'pending');
 
+      this._socketEntryCode = socketEntryCode;
+
       console.log('일렉트론 기본 방', appClient.rooms);
 
       appClient.emit('invite-room', { message: '라이엇 계정 인증 성공', data: null });
@@ -50,8 +54,16 @@ export class AppClientSocketGateway implements OnGatewayConnection, OnGatewayDis
     }
   }
 
-  handleDisconnect(@ConnectedSocket() appClient: Socket): void {
+  async handleDisconnect(@ConnectedSocket() appClient: Socket): Promise<void> {
     console.log(`종료된 일렉트론 소켓 (id: ${appClient.id})`);
+
+    await this.socketService.delSocketStatus(this._socketEntryCode);
+
+    this.socketService.emitToWeb(
+      'app-not-found',
+      this._socketEntryCode,
+      '일렉트론 앱이 종료되었습니다.',
+    );
   }
 
   @SubscribeMessage('join-room')

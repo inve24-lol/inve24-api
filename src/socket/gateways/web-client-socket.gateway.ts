@@ -58,8 +58,7 @@ export class WebClientSocketGateway implements OnGatewayConnection, OnGatewayDis
 
       const cachedSocketStatus = await this.socketService.getSocketStatus(socketEntryCode);
 
-      if (!cachedSocketStatus)
-        throw new UnauthorizedException('연결된 데스크탑 앱이 존재하지 않습니다.');
+      if (!cachedSocketStatus) throw new UnauthorizedException('연결된 데스크탑 앱이 없습니다.');
 
       if (cachedSocketStatus !== 'pending')
         throw new UnauthorizedException('이미 연결된 클라이언트가 존재합니다.');
@@ -81,7 +80,16 @@ export class WebClientSocketGateway implements OnGatewayConnection, OnGatewayDis
   async handleDisconnect(@ConnectedSocket() webClient: Socket): Promise<void> {
     console.log(`종료된 클라이언트 소켓 (id: ${webClient.id})`);
 
-    await this.socketService.setSocketStatus(this._socketEntryCode, 'pending');
+    const cachedSocketStatus = await this.socketService.getSocketStatus(this._socketEntryCode);
+
+    if (cachedSocketStatus)
+      await this.socketService.setSocketStatus(this._socketEntryCode, 'pending');
+
+    this.socketService.emitToApp(
+      'web-not-found',
+      this._socketEntryCode,
+      '웹 클라이언트에서 조회가 종료되었습니다.',
+    );
   }
 
   @SubscribeMessage('join-room')
@@ -97,13 +105,15 @@ export class WebClientSocketGateway implements OnGatewayConnection, OnGatewayDis
 
     webClient.emit('join-room-reply', { message: '데스크탑 앱과 연결되었습니다.', data: null });
 
-    this.socketService.emitToAll(socketEntryCode, 'hello');
+    this.socketService.emitToAll('hello', socketEntryCode, '조회를 시작합니다.');
   }
 
   @SubscribeMessage('disconnect-request')
   async handleDisconnectRequest(@MessageBody() body: { socketEntryCode: string }): Promise<void> {
     const { socketEntryCode } = body;
 
-    await this.socketService.setSocketStatus(socketEntryCode, 'pending');
+    const cachedSocketStatus = await this.socketService.getSocketStatus(socketEntryCode);
+
+    if (cachedSocketStatus) await this.socketService.setSocketStatus(socketEntryCode, 'pending');
   }
 }

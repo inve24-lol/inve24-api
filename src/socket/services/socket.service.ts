@@ -14,23 +14,21 @@ export class SocketService {
     @Inject(redisConfig.KEY) private readonly config: ConfigType<typeof redisConfig>,
   ) {}
 
-  async emitToApp(socketEntryCode: string, message: string) {
-    this.app.server.to(socketEntryCode).emit('hello', { message, data: null });
+  async emitToApp(eventName: string, socketEntryCode: string, message: string) {
+    this.app.server.to(socketEntryCode).emit(eventName, { message, data: null });
   }
 
-  async emitToWeb(socketEntryCode: string, message: string) {
-    this.web.server.to(socketEntryCode).emit('hello', { message, data: null });
+  async emitToWeb(eventName: string, socketEntryCode: string, message: string) {
+    this.web.server.to(socketEntryCode).emit(eventName, { message, data: null });
   }
 
-  async emitToAll(socketEntryCode: string, message: string) {
-    await this.emitToApp(socketEntryCode, message);
-    await this.emitToWeb(socketEntryCode, message);
+  async emitToAll(eventName: string, socketEntryCode: string, message: string) {
+    await this.emitToApp(eventName, socketEntryCode, message);
+    await this.emitToWeb(eventName, socketEntryCode, message);
   }
 
-  async getSocketStatus(puuid: string): Promise<string | void> {
-    const cachedPuuid = await this.socketClientCacheRepository.getSocketStatus(puuid);
-
-    if (cachedPuuid) return cachedPuuid;
+  async getSocketStatus(puuid: string): Promise<string | null> {
+    return await this.socketClientCacheRepository.getSocketStatus(puuid);
   }
 
   async setSocketStatus(puuid: string, socketStatus: string): Promise<void> {
