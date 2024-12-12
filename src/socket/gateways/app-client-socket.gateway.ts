@@ -90,6 +90,16 @@ export class AppClientSocketGateway implements OnGatewayConnection, OnGatewayDis
     this.socketService.emitToWeb('game-status', this._socketEntryCode, gameStatus);
   }
 
+  @SubscribeMessage('game-start-time')
+  handleGameStartTime(
+    @ConnectedSocket() webClient: Socket,
+    @MessageBody() body: { gameStartTime: string },
+  ): void {
+    const { gameStartTime } = body;
+
+    this.socketService.emitToWeb('game-start-time', this._socketEntryCode, gameStartTime);
+  }
+
   @SubscribeMessage('disconnect-request')
   async handleDisconnectRequest(@MessageBody() body: { socketEntryCode: string }): Promise<void> {
     const { socketEntryCode } = body;
