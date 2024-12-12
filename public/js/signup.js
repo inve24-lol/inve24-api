@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const sendEmail = async () => {
+  displayElement('spinner');
+
   const EMAIL = getLocalStorage('signupEmail');
 
   if (!EMAIL) return alert('올바른 접근이 아닙니다.');
@@ -17,11 +19,15 @@ const sendEmail = async () => {
     enableBtn('verify_email_btn');
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response, '올바른 형식의 이메일을 입력해주세요.');
+    handleCommonError(error.response, '올바른 형식의 이메일을 입력해주세요.');
+  } finally {
+    hideElement('spinner');
   }
 };
 
 const verifyEmail = async () => {
+  displayElement('spinner');
+
   const EMAIL = getLocalStorage('signupEmail');
 
   const EMAIL_CODE = document.getElementById('email_code_input').value;
@@ -47,11 +53,15 @@ const verifyEmail = async () => {
     showElement('signup_btn');
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response, '올바른 형식의 이메일 인증 코드를 입력해주세요.');
+    handleCommonError(error.response, '올바른 형식의 이메일 인증 코드를 입력해주세요.');
+  } finally {
+    hideElement('spinner');
   }
 };
 
 const signup = async () => {
+  displayElement('spinner');
+
   const EMAIL = getLocalStorage('signupEmail');
 
   const NICKNAME = document.getElementById('nickname_input').value;
@@ -80,6 +90,8 @@ const signup = async () => {
     redirectLocation(HOST, 'login');
   } catch (error) {
     if (!error.response) return alert('client error');
-    await handleCommonError(error.response, '올바른 형식의 닉네임 또는 비밀번호를 입력해주세요.');
+    handleCommonError(error.response, '올바른 형식의 닉네임 또는 비밀번호를 입력해주세요.');
+  } finally {
+    hideElement('spinner');
   }
 };

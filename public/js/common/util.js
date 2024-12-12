@@ -45,6 +45,10 @@ const appendChildToParent = (child, parent) => {
   parent.appendChild(child);
 };
 
+const displayElement = (elementId) => {
+  document.getElementById(elementId).style.display = 'flex';
+};
+
 const showElement = (elementId) => {
   document.getElementById(elementId).style.display = 'block';
 };

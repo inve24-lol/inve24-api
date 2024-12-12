@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 const redirectRiotSignOnPage = async () => {
+  displayElement('spinner');
+
   const { header } = checkUserSessionExists('userSession');
 
   try {
@@ -27,11 +29,15 @@ const redirectRiotSignOnPage = async () => {
   } catch (error) {
     if (!error.response) return alert('client error');
     await handleSessionError(error.response);
-    await handleCommonError(error.response, '올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
+    handleCommonError(error.response, '올바른 형식의 이메일 또는 비밀번호를 입력해주세요.');
+  } finally {
+    hideElement('spinner');
   }
 };
 
 const riotSignOn = async (code) => {
+  displayElement('spinner');
+
   const { header } = checkUserSessionExists('userSession');
 
   try {
@@ -51,11 +57,15 @@ const riotSignOn = async (code) => {
   } catch (error) {
     if (!error.response) return alert('client error');
     await handleSessionError(error.response);
-    await handleCommonError(error.response, 'rso access code 필요합니다.');
+    handleCommonError(error.response, 'rso access code 필요합니다.');
+  } finally {
+    hideElement('spinner');
   }
 };
 
 const getMySummoners = async () => {
+  displayElement('spinner');
+
   const { header } = checkUserSessionExists('userSession');
 
   try {
@@ -67,11 +77,15 @@ const getMySummoners = async () => {
   } catch (error) {
     if (!error.response) return alert('client error');
     let isSessionError = await handleSessionError(error.response);
-    if (!isSessionError) await handleCommonError(error.response);
+    if (!isSessionError) handleCommonError(error.response);
+  } finally {
+    hideElement('spinner');
   }
 };
 
 const deleteMySummoner = async (summonerId) => {
+  displayElement('spinner');
+
   const { header } = checkUserSessionExists('userSession');
 
   try {
@@ -83,8 +97,9 @@ const deleteMySummoner = async (summonerId) => {
   } catch (error) {
     if (!error.response) return alert('client error');
     let isSessionError = await handleSessionError(error.response);
-    if (!isSessionError)
-      await handleCommonError(error.response, '올바른 소환사 ID 형식이 아닙니다.');
+    if (!isSessionError) handleCommonError(error.response, '올바른 소환사 ID 형식이 아닙니다.');
+  } finally {
+    hideElement('spinner');
   }
 };
 

@@ -1,6 +1,6 @@
 let WEB_SERVER_SOCKET;
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   deleteLog();
 
   if (getLocalStorage('selectedSummonerProfile')) {
@@ -9,12 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (getLocalStorage('webServerSocket')) delLocalStorage('webServerSocket');
-
-  // if (getLocalStorage('webServerSocket')) {
-  //   const { webServerSocket } = getLocalStorage('webServerSocket');
-
-  //   await closeAppServerSocket(webServerSocket.puuid);
-  // }
 });
 
 const spectate = async () => {

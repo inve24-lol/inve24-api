@@ -66,7 +66,7 @@ const handleSessionError = async (error) => {
   return isSessionError;
 };
 
-const handleCommonError = async (error, description = '') => {
+const handleCommonError = (error, description = '') => {
   const { status, data } = error;
   const { message } = data;
 
@@ -87,6 +87,8 @@ const redirectLoginPage = () => {
 const logout = async () => {
   if (!getLocalStorage('userSession')) return alert('올바른 접근이 아닙니다.');
 
+  displayElement('spinner');
+
   const { header } = getLocalStorage('userSession');
 
   try {
@@ -97,18 +99,20 @@ const logout = async () => {
     delLocalStorage('selectedSummonerProfile');
     delLocalStorage('webServerSocket');
 
-    alert(`로그아웃 되었습니다.`);
-
     // 메인 페이지로 이동
     redirectLocation(HOST);
   } catch (error) {
     if (!error.response) return alert('client error');
     await handleSessionError(error.response);
-    await handleCommonError(error.response);
+    handleCommonError(error.response);
+  } finally {
+    hideElement('spinner');
   }
 };
 
 const refreshSession = async () => {
+  displayElement('spinner');
+
   try {
     const { data: responseBody } = await axios.post(
       `${HOST}/auth/v1/refresh`,
@@ -129,6 +133,8 @@ const refreshSession = async () => {
   } catch (error) {
     if (!error.response) return alert('client error');
     let isSessionError = await handleSessionError(error.response);
-    if (!isSessionError) await handleCommonError(error.response);
+    if (!isSessionError) handleCommonError(error.response);
+  } finally {
+    hideElement('spinner');
   }
 };
