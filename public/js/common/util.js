@@ -19,7 +19,7 @@ const appendLog = (message, isError = false) => {
   const time = new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' });
 
   if (isError) logArea.value += `[${time}] [ERROR] - ${message}\n`;
-  else logArea.value += `[${time}] [LOG] - ${message}\n`;
+  else logArea.value += `[${time}] - ${message}\n`;
 
   logArea.scrollTop = logArea.scrollHeight;
 };
