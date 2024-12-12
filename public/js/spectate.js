@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 const spectate = async () => {
+  hideElement('start_spectate_btn');
+  showElement('end_spectate_btn');
+
   const { header } = checkUserSessionExists('userSession');
   const { headers: extraHeaders } = header;
 
@@ -96,7 +99,7 @@ const joinWebServerRoom = async (webServerSocket, puuid) => {
   });
 };
 
-const closeAppServerSocket = async (puuid) => {
+const finishSpectate = async (puuid) => {
   if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.', true);
 
   WEB_SERVER_SOCKET.emit('disconnect-request', { socketEntryCode: puuid });
@@ -107,7 +110,8 @@ const closeAppServerSocket = async (puuid) => {
 
   delLocalStorage('webServerSocket');
 
-  appendLog('🟥 서버 연결 종료');
+  showElement('start_spectate_btn');
+  hideElement('end_spectate_btn');
 };
 
 const displaySummonerProfile = (summoner) => {
