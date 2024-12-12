@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 const spectate = async () => {
   hideElement('start_spectate_btn');
   showElement('end_spectate_btn');
+  deleteLog();
 
   const { header } = checkUserSessionExists('userSession');
   const { headers: extraHeaders } = header;
@@ -33,7 +34,7 @@ const spectate = async () => {
   });
 
   webServerSocket.on('connect_error', () => {
-    appendLog('🟨 실행중인 서버를 찾을 수 없습니다.', true);
+    appendLog('🟨 실행중인 서버를 찾을 수 없습니다.');
   });
 
   webServerSocket.on('connect', () => {
@@ -56,14 +57,14 @@ const spectate = async () => {
 
     let isSessionError = await handleSocketSessionError(message);
 
-    if (!isSessionError) appendLog(`🟨 ${message}`, true);
+    if (!isSessionError) appendLog(`🟨 ${message}`);
     else appendLog('🟨 다시 시도해주세요.');
 
     showElement('start_spectate_btn');
     hideElement('end_spectate_btn');
   });
   webServerSocket.on('session-conflict-error', (message) => {
-    appendLog(`🟨 ${message}`, true);
+    appendLog(`🟨 ${message}`);
   });
 
   webServerSocket.on('invite-room', async (body) => {
@@ -74,10 +75,18 @@ const spectate = async () => {
     await joinWebServerRoom(webServerSocket, puuid);
   });
 
-  webServerSocket.on('hello', async (body) => {
+  webServerSocket.on('hello', (body) => {
     const { message } = body;
 
     appendLog(`🟩 ${message}`);
+  });
+
+  webServerSocket.on('app-not-found', async (body) => {
+    const { message } = body;
+
+    appendLog(`🟨 ${message}`);
+
+    await finishSpectate();
   });
 
   webServerSocket.on('disconnect', () => {
@@ -91,7 +100,7 @@ const spectate = async () => {
 };
 
 const joinWebServerRoom = async (webServerSocket, puuid) => {
-  if (!webServerSocket) appendLog('🟨 연결된 서버가 없습니다.', true);
+  if (!webServerSocket) appendLog('🟨 연결된 서버가 없습니다.');
 
   webServerSocket.emit('join-room', { socketEntryCode: puuid });
 
@@ -105,7 +114,7 @@ const joinWebServerRoom = async (webServerSocket, puuid) => {
 };
 
 const finishSpectate = async (puuid) => {
-  if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.', true);
+  if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.');
 
   WEB_SERVER_SOCKET.emit('disconnect-request', { socketEntryCode: puuid });
 

@@ -14,12 +14,11 @@ const replaceText = (elementId, content) => {
   document.getElementById(elementId).innerHTML = content;
 };
 
-const appendLog = (message, isError = false) => {
+const appendLog = (message) => {
   const logArea = document.getElementById('spectate_log_area');
   const time = new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' });
 
-  if (isError) logArea.value += `[${time}] - ${message}\n`;
-  else logArea.value += `[${time}] - ${message}\n`;
+  logArea.value += `[${time}] - ${message}\n`;
 
   logArea.scrollTop = logArea.scrollHeight;
 };
