@@ -1,6 +1,6 @@
 let WEB_SERVER_SOCKET;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   deleteLog();
 
   if (getLocalStorage('selectedSummonerProfile')) {
@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     displaySummonerProfile(selectedSummonerProfile);
   }
 
-  if (getLocalStorage('webServerSocket')) delLocalStorage('webServerSocket');
+  if (getLocalStorage('webServerSocket')) {
+    const { webServerSocket } = getLocalStorage('webServerSocket');
+
+    await finishSpectate(webServerSocket.puuid);
+  }
 });
 
 const spectate = async () => {
@@ -40,6 +44,10 @@ const spectate = async () => {
         puuid,
       },
     });
+
+    hideElement('start_spectate_btn');
+    showElement('end_spectate_btn');
+    deleteLog();
 
     appendLog('🟩 서버 연결 성공');
   });
@@ -84,7 +92,7 @@ const spectate = async () => {
   webServerSocket.on('game-start-time', (body) => {
     const { message } = body;
 
-    gameProgressTime(Number(message));
+    gameProgressTime(Number(message), puuid);
   });
 
   webServerSocket.on('app-not-found', async (body) => {
@@ -92,7 +100,9 @@ const spectate = async () => {
 
     appendLog(`🟨 ${message}`);
 
-    await finishSpectate();
+    if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.');
+
+    await finishSpectate(puuid);
   });
 
   webServerSocket.on('disconnect', () => {
@@ -119,7 +129,7 @@ const joinWebServerRoom = async (webServerSocket, puuid) => {
   });
 };
 
-const gameProgressTime = (gameStartTime) => {
+const gameProgressTime = (gameStartTime, puuid) => {
   let counter = 0;
   const intervalId = setInterval(async () => {
     deleteLog();
@@ -129,15 +139,17 @@ const gameProgressTime = (gameStartTime) => {
 
     if (counter + gameStartTime >= 60) {
       appendLog('🟨 1분이 경과되어 서버 연결을 종료합니다.');
+
       clearInterval(intervalId);
-      await finishSpectate();
+
+      if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.');
+
+      await finishSpectate(puuid);
     }
   }, 1000);
 };
 
 const finishSpectate = async (puuid) => {
-  if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.');
-
   WEB_SERVER_SOCKET.emit('disconnect-request', { socketEntryCode: puuid });
 
   WEB_SERVER_SOCKET.disconnect();
