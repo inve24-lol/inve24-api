@@ -85,7 +85,10 @@ const redirectLoginPage = () => {
 };
 
 const logout = async () => {
-  if (!getLocalStorage('userSession')) return alert('올바른 접근이 아닙니다.');
+  if (!getLocalStorage('userSession')) {
+    alert('올바른 접근이 아닙니다.');
+    return;
+  }
 
   displayElement('spinner');
 

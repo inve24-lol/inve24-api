@@ -36,9 +36,9 @@ const redirectRiotSignOnPage = async () => {
 };
 
 const riotSignOn = async (code) => {
-  displayElement('spinner');
-
   const { header } = checkUserSessionExists('userSession');
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.post(
@@ -64,9 +64,9 @@ const riotSignOn = async (code) => {
 };
 
 const getMySummoners = async () => {
-  displayElement('spinner');
-
   const { header } = checkUserSessionExists('userSession');
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.get(`${HOST}/summoner/v1/summoners`, header);
@@ -84,9 +84,9 @@ const getMySummoners = async () => {
 };
 
 const deleteMySummoner = async (summonerId) => {
-  displayElement('spinner');
-
   const { header } = checkUserSessionExists('userSession');
+
+  displayElement('spinner');
 
   try {
     await axios.delete(`${HOST}/summoner/v1/summoners/${summonerId}`, header);

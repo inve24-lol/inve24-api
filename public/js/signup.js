@@ -5,11 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const sendEmail = async () => {
-  displayElement('spinner');
-
   const EMAIL = getLocalStorage('signupEmail');
 
-  if (!EMAIL) return alert('올바른 접근이 아닙니다.');
+  if (!EMAIL) {
+    alert('올바른 접근이 아닙니다.');
+    return;
+  }
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.get(`${HOST}/mail/v1/${EMAIL}`);
@@ -26,19 +29,31 @@ const sendEmail = async () => {
 };
 
 const verifyEmail = async () => {
-  displayElement('spinner');
-
   const EMAIL = getLocalStorage('signupEmail');
 
   const EMAIL_CODE = document.getElementById('email_code_input').value;
 
-  if (!EMAIL) return alert('올바른 접근이 아닙니다.');
+  if (!EMAIL) {
+    alert('올바른 접근이 아닙니다.');
+    return;
+  }
 
-  if (!EMAIL_CODE) return alert('이메일 인증 코드를 입력해주세요.');
+  if (!EMAIL_CODE) {
+    alert('이메일 인증 코드를 입력해주세요.');
+    return;
+  }
 
-  if (isNaN(Number(EMAIL_CODE))) return alert('올바른 형식의 이메일 인증 코드를 입력해주세요.');
+  if (isNaN(Number(EMAIL_CODE))) {
+    alert('올바른 형식의 이메일 인증 코드를 입력해주세요.');
+    return;
+  }
 
-  if (EMAIL_CODE.length !== 6) return alert('6자리의 이메일 인증 코드를 입력해주세요.');
+  if (EMAIL_CODE.length !== 6) {
+    alert('6자리의 이메일 인증 코드를 입력해주세요.');
+    return;
+  }
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.get(`${HOST}/mail/v1/${EMAIL_CODE}/${EMAIL}`);
@@ -60,26 +75,39 @@ const verifyEmail = async () => {
 };
 
 const signup = async () => {
-  displayElement('spinner');
-
   const EMAIL = getLocalStorage('signupEmail');
 
   const NICKNAME = document.getElementById('nickname_input').value;
   const PASSWORD = document.getElementById('password_input').value;
 
-  if (!EMAIL) return alert('올바른 접근이 아닙니다.');
+  if (!EMAIL) {
+    alert('올바른 접근이 아닙니다.');
+    return;
+  }
 
-  if (!NICKNAME) return alert('닉네임을 입력해주세요.');
+  if (!NICKNAME) {
+    alert('닉네임을 입력해주세요.');
+    return;
+  }
 
-  if (!PASSWORD) return alert('비밀번호를 입력해주세요.');
+  if (!PASSWORD) {
+    alert('비밀번호를 입력해주세요.');
+    return;
+  }
 
-  if (NICKNAME.length < 2 || NICKNAME.length > 10)
-    return alert('닉네임은 2자 이상 10자 미만이어야 합니다.');
+  if (NICKNAME.length < 2 || NICKNAME.length > 10) {
+    alert('닉네임은 2자 이상 10자 미만이어야 합니다.');
+    return;
+  }
 
-  if (PASSWORD.length < 8 || NICKNAME.length > 20)
-    return alert('비밀번호는 8자 이상 20자 미만이어야 합니다.');
+  if (PASSWORD.length < 8 || NICKNAME.length > 20) {
+    alert('비밀번호는 8자 이상 20자 미만이어야 합니다.');
+    return;
+  }
 
   const signupRequestBody = { email: EMAIL, password: PASSWORD, nickname: NICKNAME };
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.post(`${HOST}/users/v1/signup/`, signupRequestBody);

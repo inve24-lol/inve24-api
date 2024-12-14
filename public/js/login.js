@@ -5,11 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const emailCheck = async () => {
-  displayElement('spinner');
-
   const EMAIL = document.getElementById('email_input').value;
 
-  if (!EMAIL) return alert('이메일을 입력해주세요.');
+  if (!EMAIL) {
+    alert('이메일을 입력해주세요.');
+    return;
+  }
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.get(`${HOST}/users/v1/check/${EMAIL}`);
@@ -34,14 +37,17 @@ const emailCheck = async () => {
 };
 
 const login = async () => {
-  displayElement('spinner');
-
   const EMAIL = document.getElementById('email_input').value;
   const PASSWORD = document.getElementById('password_input').value;
 
-  if (!PASSWORD) return alert('비밀번호를 입력해주세요.');
+  if (!PASSWORD) {
+    alert('비밀번호를 입력해주세요.');
+    return;
+  }
 
   const loginRequestBody = { email: EMAIL, password: PASSWORD };
+
+  displayElement('spinner');
 
   try {
     const { data: responseBody } = await axios.post(`${HOST}/auth/v1/signin`, loginRequestBody);
