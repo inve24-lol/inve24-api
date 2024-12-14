@@ -100,7 +100,10 @@ const spectate = async () => {
 
     appendLog(`🟨 ${message}`);
 
-    if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.');
+    if (!WEB_SERVER_SOCKET) {
+      appendLog('🟨 연결된 서버가 없습니다.');
+      return;
+    }
 
     await finishSpectate(puuid);
   });
@@ -116,7 +119,10 @@ const spectate = async () => {
 };
 
 const joinWebServerRoom = async (webServerSocket, puuid) => {
-  if (!webServerSocket) appendLog('🟨 연결된 서버가 없습니다.');
+  if (!webServerSocket) {
+    appendLog('🟨 연결된 서버가 없습니다.');
+    return;
+  }
 
   webServerSocket.emit('join-room', { socketEntryCode: puuid });
 
@@ -130,6 +136,8 @@ const joinWebServerRoom = async (webServerSocket, puuid) => {
 };
 
 const gameProgressTime = (gameStartTime, puuid) => {
+  disableBtn('end_spectate_btn');
+
   let counter = 0;
   const intervalId = setInterval(async () => {
     deleteLog();
@@ -142,7 +150,12 @@ const gameProgressTime = (gameStartTime, puuid) => {
 
       clearInterval(intervalId);
 
-      if (!WEB_SERVER_SOCKET) return appendLog('🟨 연결된 서버가 없습니다.');
+      if (!WEB_SERVER_SOCKET) {
+        appendLog('🟨 연결된 서버가 없습니다.');
+        return;
+      }
+
+      enableBtn('end_spectate_btn');
 
       await finishSpectate(puuid);
     }
