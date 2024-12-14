@@ -3,8 +3,7 @@ import {
   generateCreatedAtColumn,
   generatePrimaryColumn,
   generateUpdatedAtColumn,
-} from 'migrations/common/__common';
-import { Role } from 'src/common/constants/roles.enum';
+} from '../common/__common';
 
 export class InitUser1732537469871 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -45,9 +44,9 @@ export class InitUser1732537469871 implements MigrationInterface {
           new TableColumn({
             name: 'role',
             type: 'enum',
-            enum: Object.values(Role),
+            enum: ['GUEST', 'MEMBER', 'ADMIN'],
             isNullable: false,
-            default: `'${Role.GUEST}'`,
+            default: `'GUEST'`,
             comment: '유저 역할 (NN)',
           }),
           generateUpdatedAtColumn('수정 일자 (NN)'),

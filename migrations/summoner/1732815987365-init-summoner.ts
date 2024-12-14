@@ -1,9 +1,9 @@
+import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
 import {
   generateCreatedAtColumn,
   generatePrimaryColumn,
   generateUpdatedAtColumn,
-} from 'migrations/common/__common';
-import { MigrationInterface, QueryRunner, Table, TableColumn } from 'typeorm';
+} from '../common/__common';
 
 export class InitSummoner1732815987365 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
