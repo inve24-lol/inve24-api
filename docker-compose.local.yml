@@ -12,6 +12,7 @@ services:
     depends_on:
       - inve24_db
       - inve24_api
+      - inve24_redis
     ports:
       - 80:80
     networks:
@@ -24,7 +25,8 @@ services:
       context: .
       dockerfile: Dockerfile.local
     depends_on:
-      - mysql_db
+      - inve24_db
+      - inve24_redis
     env_file:
       - .env.local
     networks:
@@ -38,6 +40,17 @@ services:
       - inve24_db_data:/var/lib/mysql
     ports:
       - 3307:3307
+    env_file:
+      - .env.local
+    networks:
+      - inve24_network
+
+  inve24_redis:
+    image: bitnami/redis:latest
+    container_name: inve24_redis
+    restart: always
+    ports:
+      - 6380:6379
     env_file:
       - .env.local
     networks:
