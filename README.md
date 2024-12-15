@@ -1,235 +1,123 @@
 <div align="center">
-<h1> 🌈 NestJS Template </h1>
+<h2>리그 오브 레전드 게임 시작 알림 서비스</h2>
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fokonomiyakki%2Fnestjs-template&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://github.com/okonomiyakki/nestjs-template)
+<h3><u>Backend</u></h3>
 
-![GitHub License](https://img.shields.io/github/license/okonomiyakki/nestjs-template.svg)
-
+![TypeScript Badge](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff&style=flat)
 ![Node.js Badge](https://img.shields.io/badge/Node.js-20.18.0-5FA04E?logo=nodedotjs&logoColor=5FA04E&style=flat)
 ![NestJS Badge](https://img.shields.io/badge/NestJS-10.0.0-E0234E?logo=nestjs&logoColor=E0234E&style=flat)
-![MySQL Badge](https://img.shields.io/badge/MySQL-8.0.40-4479A1?logo=mysql&logoColor=4479A1&style=flat)
-![TypeORM Badge](https://img.shields.io/badge/TypeORM-0.3.20-FE0803?logo=typeorm&logoColor=FE0803&style=flat)
+![Socket.io Badge](https://img.shields.io/badge/Socket.io-4.8.1-010101?logo=socketdotio&logoColor=fff&style=flat)
 ![NGINX Badge](https://img.shields.io/badge/NGINX-latest-009639?logo=nginx&logoColor=009639&style=flat)
 ![Docker Badge](https://img.shields.io/badge/Docker-25.0.3-2496ED?logo=docker&logoColor=2496ED&style=flat)
+<br>
+
+![MySQL Badge](https://img.shields.io/badge/MySQL-8.0.40-4479A1?logo=mysql&logoColor=4479A1&style=flat)
+![TypeORM Badge](https://img.shields.io/badge/TypeORM-0.3.20-FE0803?logo=typeorm&logoColor=FE0803&style=flat)
+![Redis Badge](https://img.shields.io/badge/Redis-7.4.1-FF4438?logo=redis&logoColor=fff&style=flat)
+<br>
+
 ![Swagger Badge](https://img.shields.io/badge/Swagger-8.0.1-85EA2D?logo=swagger&logoColor=85EA2D&style=flat)
 
-<p>This template helps you quickly start a user service in Docker environments using NestJS</p>
+<h3><u>Frontend</u></h3>
 
-[Getting Started](#getting-started)
+![JavaScript Badge](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000&style=flat)
+![Handlebars.js Badge](https://img.shields.io/badge/Handlebars.js-4.2.0-000?logo=handlebarsdotjs&logoColor=fff&style=flat)
+![Socket.io Badge](https://img.shields.io/badge/Socket.io-4.7.2-010101?logo=socketdotio&logoColor=fff&style=flat)
 
-[Clone the Repository](#clone-the-repository)
+<h3><u>Desktop App</u></h3>
 
-[Install Dependencies](#install-dependencies)
+![JavaScript Badge](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000&style=flat)
+![Node.js Badge](https://img.shields.io/badge/Node.js-20.18.0-5FA04E?logo=nodedotjs&logoColor=5FA04E&style=flat)
+![Electron Badge](https://img.shields.io/badge/Electron-33.2.1-47848F?logo=electron&logoColor=fff&style=flat)
+![electron-builder Badge](https://img.shields.io/badge/electron--builder-25.1.8-000?logo=electronbuilder&logoColor=fff&style=flat)
+![Socket.io Badge](https://img.shields.io/badge/Socket.io-4.8.1-010101?logo=socketdotio&logoColor=fff&style=flat)
+<br>
 
-[Env Settings](#env-settings)
+<h3><u>Open API</u></h3>
 
-[Migration Scripts](#migration-scripts)
+![Riot Games Badge](https://img.shields.io/badge/Riot%20Games-EB0029?logo=riotgames&logoColor=fff&style=flat)
 
-[Build the App](#build-the-app)
+<h3><u>Architecture</u></h3>
 
-[Run the App](#run-the-app)
+![아키텍처](https://github.com/user-attachments/assets/75fece89-1744-4397-8f4c-53fcbf552a15)
 
-[Documentation](#documentation)
+##
 
-[Modules Graph](#modules-graph)
+[1. 서비스 기능](#1-서비스-기능)
 
-[API Lifecycle](#api-lifecycle)
+[2. 주요 구현 기능](#2-주요-구현-기능)
 
-[Project Structure](#project-structure)
+[3. 유저 플로우](#3-유저-플로우)
 
-[How refresh tokens work](#how-refresh-tokens-work)
-
-[License](#license)
+[4. 폴더 구조](#4-폴더-구조)
 
 </div>
 
-## Getting Started
+## 1. 서비스 기능
 
-Before starting, make sure you have those components on your workstation
+- 회원 가입
+- 로그인/로그아웃
+- 리그 오브 레전드 계정 등록/삭제
+- 게임 클라이언트 상태 조회 (로비, 챔피언 픽, 로딩, 시작)
+- 실시간 게임 진행 시간 조회
 
-- [Node.js](https://nodejs.org/) (>= 20.0.0, version used)
-- [Docker](https://www.docker.com/get-started) and Docker Compose
-- MySQL 8.0 (if not using Docker)
+## 2. 주요 구현 기능
 
-## Clone the Repository
+### 이메일 인증 기능
 
-```bash
-git clone https://github.com/okonomiyakki/nestjs-template.git
+- 회원 가입 시, 해당 이메일로 인증 코드를 발송하여 이메일 인증
+- 인증 코드는 서버에 캐싱 되어 n분 동안 유효
 
-cd nestjs-template
-```
+### 로그인/로그아웃 기능
 
-## Install Dependencies
+- 로그인 시, 액세스 토큰과 리프레시 토큰 발급
+- 리프레시 토큰은 쿠키로 전달하고 토큰의 유효 기간 동안 서버에 캐싱
+- 로그아웃 시, 클라이언트 쿠키를 삭제하고 로그아웃 처리
 
-```bash
-npm install
-```
+### 중복 로그인 방지 기능
 
-## Env Settings
+- 새로운 클라이언트로 로그인 시, 리프레시 토큰을 다시 캐싱하고 새로운 세션 생성
+- 이후에 기존 클라이언트에서 액세스 토큰 갱신 시, 해당 클라이언트 쿠키를 삭제하고 로그아웃 처리
 
-This template includes env files for each operating environment as follows.
+### 리그 오브 레전드 계정 등록 기능
 
-- [Development mode](https://github.com/okonomiyakki/nestjs-template/blob/main/.env.dev)
+- 라이엇 소셜 로그인을 통해 해당 계정 정보 DB 저장
 
-- [Local mode](https://github.com/okonomiyakki/nestjs-template/blob/main/.env.local) with production settings
+### 게임 클라이언트 상태 조회 기능
 
-- [Production mode](https://github.com/okonomiyakki/nestjs-template/blob/main/.env.prod)
+- 일렉트론 앱에서 게임 클라이언트 상태 정보를 감지하여 서버로 전송
+- 클라이언트에서 소켓 인증 후, 서버로부터 실시간 게임 클라이언트 상태 정보 응답
 
-## Migration Scripts
+## 3. 유저 플로우
 
-- [TypeORM CLI](https://github.com/okonomiyakki/nestjs-template/blob/9c6c53a0adfa7c866eac3f7e8679ceec971a87f9/package.json#L18-L18)
+1. 리그 오브 레전드 게임 클라이언트가 실행된 환경에서 데스크탑 앱을 실행하고, 시작 버튼을 눌러 서버에 연결합니다.
+2. 웹으로 접속하여 회원 가입 및 로그인을 합니다.
+3. 리그 오브 레전드 게임 클라이언트에서 로그인 된 계정을 등록합니다.
+4. 조회할 계정을 선택합니다.
+5. 조회 버튼을 클릭하여 현재 연결된 데스크탑 앱이 있는지 확인합니다.
+6. 연결된 데스크탑 앱이 존재하면, 서버에 연결합니다.
+7. 서버에서 클라이언트의 연결이 감지되면, 데스크탑 앱에서 리그 오브 레전드 클라이언트 상태 정보 구독을 시작합니다.
+8. 서버에 연결되면, 리그 오브 레전드 게임 클라이언트의 실시간 상태 정보를 확인합니다.
+9. 게임 시작 시, 현재 게임 진행 시간 정보를 실시간으로 확인합니다.
+10. 게임 시작 후 1분이 경과되면, 클라이언트에서 서버 소켓 연결을 종료합니다.
 
-  ```bash
-  # Run the TypeORM CLI using "ts-node"
-  npm run typeorm
-  ```
-
-- Migration [configuration](https://github.com/okonomiyakki/nestjs-template/blob/9c6c53a0adfa7c866eac3f7e8679ceec971a87f9/package.json#L19-L19)
-
-  ```bash
-  # Set migration configuration with development settings
-  npm run typeorm:config
-  ```
-
-- [Migrations](https://github.com/okonomiyakki/nestjs-template/blob/9c6c53a0adfa7c866eac3f7e8679ceec971a87f9/package.json#L20-L24)
-
-  ```bash
-  # Create a new migration file
-  npm run migration:create
-
-  # Generate a migration file based on changes in the entity
-  npm run migration:generate
-
-  # Show the list of generated migration files
-  npm run migration:show
-
-  # Apply the migration files
-  npm run migration:run
-
-  # Revert the last applied migration file
-  npm run migration:revert
-  ```
-
-> ⚠ The migration file must be generated only in the development environment.
-
-## Build the App
-
-- [Development mode](https://github.com/okonomiyakki/nestjs-template/blob/9c6c53a0adfa7c866eac3f7e8679ceec971a87f9/package.json#L12-L13)
-
-  ```bash
-  # Transpile TypeScript files using "tsc"
-  npm run build
-
-  # Generate migrations and build the application
-  npm run build:dev
-  ```
-
-## Run the App
-
-- [Development mode](https://github.com/okonomiyakki/nestjs-template/blob/9c6c53a0adfa7c866eac3f7e8679ceec971a87f9/package.json#L14-L15)
-
-  ```bash
-  # Run the application in "watch" mode using "ts-node"
-  npm run start
-
-  # Apply migrations and run the application in "watch" mode using "ts-node"
-  npm run start:dev
-  ```
-
-- [Local mode](https://github.com/okonomiyakki/nestjs-template/blob/9c6c53a0adfa7c866eac3f7e8679ceec971a87f9/package.json#L16-L17) with production settings
-
-  ```bash
-  # Start containers using "docker-compose.local.yml"
-  npm run docker-compose:up
-
-  # Stop containers using "docker-compose.local.yml"
-  npm run docker-compose:down
-  ```
-
-  The containers are started based on the [local Docker Compose file](https://github.com/okonomiyakki/nestjs-template/blob/main/docker-compose.local.yml).
-
-  [NestJS](https://github.com/okonomiyakki/nestjs-template/blob/main/Dockerfile.local) and [NGINX](https://github.com/okonomiyakki/nestjs-template/blob/main/nginx/Dockerfile.local) are dockerized through their respective Dockerfiles.
-
-  For NestJS, migrations are applied using the provided [commands](https://github.com/okonomiyakki/nestjs-template/blob/main/scripts/start.sh), and then 'dist/main.js' is run.
-
-## Documentation
-
-Swagger is set up for API documentation.
-
-Once the server is running, access the Swagger UI at:
-
-- `http://localhost:`[ server-running-port ](https://github.com/okonomiyakki/nestjs-template/blob/4c1f8a1a6cdfdd9c2ffbd0f64bc36b011f919bdb/.env.dev#L6)`/api` ········ (development)
-
-- http://localhost/api ······························································· (local)
-
-- `http://`[ your-production-domain.com ](https://github.com/okonomiyakki/nestjs-template/blob/6a3650b5300461dbdbf455c026bd30dd640a424b/nginx/nginx.conf#L9)`/api` ········· (production)
-
-## Modules Graph
-
-![modules](https://github.com/user-attachments/assets/928ddb72-fcc3-4d0a-be1e-aadc2a93737d)
-
-## API Lifecycle
-
-- POST /api/users/v1/signup
-  ![signup](https://github.com/user-attachments/assets/34720f2f-1948-4d1f-a298-27c0dd37d2ef)
-
-- POST /api/auth/v1/signin
-  ![signin](https://github.com/user-attachments/assets/d2b6fec6-1c99-4c7c-af52-9ef9896a3786)
-
-- DELETE /api/auth/v1/signout
-  ![signout](https://github.com/user-attachments/assets/9e460a2a-f5bd-4c06-a559-b5b9a890dc73)
-
-- POST /api/auth/v1/refresh
-
-  The role guard here is for testing purposes. So Remove [this code](https://github.com/okonomiyakki/nestjs-template/blob/629f59a923585f47dd40bbb6c07933608e1f7a1c/src/auth/controllers/auth.controller.ts#L80C36-L81C72) when using it.
-  ![refresh](https://github.com/user-attachments/assets/cde0bd0d-c7d7-4873-ba03-f2e3d89bc79d)
-
-## Project Structure
+## 4. 폴더 구조
 
 ```
-src/
-├───auth
-│   ├───controllers
-│   ├───dtos
-│   │   ├───requests
-│   │   └───responses
-│   ├───guards
-│   ├───services
-│   ├───strategies
-│   └───token
-│       ├───dtos
-│       ├───interfaces
-│       ├───jwt
-│       │   └───factories
-│       └───services
-├───common
-│   ├───constants
-│   ├───decorators
-│   ├───dtos
-│   └───interfaces
-├───core
-│   ├───config
-│   │   ├───constants
-│   │   └───validations
-│   └───type-orm
-│       ├───constants
-│       ├───decorators
-│       ├───entities
-│       ├───factories
-│       └───repositories
-└───users
-    ├───constants
-    ├───controllers
-    ├───dtos
-    │   ├───internals
-    │   ├───requests
-    │   └───responses
-    ├───interfaces
-    └───services
+src
+├───auth          # 인증 모듈
+│   └───token     # jwt 모듈
+├───common        # 공통 관심사
+├───core          # 코어 모듈
+│   ├───config    # 환경 변수 설정 모듈
+│   ├───redis     # 레디스 클라이언트 모듈 (레포지토리 추상 및 구현 클래스)
+│   └───type-orm  # 데이터베이스 모듈 (엔티티, 레포지토리 추상 및 구현 클래스)
+├───mail          # 이메일 모듈
+├───socket        # 데스크탑 앱, 클라이언트 웹 소켓 모듈
+├───summoner      # 롤 계정 모듈
+│   └───http      # 라이엇 API 요청 모듈
+└───users         # 유저 모듈
+
 ```
 
-## How refresh tokens work
-
-## License
-
-This project is licensed under [MIT licensed](https://github.com/okonomiyakki/nestjs-template/blob/main/LICENSE).
+---
