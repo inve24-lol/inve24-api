@@ -90,16 +90,139 @@
 
 ## 3. 유저 플로우
 
-1. 리그 오브 레전드 게임 클라이언트가 실행된 환경에서 데스크탑 앱을 실행하고, 시작 버튼을 눌러 서버에 연결합니다.
-2. 웹으로 접속하여 회원 가입 및 로그인을 합니다.
-3. 리그 오브 레전드 게임 클라이언트에서 로그인 된 계정을 등록합니다.
-4. 조회할 계정을 선택합니다.
-5. 조회 버튼을 클릭하여 현재 연결된 데스크탑 앱이 있는지 확인합니다.
-6. 연결된 데스크탑 앱이 존재하면, 서버에 연결합니다.
-7. 서버에서 클라이언트의 연결이 감지되면, 데스크탑 앱에서 리그 오브 레전드 클라이언트 상태 정보 구독을 시작합니다.
-8. 서버에 연결되면, 리그 오브 레전드 게임 클라이언트의 실시간 상태 정보를 확인합니다.
-9. 게임 시작 시, 현재 게임 진행 시간 정보를 실시간으로 확인합니다.
-10. 게임 시작 후 1분이 경과되면, 클라이언트에서 서버 소켓 연결을 종료합니다.
+<h3>(1) 웹으로 접속하여 <u>회원 가입</u> 및 <u>로그인</u>을 합니다.</h3>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![2](https://github.com/user-attachments/assets/5893fefe-5f4e-4cb7-89d9-6fc3653fc7e6)
+
+</details>
+
+<h3>(2) <u>리그 오브 레전드 클라이언트</u>에서 로그인 한 계정을 <u>등록</u>합니다.</h3>
+
+> 리그 오브 레전드 계정이 등록된 사용자에게는 게임 조회 접근 권한이 주어집니다.
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![3](https://github.com/user-attachments/assets/af311287-6015-4d2c-90c3-30d897c38455)
+
+</details>
+
+<h3>(3) 리그 오브 레전드 클라이언트가 실행 중인 환경에서 <u>데스크탑 앱</u>을 <u>실행</u>하고, 시작 버튼을 눌러 서버에 연결합니다.</h3>
+
+> 서버 소켓 게이트웨이에서 DB에 등록된 리그 오브 레전드 계정인지 검증합니다. <br>
+> 검증에 성공하면, 동일한 사용자가 웹에서 접근했을 때 식별이 가능한 값으로 소켓 룸을 생성합니다. <br>
+> 동시에 해당 값을 '대기' 상태로 레디스에 저장 합니다. <br>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![1](https://github.com/user-attachments/assets/a7cba44c-54b7-4fbd-83f4-571608a13481)
+
+</details>
+
+<h3>(4) 조회할 계정을 <u>선택</u>합니다.</h3>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![4](https://github.com/user-attachments/assets/f3de94bc-147f-4e47-b162-0bbe6597aa07)
+
+</details>
+
+<h3>(5) <u>조회 버튼</u>을 클릭하여 현재 연결된 데스크탑 앱이 있는지 확인합니다.</h3>
+
+> 앞서 클라이언트가 식별 가능한 값을 통해, 레디스에 '대기' 상태의 캐싱 된 값이 있는지 확인합니다. <br>
+> 해당 값이 존재하지 않는다면, 데스크탑 앱이 아직 실행되지 않았거나, 연결 실패로 판단합니다. <br>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![5](https://github.com/user-attachments/assets/c91c16c1-4b12-4eee-bd73-b153c0759574)
+
+</details>
+
+<h3>(6) <u>연결된 데스크탑 앱</u>이 <u>존재</u>하면, 서버에 자동으로 연결됩니다.</h3>
+
+> 서버 소켓 게이트웨이에서 사용자의 권한 및 사용자 세션을 검증합니다. <br>
+> 검증에 성공하면, 일렉트론 앱으로부터 생성된 소켓 룸과 동일한 값으로 소켓 룸을 생성합니다. <br>
+> 동시에 '대기' 상태의 레디스 값을 '활성' 상태로 업데이트합니다. <br>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![6](https://github.com/user-attachments/assets/36ccbf09-f033-40c0-9b67-815095749337)
+
+</details>
+
+<h3>(7) 서버에서 <u>클라이언트의 연결</u>이 <u>감지</u>되면, 데스크탑 앱에서 리그 오브 레전드 클라이언트 상태 정보 조회를 시작합니다.</h3>
+
+> 서버에서 일렉트론 앱으로 클라이언트의 소켓 연결 성공 메시지를 전달합니다. <br>
+> 동시에 일렉트론 앱은 리그 오브 레전드 클라이언트 상태 정보 구독을 시작합니다. <br>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![7](https://github.com/user-attachments/assets/5f667da5-0183-4e65-ab04-0412d3227a0d)
+
+</details>
+
+<h3>(8) 리그 오브 레전드 클라이언트의 <u>상태 변경</u>이 <u>감지</u>될 때 마다 클라이언트에서 이를 확인합니다.</h3>
+
+<details>
+<summary><u>자세히 보기</u> - 로비 상태</summary>
+
+![9](https://github.com/user-attachments/assets/27bc9f51-5be2-41a2-a34d-f3540ad88b44)
+![8](https://github.com/user-attachments/assets/61615e2c-f3de-456a-bbea-2674a0b5b3db)
+
+</details>
+
+<details>
+<summary><u>자세히 보기</u> - 챔피언 선택 상태</summary>
+
+![11](https://github.com/user-attachments/assets/3be82a88-e619-4f48-983e-cfa44cd61e88)
+![10](https://github.com/user-attachments/assets/9cc969de-dea3-4633-ade7-cfc9627ad076)
+
+</details>
+
+<h3>(9) <u>챔피언 선택</u>이 <u>종료</u>되면, <u>로딩 상태 정보</u>를 2초 간격으로 확인합니다.</h3>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![12](https://github.com/user-attachments/assets/e2b6c9ab-99db-4ec9-84b5-af40924095bc)
+
+</details>
+
+<h3>(10) <u>게임이 시작</u>되면, 실시간 <u>게임 진행 시간 정보</u>를 확인합니다.</h3>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![13](https://github.com/user-attachments/assets/5cc54a3a-aad6-4d3d-8e2c-70db8e0ea022)
+
+</details>
+
+<h3>(11) <u>게임 시작 후 1분이 경과</u>되면, 클라이언트에서 <u>서버 소켓 연결</u>을 <u>종료</u>합니다.</h3>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![15](https://github.com/user-attachments/assets/b6fc04c6-e347-41b8-aed6-c512f5eb0361)
+![16](https://github.com/user-attachments/assets/43e6c1e9-ce69-4f5e-b0b9-4be9d57489de)
+
+</details>
+
+<h3>(12) 빠른 참여를 위해, 게임 진행 시간은 <u>1초</u> 빠르게 표시됩니다.</u></h3>
+
+<details>
+<summary><u>자세히 보기</u></summary>
+
+![14](https://github.com/user-attachments/assets/30a1b260-df1b-4e6a-93e1-ec08ec9c77c6)
+
+</details>
 
 ## 4. 폴더 구조
 
