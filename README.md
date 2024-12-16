@@ -49,7 +49,9 @@
 
 [3. 유저 플로우](#3-유저-플로우)
 
-[4. 폴더 구조](#4-폴더-구조)
+[4. API](#4-api)
+
+[5. 폴더 구조](#5-폴더-구조)
 
 </div>
 
@@ -224,7 +226,13 @@
 
 </details>
 
-## 4. 폴더 구조
+## 4. API
+
+<h3>Swagger API Docs</u></h3>
+
+![swagger docs](https://github.com/user-attachments/assets/e92331fa-bcd9-4545-9c48-99fb810aa5e0)
+
+## 5. 폴더 구조
 
 ```
 src
